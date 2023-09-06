@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.host-selector {
+    width: 200px;
+}
+
+.host-list {
+    width: calc(50% - 220px);
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 200px;
+}
