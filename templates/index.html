@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instance Openstack Management Migration</title>
+</head>
+<body>
+    <h1>Instance Openstack Management Migration</h1>
+    <div style="float: left; width: 45%;">
+        <h2>Source Host</h2>
+        <select id="sourceHostsDropdown" onchange="loadInstances()">
+            <!-- Hosts will be loaded here -->
+        </select>
+        <h3 id="sourceHostTitle">Instances on source_hosts</h3>
+        <table id="sourceHost">
+            <!-- Instances will be loaded here -->
+        </table>
+        <h2>vCPU Allocation Plot</h2>
+        <button onclick="generateVcpuAllocationPlot()">Generate Plot</button>
+        <div id="vcpuAllocationPlot">
+            <!-- Plot will be displayed here -->
+        </div>
+    </div>
+    <div style="float: left; width: 45%;">
+        <h2>Destination Host</h2>
+        <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()">
+            <!-- Hosts will be loaded here -->
+        </select>
+        <h3 id="destinationHostInfo">Info destination_host</h3>
+        <p>vCPUs Used : <span id="vcpusUsedHost">0</span></p>
+        <p>Total vCPUs : <span id="totalVCPUsHost">0</span></p>
+        <p>Free vCPUs (Current): <span id="freeVCPUsHost">0</span></p>
+        <p>Free vCPUs (After): <span id="freeVCPUsAfter">0</span></p>
+        <p>Total vCPUs to Move: <span id="totalVCPUsToMove">0</span></p>
+        
+        <h3 id="destinationHostTitle">Instances on destination_host</h3>
+        <table id="destinationHost">
+            <!-- Instances will be loaded here -->
+        </table>
+        <p id="errorText" style="color: red;"></p>
+        <h2>Instances to Move</h2>
+        <button onclick="clearInstancesToMove()">Clear Instances</button>
+        <table id="instancesToMove">
+            <!-- Instances to move will be loaded here -->
+        <tr>
+        <th>Name</th>
+        <th>vCPU</th>
+        </tr>
+        </table>
+    </div>
+    <div style="clear: both;"></div>
+    
+
+
+    <script>
+    function loadSourceHosts() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/get_source_hosts', true);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var sourceHosts = xhr.response;
+                var sourceHostsDropdown = document.getElementById('sourceHostsDropdown');
+                var destinationHostsDropdown = document.getElementById('destinationHostsDropdown');
+                sourceHostsDropdown.innerHTML = '<option value="" disabled selected>Select a host</option>';
+                destinationHostsDropdown.innerHTML = '<option value="" disabled selected>Select a host</option>';
+                sourceHosts.forEach(function(host) {
+                    var option = document.createElement('option');
+                    option.value = host;
+                    option.textContent = host;
+                    sourceHostsDropdown.appendChild(option);
+
+                    var optionCopy = option.cloneNode(true);
+                    destinationHostsDropdown.appendChild(optionCopy);
+                });
+            }
+        };
+        xhr.send();
+    }
+
+    function loadInstances() {
+        var selectedHost = document.getElementById('sourceHostsDropdown').value;
+        // moveButton.setAttribute('data-row-index', index);
+
+        if (selectedHost) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/get_instances?host=' + encodeURIComponent(selectedHost), true);
+            xhr.responseType = 'json';
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var instances = xhr.response.instances;
+                    var sourceHostTable = document.getElementById('sourceHost');
+                    sourceHostTable.innerHTML = '<tr><th>Name</th><th>vCPU</th><th>Actions</th></tr>';
+                    instances.forEach(function(instance, index) {
+                        var row = sourceHostTable.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        cell1.textContent = instance.Name;
+                        cell2.textContent = instance.CPU;
+
+                        // Menambahkan tombol "Move" dengan ID yang unik
+                        var moveButton = document.createElement('button');
+                        moveButton.textContent = 'Move';
+                        moveButton.onclick = function() {
+                            moveInstanceToDestination('sourceHostMoveBtn' + index);
+                        };
+                        cell3.appendChild(moveButton);
+
+                        // Memberi ID unik pada tombol "Move"
+                        moveButton.id = 'sourceHostMoveBtn' + index;
+                    });
+                }
+                document.getElementById('sourceHostTitle').textContent = 'Instances on ' + selectedHost;
+            };
+            xhr.send();
+        }
+    }
+
+    function loadDestinationHostInstances() {
+        var selectedHost = document.getElementById('destinationHostsDropdown').value;
+        if (selectedHost) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/get_destination_host_instances?host=' + encodeURIComponent(selectedHost), true);
+            xhr.responseType = 'json';
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = xhr.response;
+                    if (response.instances) {
+                        var instances = response.instances;
+                        var destinationHostTable = document.getElementById('destinationHost');
+                        destinationHostTable.innerHTML = '<tr><th>Name</th><th>vCPU</th></tr>';
+                        instances.forEach(function(instance) {
+                            var row = destinationHostTable.insertRow();
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            cell1.textContent = instance.Name;
+                            cell2.textContent = instance.CPU;
+                        });
+                    } else {
+                        var destinationHostTable = document.getElementById('destinationHost');
+                        destinationHostTable.innerHTML = '';
+                    }
+                    document.getElementById('destinationHostTitle').textContent = 'Instances on ' + selectedHost;
+                    document.getElementById('destinationHostInfo').textContent = 'Info ' + selectedHost;
+
+                        // Mengambil informasi host dari endpoint /get_host_allocation
+                        var xhrHostAllocation = new XMLHttpRequest();
+                        xhrHostAllocation.open('GET', '/get_host_allocation?host=' + encodeURIComponent(selectedHost), true);
+                        xhrHostAllocation.responseType = 'json';
+                        xhrHostAllocation.onreadystatechange = function() {
+                            if (xhrHostAllocation.readyState === 4 && xhrHostAllocation.status === 200) {
+                                var hostAllocation = xhrHostAllocation.response;
+                                document.getElementById('vcpusUsedHost').textContent = hostAllocation.vcpus_used;
+                                document.getElementById('totalVCPUsHost').textContent = hostAllocation.vcpus_total;
+                                document.getElementById('freeVCPUsHost').textContent = hostAllocation.vcpus_free;
+                            }
+                        };
+                        xhrHostAllocation.send();
+                }
+            };
+            xhr.send();
+        }
+    }
+
+    function moveInstanceToDestination(btnId) {
+        // var rowIndex = document.getElementById(btnId).getAttribute('data-row-index');
+        var sourceRow = document.getElementById(btnId).parentNode.parentNode;
+        var name = sourceRow.cells[0].textContent;
+        var cpu = sourceRow.cells[1].textContent;
+        var selectedHost = document.getElementById('destinationHostsDropdown').value;
+        var vcpusFreeElement = document.getElementById('vcpusFree');
+        var vcpus_free = vcpusFreeElement ? parseFloat(vcpusFreeElement.textContent) : 0;
+        
+        // Menonaktifkan dropdown pilihan source host
+        var sourceHostsDropdown = document.getElementById('sourceHostsDropdown');
+        sourceHostsDropdown.disabled = true;
+        // Menonaktifkan dropdown pilihan destination host
+        var destinationHostsDropdown = document.getElementById('destinationHostsDropdown');
+        destinationHostsDropdown.disabled = true;
+
+        // Periksa jika destination host belum dipilih
+        if (!selectedHost) {
+            alert('Please select a destination host first.');
+            clearInstancesToMove();
+            return;
+        }
+
+
+        // Mengambil jumlah vCPU instance yang akan dipindahkan
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/get_instance_vcpus_used?name=' + encodeURIComponent(name), true);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var vcpus_used_instance = parseFloat(xhr.response);
+
+                // Mengambil total vCPU dan vCPU used dari host tujuan
+                var xhrAllocation = new XMLHttpRequest();
+                xhrAllocation.open('GET', '/get_host_allocation?host=' + encodeURIComponent(selectedHost), true);
+                xhrAllocation.responseType = 'json';
+                xhrAllocation.onreadystatechange = function() {
+                    if (xhrAllocation.readyState === 4 && xhrAllocation.status === 200) {
+                        var hostAllocation = xhrAllocation.response;
+                        var vcpus_used_host = parseFloat(hostAllocation.vcpus_used);
+                        var vcpus_total_host = parseFloat(hostAllocation.vcpus_total);
+                        var vcpus_free_host = parseFloat(hostAllocation.vcpus_free);
+
+                        // Menghitung total vCPU dari semua instance yang akan dipindahkan
+                        var instancesToMoveTable = document.getElementById('instancesToMove');
+                        var rows = instancesToMoveTable.getElementsByTagName('tr');
+                        var totalVCPUsToMove = vcpus_used_instance;
+
+                        for (var i = 1; i < rows.length; i++) {
+                            var cells = rows[i].getElementsByTagName('td');
+                            var vcpuInstance = parseFloat(cells[1].textContent);
+                            totalVCPUsToMove += vcpuInstance;
+                        }
+
+                        // Memeriksa apakah totalVCPUsToMove masih cocok dengan vcpus_free_host
+                        if (totalVCPUsToMove <= vcpus_free_host) {
+                            // Memeriksa apakah total vCPU setelah pemindahan melebihi batas
+                            if ((vcpus_used_host + totalVCPUsToMove) <= vcpus_total_host) {
+                                // Memeriksa apakah jumlah vCPU yang dipindahkan tidak melebihi vCPU bebas pada host tujuan
+                                if ((vcpus_free_host - totalVCPUsToMove) >= 0) {
+                                    console.log(totalVCPUsToMove);
+                                    console.log(vcpus_used_host);
+                                    console.log(vcpus_total_host);
+                                    console.log(vcpus_free_host);
+                                    document.getElementById('totalVCPUsToMove').textContent = totalVCPUsToMove;
+                                    // document.getElementById('vcpusUsedHost').textContent = vcpus_used_host;
+                                    // document.getElementById('totalVCPUsHost').textContent = vcpus_total_host;
+                                    // document.getElementById('freeVCPUsHost').textContent = vcpus_free_host;
+                                    // Hitung dan perbarui "Free vCPUs After"
+                                    var freeVCPUsAfter = vcpus_free_host - totalVCPUsToMove;
+                                    document.getElementById('freeVCPUsAfter').textContent = freeVCPUsAfter;
+
+                                    // Tambahkan instance yang ingin dipindahkan ke tabel "Instances to Move"
+
+                                    var newRowToMove = instancesToMoveTable.insertRow();
+                                    var cell1ToMove = newRowToMove.insertCell(0);
+                                    var cell2ToMove = newRowToMove.insertCell(1);
+                                    cell1ToMove.textContent = name;
+                                    cell2ToMove.textContent = vcpus_used_instance; // Menampilkan jumlah vCPU di sini
+                                    sourceRow.parentNode.removeChild(sourceRow);
+                                    vcpus_free_host -= totalVCPUsToMove; // Update vcpus_free_host
+                                    if (vcpusFreeElement) {
+                                        vcpusFreeElement.textContent = vcpus_free_host;
+                                    }
+                                    document.getElementById('errorText').textContent = '';
+                                } else {
+                                    document.getElementById('errorText').textContent = 'Insufficient vcpus_free on the destination host.';
+                                }
+                            } else {
+                                document.getElementById('errorText').textContent = 'Total vCPU of the destination host will exceed the limit.';
+                            }
+                        } else {
+                            document.getElementById('errorText').textContent = 'Insufficient vcpus_free on the destination host.';
+                        }
+                    }
+                };
+                xhrAllocation.send();
+            }
+        };
+        xhr.send();
+    }
+
+    function clearInstancesToMove() {
+    var instancesToMoveTable = document.getElementById('instancesToMove');
+    var sourceHostTable = document.getElementById('sourceHost');
+    var vcpusFreeElement = document.getElementById('vcpusFree');
+    var vcpus_free = vcpusFreeElement ? parseFloat(vcpusFreeElement.textContent) : 0;
+
+    // Mengaktifkan kembali dropdown pilihan source host
+    var sourceHostsDropdown = document.getElementById('sourceHostsDropdown');
+    if (sourceHostsDropdown) {
+        sourceHostsDropdown.disabled = false;
+    }
+    // Mengaktifkan kembali dropdown pilihan source host
+    var destinationHostsDropdown = document.getElementById('destinationHostsDropdown');
+    if (destinationHostsDropdown) {
+        destinationHostsDropdown.disabled = false;
+    }
+    // Set nilai "Total vCPUs to Move" menjadi 0
+    document.getElementById('totalVCPUsToMove').textContent = 0;
+    // Set nilai "Free vCPUs After" menjadi 0
+    document.getElementById('freeVCPUsAfter').textContent = 0;
+
+
+    // Iterasi semua baris di tabel "Instances to Move" dan tambahkan vCPU mereka ke vcpus_free
+    if (instancesToMoveTable) {
+        var rows = instancesToMoveTable.getElementsByTagName('tr');
+        for (var i = 1; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+            var vcpuInstance = parseFloat(cells[1].textContent);
+            vcpus_free += vcpuInstance;
+        }
+
+        // Kosongkan tabel "Instances to Move"
+        while (instancesToMoveTable.rows.length > 1) {
+            instancesToMoveTable.deleteRow(1);
+        }
+    }
+
+    // Perbarui nilai vcpus_free di HTML
+    if (vcpusFreeElement) {
+        vcpusFreeElement.textContent = vcpus_free;
+    }
+
+    // Kosongkan pesan kesalahan
+    var errorText = document.getElementById('errorText');
+    if (errorText) {
+        errorText.textContent = '';
+    }
+
+    // Memanggil kembali fungsi untuk memuat instance setelah membersihkan
+    loadInstances();
+    }
+    function generateVcpuAllocationPlot() {
+    var selectedDestinationHost = document.getElementById('destinationHostsDropdown').value;
+    var selectedInstancesToMove = [];
+    
+    // Mendapatkan instance yang akan dipindahkan dari tabel "Instances to Move"
+    var instancesToMoveTable = document.getElementById('instancesToMove');
+    var rows = instancesToMoveTable.getElementsByTagName('tr');
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName('td');
+        var instanceName = cells[0].textContent;
+        selectedInstancesToMove.push(instanceName);
+    }
+
+    // Memanggil endpoint untuk menghasilkan plot alokasi vCPU
+    var xhr = new XMLHttpRequest();
+    // xhr.open('GET', '/generate_vcpu_allocation_plot?destination_host=' + encodeURIComponent(selectedDestinationHost) + '&instances_to_move[]=' + encodeURIComponent(selectedInstancesToMove.join('&instances_to_move[]=')), true);
+    xhr.open('GET', '/generate_vcpu_allocation_plot?destination_host=' + encodeURIComponent(selectedDestinationHost), true);
+    xhr.responseType = 'json';
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var plotFilename = xhr.response.plot_filename;
+            displayVcpuAllocationPlot(plotFilename);
+        }
+    };
+    xhr.send();
+}
+
+    function displayVcpuAllocationPlot(plotFilename) {
+        // Menampilkan plot di halaman HTML
+        var vcpuAllocationPlotDiv = document.getElementById('vcpuAllocationPlot');
+        vcpuAllocationPlotDiv.innerHTML = '<img src="' + plotFilename + '" alt="vCPU Allocation Plot">';
+    }
+
+    window.onload = function() {
+    loadSourceHosts();
+    }
+    </script>
+
+</body>
+</html>

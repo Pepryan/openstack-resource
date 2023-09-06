@@ -1,0 +1,23 @@
+from flask import Flask, render_template, request, jsonify
+import json
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/get_instance_data', methods=['POST'])
+def get_instance_data():
+    selected_host = request.form['selected_host']
+    
+    # Replace this with your logic to fetch instance data based on the selected host
+    instance_data = {
+        "host": selected_host,
+        "instances": ["Instance1", "Instance2", "Instance3"]
+    }
+    
+    return jsonify(instance_data)
+
+if __name__ == '__main__':
+    app.run(debug=True)
