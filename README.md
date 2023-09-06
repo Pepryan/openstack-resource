@@ -5,7 +5,7 @@ Data is still static from file aio.csv, ratio.txt, and allocation.txt (not sync 
 - Info vCPUs compute
 - List instance on compute with vCPU
 - Move instance
-- Generate plot vCPUs allocation
+- Generate plot vCPUs allocation (work on progress, you can still see the generated image on your project directory)
 
 ### Development
 Clone this repo to your machine
