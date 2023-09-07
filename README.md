@@ -1,11 +1,22 @@
 # Openstack Resource Allocation Web
-Data is still static from file aio.csv, ratio.txt, and allocation.txt (not sync automatically)
+
 
 ### Feature
 - Info vCPUs compute
 - List instance on compute with vCPU
 - Move instance
 - Generate plot vCPUs allocation (work on progress, you can still see the generated image on your project directory)
+
+### Tech used
+- Vanilla javascript, HTML, CSS
+- python
+- flask
+
+### Still on check (known bugs)
+- Data aio.csv not update (not yet updated as of Sept 2023)
+- Data from allocation.txt and sum of vCPUs not same (because aio.csv not update)
+- Picture when "Generate Plot" can be only see in the "Results" project dir, not yet implement in frontend (still error)
+- Picture plot allocation only listing instance on destination host (instance to move not yet added)
 
 ### Development
 Clone this repo to your machine
