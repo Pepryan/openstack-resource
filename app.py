@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import datetime
 
 app = Flask(__name__)
 
@@ -146,8 +147,9 @@ def generate_vcpu_allocation_plot():
     data_destination_host = data[data['Host'] == destination_host]
     vcpus_destination_host = data_destination_host['CPU'].astype(int).tolist()
     vcpus.extend(vcpus_destination_host)
-    # data_project = data[data['Host'] == destination_host]['Project'].tolist()
-    # vcpu_labels = data_destination_host['Name'].tolist()  # Convert the 'Name' column to a list of strings
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    data_project = data[data['Host'] == destination_host]['Project'].tolist()
+    vcpu_labels = data_destination_host['Name'].tolist()  # Convert the 'Name' column to a list of strings
     # if len(f"{data_project}__{vcpu_labels}") > len(longest_string):
     #     longest_string = f"{data_project}__{vcpu_labels}"
     # print(longest_string)
@@ -229,8 +231,8 @@ def generate_vcpu_allocation_plot():
     print(enumerate(zip(vcpus_destination_host, vcpu_labels)))
 
     # Buat salinan vcpu_labels
-    remaining_labels = vcpu_labels.copy()
-    legend_handles = []
+    # remaining_labels = vcpu_labels.copy()
+    # legend_handles = []
 
     # Buat salinan vcpu_labels
     remaining_labels = vcpu_labels.copy()
@@ -295,9 +297,10 @@ def generate_vcpu_allocation_plot():
 
 
     # Title plot
+    image_path = f'results/{destination_host}_{current_time}.png'
     plt.title(destination_host)
-    plt.savefig(f'results/{destination_host}.png', bbox_inches='tight')
-    print(f"{destination_host} exported")
+    plt.savefig(image_path, bbox_inches='tight')
+    print(f"{destination_host} exported as {image_path}")
 
     # Return the image path to be displayed in the HTML
     # return f"results/{destination_host}.png"
