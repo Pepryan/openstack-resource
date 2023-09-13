@@ -1,0 +1,536 @@
+Project|ID|Name|Status|Power State|Networks|Flavor Name|Host|CPU|RAM
+admin|f8d81d51-9c81-499e-9acb-7edac0d2974c|test-resize|ACTIVE|Running|admin-net-prod=192.168.100.68|n2-highcpu-4-1s|odc-r09-oscompute-03|4|4G
+admin|f1f8db92-32e2-4254-b78d-b46eb7b5dcd2|test-resize-2|ACTIVE|Running|admin-net-prod=192.168.100.146|n2-highcpu-8-1s|odc-r08-oscompute-22|8|8G
+ddb|1421dc50-ee8e-4826-abe3-a34cca654892|odc-ops-ceria-ms-modalkerja-workflow-prd-db-02|ACTIVE|Running|Prod_Network=172.28.216.67|c2-standard-4-1s|odc-r09-oscompute-11|4|8G
+ddb|7e3f5d6f-5422-4e95-a996-e96dba45252f|odc-ops-ceria-ms-modalkerja-workflow-prd-db-01|ACTIVE|Running|Prod_Network=172.28.216.65|c2-standard-4-1s|odc-r09-oscompute-03|4|8G
+ddb|516360db-15b2-4c69-94f2-10ad95239f80|odc-ops-ceria-ms-modalkerja-workflow-prd-redis-02|ACTIVE|Running|Prod_Network=172.28.216.60|c2-standard-4-1s|odc-r07-oscompute-33|4|8G
+ddb|79b4ee05-6aa2-49e1-9c18-52f89546fb0e|odc-ops-ceria-ms-modalkerja-workflow-prd-redis-01|ACTIVE|Running|Prod_Network=172.28.216.59|c2-standard-4-1s|odc-r09-oscompute-11|4|8G
+admin|a04f1da7-f024-44e2-a29e-3976e0f541c3|btech-reporting|ACTIVE|Running|admin-net-prod=192.168.100.109, 172.28.217.110|test-flavor-golden|odc-r08-oscompute-17|2|2G
+admin|9fab9e45-f0c8-4842-ba73-5f45c5563302|btech-backup-db-openstack-to-rubrik|ACTIVE|Running|admin-net-prod=192.168.100.23, 172.28.217.81|n2-highcpu-2-1s|odc-r09-oscompute-07|2|2G
+ddb|ea7aaddd-cdf7-4b91-8ee2-38133dd5d19f|briapi-apigee-msg_processor-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.42|c2-standard-16-1s|odc-r07-oscompute-31|16|32G
+ddb|de82b3bf-ca02-48af-86e6-8eb99a2d3f42|briapi-apigee-msg_processor-sandbox-2|ACTIVE|Running|Prod_Network=172.28.216.214|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|c13e14e4-5856-4117-bc27-6681ea2fbdd8|briapi-apigee-postgresql-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.10|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|4bc20dcc-926e-428e-a32d-feea2a9a594b|briapi-apigee-cassandra-sandbox-2|ACTIVE|Running|Prod_Network=172.28.216.99|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|8557f94e-0c1b-4d2a-87e1-e6447838cb4a|briapi-apigee-cassandra-sandbox-3|ACTIVE|Running|Prod_Network=172.28.216.115|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|c175941b-d960-49bb-bc72-024f49581c77|briapi-apigee-qpid-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.8|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|d96fcda2-efbc-4848-a12f-37af920d13b5|briapi-apigee-qpid-sandbox-2|ACTIVE|Running|Prod_Network=172.28.216.165|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|05530377-2978-446b-a2e6-1631f005df4d|briapi-apigee-cassandra-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.114|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb|7db15541-9ed2-4eb3-b7a1-b73b9a79eddf|briapi-apigee-devportal-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.119|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+admin|b73800ba-4e5f-445a-8ade-471bbbd58c5f|repo-php|ACTIVE|Running|Prod_Network=172.28.217.33|c2-standard-2-1s|odc-r08-oscompute-19|2|4G
+ddb-development|af45f556-f636-4649-97b0-0375c166bd5b|rgn-ops-briapi-dev-ms-briapi-snap-get-rsa-key-db-01|ACTIVE|Running|Dev_Network=172.28.228.132|c2-standard-4-1s|odc-r08-oscompute-16|4|8G
+ddb-development|5121a120-7f70-482e-9e0e-d9c36a32d651|biteg-minio-kube|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.160, 172.28.224.202|c2-standard-8-1s|odc-r08-oscompute-19|8|16G
+admin|eba3b0b4-44e9-4332-bb6c-3f00f81b2d03|test-apigee-repo-client|ACTIVE|Running|Prod_Network=172.28.216.166|c2-standard-0-1-copy|odc-r08-oscompute-19|1|1G
+admin|c7cffced-42db-443a-a36e-beb65670aef0|test_repo|ACTIVE|Running|Prod_Network=172.28.216.107; replikasi-cloudera-network=172.28.120.123|test-flavor-golden|odc-r08-oscompute-20|2|2G
+admin|5ebf85e9-82cc-49c9-b026-8ffe0ef143b1|apigee-repo|ACTIVE|Running|Prod_Network=172.28.216.177|c2-standard-2-1s|odc-r08-oscompute-21|2|4G
+admin|d6fc1cea-01f5-4c9d-88e2-11822c64078a|grafanaXprometheus|ACTIVE|Running|admin-net-prod=192.168.100.188, 172.28.216.11|n2-highcpu-16-1s|odc-r08-oscompute-18|16|16G
+ddb|1c72eef0-6e88-40f1-ba21-0b4cb6c36688|devops-Minio-prd-4|ACTIVE|Running|Prod_Network=172.28.216.44|n2-standard-4-1s|odc-r07-oscompute-33|4|16G
+ddb|4ff0d533-d289-4dab-8730-356dc2b80c17|devops-Minio-prd-3|ACTIVE|Running|Prod_Network=172.28.216.40|n2-standard-4-1s|odc-r09-oscompute-11|4|16G
+ddb|6632cab0-a038-44cf-85bc-91b7d6e7ac7b|devops-Minio-prd-2|ACTIVE|Running|Prod_Network=172.28.216.38|n2-standard-4-1s|odc-r06-oscompute-37|4|16G
+ddb|ed405b0e-c35d-447b-a5e4-8c006769b493|devops-Minio-prd-1|ACTIVE|Running|Prod_Network=172.28.216.37|n2-standard-4-1s|odc-r09-oscompute-11|4|16G
+ddb|f3f8d5bb-1440-4e44-9df7-81b1898f6423|umi-db-mongo-3|ACTIVE|Running|Prod_Network=172.28.216.35|c2-standard-8-1s|odc-r09-oscompute-11|8|16G
+ddb|8d315336-0afe-42a6-8a77-113b1173a869|umi-db-mongo-2|ACTIVE|Running|Prod_Network=172.28.216.34|c2-standard-8-1s|odc-r08-oscompute-15|8|16G
+ddb|df755b3c-7bd9-4fe8-8c1c-afd93604a540|umi-db-mongo-1|ACTIVE|Running|Prod_Network=172.28.216.32|c2-standard-8-1s|odc-r07-oscompute-33|8|16G
+ddb|76a5cc90-0b82-4fec-9947-7740d2e6938e|db-umi-postgresql-prd-3|ACTIVE|Running|Prod_Network=172.28.216.29|c2-standard-8-1s|odc-r07-oscompute-33|8|16G
+ddb|7a7565e6-1aad-4964-99bb-0f5f1dac4d37|db-umi-postgresql-prd-2|ACTIVE|Running|Prod_Network=172.28.216.28|c2-standard-8-1s|odc-r06-oscompute-37|8|16G
+ddb|47fb757b-0276-4a91-b82a-b1d440ef3896|db-umi-postgresql-prd-1|ACTIVE|Running|Prod_Network=172.28.216.27|c2-standard-8-1s|odc-r06-oscompute-37|8|16G
+ddb|ec1ede89-3ce2-41e5-9538-ac2b2765533e|senyum-mobile-db-psql-prd-2|ACTIVE|Running|Prod_Network=172.28.216.26|c2-standard-8-1s|odc-r08-oscompute-17|8|16G
+ddb|8da40505-b352-44f1-a135-79c9c4ad6548|senyum-mobile-db-psql-prd-1|ACTIVE|Running|Prod_Network=172.28.216.12|c2-standard-16-1s|odc-r08-oscompute-17|16|32G
+edm|11c0f5f8-8e08-498a-914f-6a701f51bdeb|cloudera-utility-node-1|ACTIVE|Running|Cloudera_Network=10.148.0.145, 172.28.218.181; internal-replikasi-cloudera-net=10.50.0.182, 172.28.120.43|n2-highmem-16|odc-r06-oscompute-42|16|128G
+ddb|81a94034-73ca-4d0d-a55e-08b3716cd6cd|redis-umi-worker-1|ACTIVE|Running|Prod_Network=172.28.216.20|c2-standard-4-1s|odc-r07-oscompute-31|4|8G
+ddb|bde0ef94-f305-48e2-a912-552b90c52761|redis-umi-master-1|ACTIVE|Running|Prod_Network=172.28.216.19|c2-standard-4-1s|odc-r06-oscompute-40|4|8G
+admin|0e484ae7-4ca0-4114-bd21-26c6bd0e3a2f|iperf-client-ebpf-1|ACTIVE|Running|Dev_Network=172.28.227.163; admin-net-prod=192.168.100.38, 172.28.219.197|n2-highcpu-2-1s|odc-r08-oscompute-18|2|2G
+admin|f64917a4-1e10-4a1c-8358-ad9ef2a3be5e|iperf-client-ebpf-2|ACTIVE|Running|Dev_Network=172.28.228.80; admin-net-prod=192.168.100.41, 172.28.218.253|n2-highcpu-2-1s|odc-r06-oscompute-42|2|2G
+ddb-staging|e959f921-9524-4950-89cc-49043784db55|odc-k8s-stg-load_balancer_ingress-01|ACTIVE|Running|Prod_Network=172.28.221.25|c2-standard-4-1s|odc-r08-oscompute-18|4|8G
+ddb-staging|a0ead3c6-68f4-425a-bc2e-2a03789f6f03|devops-rundeck-stg-odc-01|ACTIVE|Running|Prod_Network=172.28.221.27|c2-standard-8-1s|odc-r08-oscompute-18|8|16G
+ddb-staging|f6088001-ebb0-4c14-95de-96ddde32cc17|btech_test_alert_ddb_staging_odc|SHUTOFF|Shutdown|Prod_Network=172.28.221.120; net-staging-devops=10.30.4.168|c2-standard-0-1s|odc-r08-oscompute-19|1|1G
+ddb-development|3cd7e06c-7a80-485f-8632-137935e7daad|k8s-dev-ebpf-ingress-02|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.122, 172.28.224.101|c2-standard-8-1s|odc-r06-oscompute-42|8|16G
+ddb-development|f5a08fce-08a8-471b-9501-23baac0a772c|k8s-dev-ebpf-nfs-server|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.124|c2-standard-2-1s|odc-r07-oscompute-30|2|4G
+ddb-development|9ea2d965-1f90-4105-a018-7153d0a94fe1|k8s-dev-ebpf-ingress-03|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.123, 172.28.224.102|c2-standard-8-1s|odc-r06-oscompute-42|8|16G
+ddb-development|73873b0a-2b90-4288-8a66-60681df1cd60|k8s-dev-ebpf-ingress-01|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.121, 172.28.224.100|c2-standard-8-1s|odc-r08-oscompute-17|8|16G
+ddb-development|f6f0027b-822a-43ef-b9f0-44b95682a99a|k8s-dev-ebpf-worker-04|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.107|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb-development|816bb778-9547-4c2e-8b84-27908576a820|k8s-dev-ebpf-worker-03|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.106|c2-standard-16-1s|odc-r08-oscompute-21|16|32G
+ddb-development|af0b766e-a75a-4207-bb58-630322ffee74|k8s-dev-ebpf-worker-02|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.105|c2-standard-16-1s|odc-r09-oscompute-09|16|32G
+ddb-development|e0cea577-d477-4753-94df-97face0b3d59|k8s-dev-ebpf-worker-01|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.104|c2-standard-16-1s|odc-r09-oscompute-09|16|32G
+ddb-development|f2a596cd-94b6-4569-9ba7-002f2199f2c0|k8s-dev-ebpf-master-03|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.103|c2-standard-8-1s|odc-r08-oscompute-17|8|16G
+ddb-development|739e0468-d58c-4f4d-baae-319243dc56bc|k8s-dev-ebpf-master-02|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.102|c2-standard-8-1s|odc-r07-oscompute-30|8|16G
+ddb-development|0b5355bb-9d6f-4fcd-913f-35d2cc7636bf|k8s-dev-ebpf-master-01|ACTIVE|Running|ddb-dev-ebpf-net=10.0.1.101|c2-standard-8-1s|odc-r08-oscompute-17|8|16G
+ddb-staging|32be256d-0322-42a7-b072-cba0bc53843b|odc-k8s-stg-storage-nfs-01|ACTIVE|Running|k8s-staging-calico=192.168.224.9|n2-standard-8-1s|odc-r08-oscompute-16|8|32G
+ddb-staging|a0b506cd-dd1f-406c-b19d-2b2494a74076|odc-k8s-stg-jumpserver|ACTIVE|Running|k8s-staging-calico=192.168.224.10, 172.28.222.210|c2-standard-4-1s|odc-r07-oscompute-33|4|8G
+ddb-staging|ae162d20-431a-4f7f-9c54-7499bbfc5ed6|odc-k8s-stg-master-01|ACTIVE|Running|k8s-staging-calico=192.168.224.11, 172.28.222.211|c2-standard-8-1s|odc-r07-oscompute-30|8|16G
+ddb-staging|435cc45e-c575-4ca3-9f1d-92891a3d57c4|odc-k8s-stg-master-02|ACTIVE|Running|k8s-staging-calico=192.168.224.12, 172.28.222.212|c2-standard-8-1s|odc-r08-oscompute-17|8|16G
+ddb-staging|fc841fe9-8f2b-48c1-86c7-bcb7ce016690|odc-k8s-stg-master-03|ACTIVE|Running|k8s-staging-calico=192.168.224.13, 172.28.222.213|c2-standard-8-1s|odc-r08-oscompute-18|8|16G
+ddb-staging|2812068d-f104-4e6f-9017-3e6383669ae5|odc-k8s-stg-worker-01|ACTIVE|Running|k8s-staging-calico=192.168.224.21|c2-standard-16-1s|odc-r06-oscompute-42|16|32G
+ddb-staging|3c3c68be-4bd5-43a5-b5ee-ef4d67d6a65a|odc-k8s-stg-worker-02|ACTIVE|Running|k8s-staging-calico=192.168.224.22|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb-staging|99b2aa84-6678-493f-b764-deeef68a00dd|odc-k8s-stg-worker-03|ACTIVE|Running|k8s-staging-calico=192.168.224.23|c2-standard-16-1s|odc-r06-oscompute-43|16|32G
+ddb-staging|10ac854a-d12d-4131-a889-e7ed16f32f83|odc-k8s-stg-worker-04|ACTIVE|Running|k8s-staging-calico=192.168.224.24|c2-standard-16-1s|odc-r09-oscompute-06|16|32G
+ddb-staging|eeb13091-e6a0-4b8b-a5ee-5aea93934f90|odc-k8s-stg-worker-05|ACTIVE|Running|k8s-staging-calico=192.168.224.25|c2-standard-16-1s|odc-r09-oscompute-04|16|32G
+ddb-staging|b2bb7329-fa61-48bf-be75-56717745d14c|odc-k8s-stg-worker-06|ACTIVE|Running|k8s-staging-calico=192.168.224.26|c2-standard-16-1s|odc-r08-oscompute-15|16|32G
+ddb-staging|0d338f2b-0da7-4efc-8dc7-af54f9a7c093|odc-k8s-stg-worker-07|ACTIVE|Running|k8s-staging-calico=192.168.224.27|c2-standard-16-1s|odc-r06-oscompute-37|16|32G
+admin|d0323848-81a0-41f9-935f-281704b263f6|ubuntu22-k8s-v1-26-containerd|ACTIVE|Running|admin-net-prod=192.168.100.148, 172.28.219.79|c2-standard-4-1s|odc-r06-oscompute-40|4|8G
+ddb|a89a7e04-fb4d-405e-989b-785ab4688465|k8s-worker-08|ACTIVE|Running|k8s-prd-net=10.255.1.28, 172.28.217.76|k9-standard-w1-1s|odc-r06-oscompute-40|16|32G
+ddb|1bf5c26e-b9ae-468f-8289-10a55f48c144|sabrina-dbchatbot-3|ACTIVE|Running|sabrina-database-1-net=10.31.2.100, 172.28.216.63|sabrina-database-8-24|odc-r06-oscompute-43|8|24G
+ddb|f63f706b-5c2e-4b29-9a31-8317bb904cab|sabrina-dbchatbot-2|ACTIVE|Running|sabrina-database-1-net=10.31.2.201, 172.28.216.70|sabrina-database-8-24|odc-r06-oscompute-43|8|24G
+ddb|072603b1-99d8-4acb-946d-8ea8a46b4b6e|sabrina-dbchatbot-1|ACTIVE|Running|sabrina-database-1-net=10.31.2.68, 172.28.216.216|sabrina-database-8-24|odc-r06-oscompute-43|8|24G
+ddb|c9bce5f5-d9d6-4af5-be82-1af6c06e873f|odc-prd-k8s-ingress-03|ACTIVE|Running|devops-backend-01=10.40.1.222, 172.28.219.213|c2-standard-8-1s|odc-r08-oscompute-15|8|16G
+ddb|bfd2b62e-c606-4e99-8b77-ae1fa500285c|odc-prd-k8s-ingress-02|ACTIVE|Running|devops-backend-01=10.40.1.221, 172.28.219.212|c2-standard-8-1s|odc-r06-oscompute-37|8|16G
+ddb|9ff20ddc-92ce-48b2-9f9b-d2cfd399c30d|odc-prd-k8s-ingress-01|ACTIVE|Running|devops-backend-01=10.40.1.220, 172.28.219.211|c2-standard-8-1s|odc-r06-oscompute-37|8|16G
+ddb|8db11037-5707-4b07-8ff4-08c032e16fef|sabrina-appchatbot-1|ACTIVE|Running|sabrina-backend-1-net=10.31.0.5, 172.28.216.252|n2-standard-4-1s|odc-r06-oscompute-37|4|16G
+ddb|7e7b1d78-7b9b-4ca9-834e-d202aca58359|sabrina-appchatbot-1|ACTIVE|Running|sabrina-backend-1-net=10.31.0.100, 172.28.216.3|n2-standard-4-1s|odc-r06-oscompute-37|4|16G
+ddb|a75c2719-6efb-42b0-93e6-1fb11e06d31b|sabrina-webchatbot-2|ACTIVE|Running|sabrina-frontend-1-net=10.31.1.75, 172.28.216.151|c2-standard-4-1s|odc-r06-oscompute-37|4|8G
+ddb|bb59a656-310a-4d1d-9a37-2186511fb4b4|sabrina-webchatbot-1|ACTIVE|Running|sabrina-frontend-1-net=10.31.1.168, 172.28.216.225|c2-standard-4-1s|odc-r06-oscompute-37|4|8G
+ddb-staging|4eb80dc7-5c2b-4dbc-ab85-1256b226c419|cbm-rabbitmq-staging-odc-1|ACTIVE|Running|net-cbm-database-staging-1=10.30.12.214|c2-standard-2-1s|odc-r06-oscompute-37|2|4G
+ddb-staging|1fc67136-98df-4821-9e45-71a64fa527f9|cbm-db-lb-percona-staging-odc|ACTIVE|Running|net-cbm-database-staging-1=10.30.12.248, 172.28.221.1|c2-standard-2-1s|odc-r06-oscompute-37|2|4G
+ddb-staging|9209f448-26eb-44d2-85a5-761bc8f9de3e|cbm-db-percona-staging-odc-3|ACTIVE|Running|net-cbm-database-staging-1=10.30.12.25|n2-standard-4-1s|odc-r06-oscompute-37|4|16G
+ddb-staging|7ebe0d35-461f-4314-be13-f01e77a56e7b|cbm-db-percona-staging-odc-2|ACTIVE|Running|net-cbm-database-staging-1=10.30.12.126|n2-standard-4-1s|odc-r06-oscompute-37|4|16G
+ddb-staging|2944d338-06e3-4c11-b705-59385b3316cc|cbm-db-percona-staging-odc-1|ACTIVE|Running|net-cbm-database-staging-1=10.30.12.162|n2-standard-4-1s|odc-r06-oscompute-37|4|16G
+admin|20b9571d-b2c2-4d2f-a728-af574ae6e212|uptime-kuma|ACTIVE|Running|Dev_Network=172.28.227.164; Prod_Network=172.28.217.41; admin-net-prod=192.168.100.53, 172.28.218.178|n2-high-8-16-1s|odc-r06-oscompute-37|8|16G
+admin|8a4cf526-7e39-4fe6-ae0a-c4e52cd80f26|tes-pjr|ACTIVE|Running|admin-net-prod=192.168.100.205|n2-highcpu-4-1s|odc-r06-oscompute-37|4|4G
+edm|bb288a9e-431b-49e0-aabc-4ffc281335ad|odc-edm-prd-k8s-lb-ingress-1|ACTIVE|Running|edm-k8s-prod-net=10.40.220.141|c2-standard-4-1s|odc-r07-oscompute-29|4|8G
+edm|c43a32e4-3179-4384-a1b9-b6ac3ee55872|odc-edm-prd-k8s-jenkins|ACTIVE|Running|edm-k8s-prod-net=10.40.220.103, 172.28.217.95|c2-standard-4-1s|odc-r06-oscompute-37|4|8G
+edm|736cd520-eedf-4032-9e0f-fca03121d331|odc-edm-prd-k8s-lb-ingress-3|ACTIVE|Running|edm-k8s-prod-net=10.40.220.143|c2-standard-4-1s|odc-r08-oscompute-18|4|8G
+edm|99f8d7c3-9d5c-41c1-b663-64719f38bd9e|odc-edm-prd-k8s-nfs-server|ACTIVE|Running|edm-k8s-prod-net=10.40.220.102|c2-standard-2-1s|odc-r06-oscompute-37|2|4G
+edm|a0130858-bbd4-4e51-b849-f48e766554ba|odc-edm-prd-k8s-registry|ACTIVE|Running|edm-k8s-prod-net=10.40.220.104|n2-highcpu-2-1s|odc-r09-oscompute-06|2|2G
+edm|6a6c8931-c59b-4118-b359-0ae6c6f4494d|odc-edm-prd-k8s-lb-ingress-2|ACTIVE|Running|edm-k8s-prod-net=10.40.220.142|c2-standard-4-1s|odc-r06-oscompute-37|4|8G
+edm|3b37f168-897e-42ab-92f3-88a6bf0a97e0|odc-edm-prd-k8s-worker-5|ACTIVE|Running|edm-k8s-prod-net=10.40.220.125|c2-standard-16-1s|odc-r08-oscompute-16|16|32G
+edm|5d5899ad-1f34-4bf5-8ac0-3ece18b75295|odc-edm-prd-k8s-worker-9|ACTIVE|Running|edm-k8s-prod-net=10.40.220.129|c2-standard-16-1s|odc-r06-oscompute-41|16|32G
+edm|f560ce63-3523-43bc-94ed-24069801f29d|odc-edm-prd-k8s-worker-8|ACTIVE|Running|edm-k8s-prod-net=10.40.220.128|c2-standard-16-1s|odc-r09-oscompute-11|16|32G
+edm|b039b600-5e62-4007-a286-57c58bf7437b|odc-edm-prd-k8s-worker-7|ACTIVE|Running|edm-k8s-prod-net=10.40.220.127|c2-standard-16-1s|odc-r07-oscompute-26|16|32G
+edm|572ac32a-f949-4b94-b7f7-3c0736609685|odc-edm-prd-k8s-worker-10|ACTIVE|Running|edm-k8s-prod-net=10.40.220.130|c2-standard-16-1s|odc-r08-oscompute-15|16|32G
+edm|4f8b4e70-54f2-436c-99ef-1c0941349f82|odc-edm-prd-k8s-worker-6|ACTIVE|Running|edm-k8s-prod-net=10.40.220.126|c2-standard-16-1s|odc-r07-oscompute-32|16|32G
+edm|714e9b34-ed13-4c13-8b97-63f220a7847b|odc-edm-prd-k8s-worker-11|ACTIVE|Running|edm-k8s-prod-net=10.40.220.131|c2-standard-16-1s|odc-r09-oscompute-03|16|32G
+edm|eb049640-dad8-4fcb-a310-e9fba1c9d6cd|odc-edm-prd-k8s-worker-4|ACTIVE|Running|edm-k8s-prod-net=10.40.220.124|c2-standard-16-1s|odc-r09-oscompute-03|16|32G
+edm|05db3d4f-30a1-449d-a952-d28c86890dfe|odc-k8s-ops-monit|ACTIVE|Running|edm-k8s-prod-net=10.40.220.251|c2-standard-8-1s|odc-r06-oscompute-39|8|16G
+edm|53102ebe-b5bf-4624-9e12-c6d807a58848|odc-edm-prd-k8s-worker-3|ACTIVE|Running|edm-k8s-prod-net=10.40.220.123|c2-standard-16-1s|odc-r07-oscompute-33|16|32G
+edm|9ae372e9-d024-4c24-8760-f965ef2f9629|odc-edm-prd-k8s-worker-2|ACTIVE|Running|edm-k8s-prod-net=10.40.220.122|c2-standard-16-1s|odc-r08-oscompute-20|16|32G
+edm|af20f2c0-50b5-4f16-a810-5380109d0fae|odc-edm-prd-k8s-worker-1|ACTIVE|Running|edm-k8s-prod-net=10.40.220.121|c2-standard-16-1s|odc-r08-oscompute-17|16|32G
+edm|e98be809-fe4a-4bf0-b193-5535a787f24a|odc-edm-prd-k8s-master-3|ACTIVE|Running|edm-k8s-prod-net=10.40.220.113|n2-standard-4-1s|odc-r07-oscompute-30|4|16G
+edm|9532a19c-f43c-44e6-a7e6-0c44464a5cf1|odc-edm-prd-k8s-master-2|ACTIVE|Running|edm-k8s-prod-net=10.40.220.112|n2-standard-4-1s|odc-r08-oscompute-21|4|16G
+edm|7f488751-67c7-4ab6-b42d-76434c64455b|odc-edm-prd-k8s-master-1|ACTIVE|Running|edm-k8s-prod-net=10.40.220.111, 172.28.216.140|n2-standard-4-1s|odc-r06-oscompute-40|4|16G
+ddb|7585f130-2e28-4885-b68a-77cfb7a70c5f|cbm-percona-db-prd-odc-3|ACTIVE|Running|cbm-database-1-net=10.40.17.16, 172.28.216.21|n2-standard-4-1s|odc-r06-oscompute-40|4|16G
+system-monitoring|f19afae9-27c2-445e-96b1-c784476d117c|loki-bm-odc-gti|ACTIVE|Running|monitoring-net=192.168.100.185, 172.28.217.99|c2-highcpu-8-1s|odc-r06-oscompute-40|8|8G
+system-monitoring|3e0761ae-f930-475b-8749-986bb3f5c334|prometheus-bm-odc-gti|ACTIVE|Running|monitoring-net=192.168.100.50, 172.28.217.240|c2-highcpu-8-1s|odc-r06-oscompute-40|8|8G
+ddb|4002fc3b-c107-46e9-ac62-b0f4c795e0f8|briapi-postgres-ms-valas-nego-api-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.232, 172.28.216.229|c2-standard-4-1s|odc-r07-oscompute-26|4|8G
+ddb|d8467d83-7b6e-49bf-9553-6f430ace28c4|devops-elk-prod-odc-03|ACTIVE|Running|Prod_Network=172.28.220.58; devops-backend-01=10.40.1.173|n2-standard-16-1s|odc-r07-oscompute-26|16|64G
+ddb|4ada7a86-dd34-42a8-812d-1326e569492a|devops-elk-prod-odc-02|ACTIVE|Running|Prod_Network=172.28.220.56; devops-backend-01=10.40.1.35|n2-standard-16-1s|odc-r07-oscompute-26|16|64G
+ddb|4ec52ea6-7db3-4eea-9ac0-44d66137d269|website-BRI-NFS-odc-3|ACTIVE|Running|website-bri-1-net=10.40.27.26|c2-standard-2-1s|odc-r07-oscompute-27|2|4G
+kubernetes|b594fa59-8cbe-4ad9-a06b-9993291f58dc|POC-Openstack-ODC-Firewall-Workstation-VM2|SHUTOFF|Shutdown|Prod_Network=172.28.216.171|n2-standard-2-1s|odc-r08-oscompute-17|2|8G
+kubernetes|344d7940-d26e-4b38-b910-7f7eac9fdebb|POC-Openstack-ODC-Firewall-Workstation-VM1|ACTIVE|Running|Prod_Network=172.28.216.49|n2-standard-2-1s|odc-r06-oscompute-39|2|8G
+kubernetes|196a7b4b-3f77-4d82-be9c-6c40e148fa6f|POC-Openstack-ODC-Firewall-Fortigate-VM-Tenant-Zone-B|ACTIVE|Running|Prod_Network=172.28.217.86|n2-standard-2-1s|odc-r06-oscompute-39|2|8G
+kubernetes|91fde735-e072-43e0-a4b7-bcb689939e65|POC-Openstack-ODC-Firewall-Fortigate-VM-Tenant-Zone-A2|ACTIVE|Running|Prod_Network=172.28.217.11|n2-standard-2-1s|odc-r06-oscompute-39|2|8G
+kubernetes|8a8e017c-859f-496f-ba53-f5a0e1ba30ad|POC-Openstack-ODC-Firewall-Fortigate-VM-Tenant-Zone-A1|ACTIVE|Running|Prod_Network=172.28.217.101|n2-standard-2-1s|odc-r07-oscompute-29|2|8G
+kubernetes|2589f585-ad15-440f-8a3d-62bf11d3c174|POC-Openstak-ODC-Firewall-Fortigate-VM-Service-Tenant|ACTIVE|Running|Prod_Network=172.28.217.74|n2-standard-2-1s|odc-r09-oscompute-06|2|8G
+ddb|d3c7f9b5-e21c-444a-b51e-c89188ea3b80|website-BRI-NFS-odc-02|ACTIVE|Running|Prod_Network=172.28.216.243; website-bri-1-net=10.40.27.52|c2-standard-2-1s|odc-r06-oscompute-39|2|4G
+admin|386e6a0f-96ef-4e4c-a4a9-1cd78eadbee7|riset  upgrade os|ACTIVE|Running|admin-net-prod=192.168.100.66|n2-highcpu-4-1s|odc-r07-oscompute-28|4|4G
+ddb|47814129-2bb1-40fa-86c0-41b3184e6b96|devops-backup-barman-prod-odc-1|ACTIVE|Running|Prod_Network=172.28.217.82; devops-backend-01=10.40.1.51|c2-standard-4-1s|odc-r07-oscompute-27|4|8G
+ddb-staging|608a1c56-8562-4f28-a86c-8bfe8e2ae73b|devops-backup-barman-staging-odc-1|ACTIVE|Running|Prod_Network=172.28.221.234; net-staging-devops=10.30.4.238|c2-standard-4-1s|odc-r09-oscompute-09|4|8G
+ddb|64c915b7-d9f8-4e1f-90be-8dcd22b66881|ceria-merchant-dashboard-db-postgres-1|ACTIVE|Running|ceria-database-1=10.40.8.152, 172.28.216.218|c2-standard-4-1s|odc-r06-oscompute-40|4|8G
+ddb|041c5220-07b6-467d-95fe-a4a00224bff3|brimola-mysql-db-report-prd-new|ACTIVE|Running|Prod_Network=172.28.217.21; brimola-db-net-01=10.40.30.33|db-brimola-24-24|odc-r08-oscompute-19|24|24G
+ddb|ad54c170-e85a-47cb-bd19-c8d06d0a3671|briapi-lb-edb-prod-odc-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.169; Prod_Network=172.28.216.182|c2-standard-8-1s|odc-r06-oscompute-43|8|16G
+ddb-staging|1875a8eb-44ff-4389-b84b-7494805d87a7|briapi-lb-edb-staging-odc-1|ACTIVE|Running|Prod_Network=172.28.221.45; net-staging-01-briapi-backend-01=10.30.3.78|c2-standard-8-1s|odc-r08-oscompute-20|8|16G
+ddb-staging|248d81ac-5c09-493d-889c-f0e2821562d5|briapi-lb-edb-staging-odc-2|ACTIVE|Running|Prod_Network=172.28.221.12; net-staging-01-briapi-backend-01=10.30.3.96|c2-standard-8-1s|odc-r09-oscompute-07|8|16G
+ddb-staging|67ee8478-9868-42b1-a8db-9f62441d3795|briapi-db-edb-staging-odc-3|ACTIVE|Running|Prod_Network=172.28.221.108; net-staging-01-briapi-backend-01=10.30.3.165|n2-standard-8-1s|odc-r07-oscompute-26|8|32G
+ddb-staging|6b552b1d-fed0-44b2-85f5-e77ab3a01638|briapi-db-edb-staging-odc-2|ACTIVE|Running|Prod_Network=172.28.221.96; net-staging-01-briapi-backend-01=10.30.3.59|n2-standard-8-1s|odc-r07-oscompute-26|8|32G
+ddb-staging|b3f36b86-a67e-4b30-a4c6-09aa44394482|briapi-db-edb-staging-odc-1|ACTIVE|Running|Prod_Network=172.28.221.104; net-staging-01-briapi-backend-01=10.30.3.237|n2-standard-8-1s|odc-r07-oscompute-26|8|32G
+ddb|734d6983-84ee-4117-b6a9-a64249dbf65c|briapi-lb-edb-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.53; Prod_Network=172.28.216.154|c2-standard-8-1s|odc-r07-oscompute-33|8|16G
+ddb|fb285d69-d480-43d4-b6c9-fe8abbcccb43|briapi-db-edb-prod-odc-3|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.136; Prod_Network=172.28.216.202|c2-standard-16-1s|odc-r07-oscompute-27|16|32G
+ddb|5ead08d4-5c45-482c-92c9-5ff1e40952f4|briapi-db-edb-prod-odc-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.131; Prod_Network=172.28.216.198|c2-standard-16-1s|odc-r08-oscompute-19|16|32G
+ddb|e3ebdc41-ce4b-4489-aa73-46647022ac48|briapi-db-edb-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.114; Prod_Network=172.28.216.189|c2-standard-16-1s|odc-r07-oscompute-29|16|32G
+ddb|8f0be756-17ae-43cc-86dc-33ede33ab96f|jmeter-odc-prod-2|ACTIVE|Running|website-bri-1-net=10.40.27.117, 172.28.216.135|c2-standard-4-1s|odc-r08-oscompute-19|4|8G
+ddb|cec50424-f9cc-4da3-941a-1cb00a21bd7c|devops-elk-prod-odc|ACTIVE|Running|devops-backend-01=10.40.1.158, 172.28.220.104|n2-standard-16-1s|odc-r08-oscompute-19|16|64G
+ddb|dc2de40c-f473-4101-88cb-3474ba78d9f6|jmeter-odc-prod-1|ACTIVE|Running|website-bri-1-net=10.40.27.90, 172.28.216.132|c2-standard-4-1s|odc-r07-oscompute-27|4|8G
+kubernetes|8f3963a1-5659-4320-9491-315b2e5b0af1|test_dev|ACTIVE|Running|test=192.168.50.6|n2-standard-2-1s|odc-r07-oscompute-29|2|8G
+kubernetes|96e9c1a3-4bf3-4d15-8f18-8f1c1278dead|POC-Openstack-ODC-Database|ACTIVE|Running|internal-net-dev=192.168.100.114, 172.28.225.116|n2-standard-2-1s|odc-r06-oscompute-43|2|8G
+kubernetes|f5e10fcb-246b-4549-bd6f-8622c0caae9e|POC-Openstack-ODC-Kubernetes-Cluster-Versi-1-20-VM2|ACTIVE|Running|internal-net-dev=192.168.100.231, 172.28.227.156|n2-standard-4-1s|odc-r08-oscompute-19|4|16G
+kubernetes|039a3909-1745-4b74-80bb-2b8e5c30f053|POC-Openstack-ODC-Kubernetes-Cluster-Versi-1-20-VM1|ACTIVE|Running|internal-net-dev=192.168.100.34, 172.28.228.220|n2-standard-4-1s|odc-r07-oscompute-33|4|16G
+kubernetes|cfb310c6-92b1-400b-a4ea-c984a0fcbb53|POC-Openstack-ODC-Kubernetes-Cluster-Versi-1-20-Master|ACTIVE|Running|internal-net-dev=192.168.100.250, 172.28.225.22|n2-standard-4-1s|odc-r07-oscompute-29|4|16G
+kubernetes|8b44c4e7-61ee-4e8d-90f5-5c8df9a3ea53|POC-Openstack-ODC-Kubernetes-Cluster-Versi-1-20-VM3|ACTIVE|Running|internal-net-dev=192.168.100.14, 172.28.226.142|n2-standard-4-1s|odc-r06-oscompute-43|4|16G
+kubernetes|c851f07c-3796-4acd-b92c-d4e8dd16dfb6|POC-Openstack-ODC-LB-ingress|ACTIVE|Running|internal-net-dev=192.168.100.126, 172.28.227.199|n2-standard-2-1s|odc-r07-oscompute-29|2|8G
+kubernetes|29007290-9e2b-42ae-9291-a2939ee00804|POC-Openstack-ODC-NFS|ACTIVE|Running|internal-net-dev=192.168.100.101, 172.28.225.85|n2-standard-2-1s|odc-r07-oscompute-29|2|8G
+edm|3d0a9104-037a-4c93-a083-d9b5764d720c|hbase-worker-node-2|ACTIVE|Running|Hbase_Network=10.148.2.225; Prod_Network=172.28.220.2; replikasi-cloudera-network=172.28.120.55|dedicated-16-128-numa-2|odc-r09-oscompute-02|16|128G
+ddb|12b0d2ef-9d50-4aa1-84f8-72e097cb96c8|briapi-bank-garansi-db-postgres-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.231|c2-standard-4-1s|odc-r07-oscompute-32|4|8G
+ddb|d9768c36-024a-4d6a-8847-1bea67c71a12|briapi-bank-garansi-db-postgres-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.173; Prod_Network=172.28.216.150|c2-standard-4-1s|odc-r08-oscompute-18|4|8G
+edm|cdc72b3c-c9b3-4dea-98eb-58d53ad74677|cloudera-worker-node-23|ACTIVE|Running|Cloudera_Network=10.148.0.195, 172.28.218.4; internal-replikasi-cloudera-net=10.50.0.173, 172.28.120.36|n2-standard-32-1s|odc-r09-oscompute-05|32|128G
+ddb|0e5df057-d0de-4425-a49e-57e495ae7bc5|briapi-get-rsa-key-snap-devportal_db-postgres-prod-odc-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.223|c2-standard-4-1s|odc-r09-oscompute-05|4|8G
+ddb|3589a1c5-3468-4f37-87fe-4fd663e01281|briapi-get-rsa-key-snap-devportal_db-postgres-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.227, 172.28.216.213|c2-standard-4-1s|odc-r06-oscompute-42|4|8G
+ddb|63b4848e-6ea3-482a-b1fb-ded395279f5e|website-BRI-db-odc-mysql-1|ACTIVE|Running|website-bri-1-net=10.40.27.14, 172.28.216.131|n2-standard-4-1s|odc-r09-oscompute-05|4|16G
+ddb|3d851827-1cb9-46a4-9596-d4d2a9a88f3f|website-BRI-appserver-1|ACTIVE|Running|website-bri-1-net=10.40.27.24, 172.28.216.127|n2-highmem-8-1s|odc-r09-oscompute-05|8|64G
+ddb|99aa6fe5-fdfb-441d-87a4-178b97dcaaab|website-BRI-appserver-2|ACTIVE|Running|website-bri-1-net=10.40.27.33, 172.28.216.128|n2-highmem-8-1s|odc-r08-oscompute-18|8|64G
+ddb|3ae7f049-38eb-4bd5-ab32-9bf67d5ab2a9|website-BRI-webserver-2|ACTIVE|Running|website-bri-1-net=10.40.27.115, 172.28.216.122|n2-standard-4-1s|odc-r06-oscompute-41|4|16G
+ddb|649a85fa-8827-4d27-91a6-de84a0104185|website-BRI-webserver-1|ACTIVE|Running|website-bri-1-net=10.40.27.177, 172.28.216.120|n2-standard-4-1s|odc-r09-oscompute-05|4|16G
+ddb|0e36ba3c-cbe6-4fd2-9abd-b17b95a9d9a2|pinang-database-och-slave-node-2|ACTIVE|Running|pinang-database-1=10.40.9.116, 172.28.218.9|c2-standard-16|odc-r08-oscompute-15|16|32G
+ddb|f32c755a-186d-4a32-a665-5a2191379a9e|odc-prd-k8s-worker-04|ACTIVE|Running|devops-backend-01=10.40.1.31|k9-standard-m1-1s|odc-r08-oscompute-15|8|16G
+ddb|08d2c021-d71b-4ff0-b14e-879f049341d3|briapi-snap-bi-direct-debit-cockroach-db-prod-odc-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.29, 172.28.216.56|n2-highmem-8-1s|odc-r09-oscompute-04|8|64G
+ddb|33076035-d486-440c-beae-6e12bd08ff33|briapi-snap-bi-direct-debit-cockroach-db-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.161, 172.28.216.55|n2-highmem-8-1s|odc-r06-oscompute-39|8|64G
+ddb|c2043bf8-6963-4a06-bc71-957fba54531e|briapi-snap-bi-direct-debit-cockroach-db-prod-odc-3|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.64, 172.28.216.57|n2-highmem-8-1s|odc-r09-oscompute-11|8|64G
+ddb|125300cb-ed68-476e-8057-3f8e16273041|briapi-snap-bi-non-simulator-haproxy-db-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.210, 172.28.216.48|c2-standard-4-1s|odc-r08-oscompute-15|4|8G
+ddb|c744b16a-7281-4db0-a9da-2c5c737323a6|briapi-snap-bi-non-simulator-redis-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.186|c2-standard-4-1s|odc-r08-oscompute-15|4|8G
+ddb|62a4f8b0-ed07-4bf5-8aca-474741aabb6d|ambilin-db-postgres-2|ACTIVE|Running|devops-backend-01=10.40.1.69|c2-standard-4-1s|odc-r07-oscompute-28|4|8G
+ddb|39682f29-a16f-4af5-9b37-dddba3c6a782|ambilin-db-postgres-1-odc|ACTIVE|Running|Prod_Network=172.28.216.126; devops-backend-01=10.40.1.193|c2-standard-4-1s|odc-r09-oscompute-05|4|8G
+admin|157a61d2-56b8-4ca2-91c3-8d6a5e759353|btech-tes-latency-1 (blackbox agent)|ACTIVE|Running|admin-net-prod=192.168.100.118, 172.28.217.60|c2-standard-0-1s|odc-r08-oscompute-15|1|1G
+edm|c87b6a88-bbfa-4e34-8239-a88cdfa944b0|cloudera-worker-node-17|ACTIVE|Running|Cloudera_Network=10.148.0.216, 172.28.218.29; internal-replikasi-cloudera-net=10.50.0.243, 172.28.120.30|n2-highmem-16|odc-r08-oscompute-20|16|128G
+edm|4da48822-dea6-49d9-85a9-6b8f41348979|hbase-worker-node-3|ACTIVE|Running|Hbase_Network=10.148.2.220; Prod_Network=172.28.220.68; replikasi-cloudera-network=172.28.120.56|dedicated-16-128-numa-2|odc-r08-oscompute-12|16|128G
+admin|3b31ad18-ba69-492b-910e-1bd16afe245d|btech-minioserver-risetkops|ACTIVE|Running|Prod_Network=172.28.216.235|c2-standard-2-1s|odc-r09-oscompute-05|2|4G
+ddb|5d473c9b-3a14-49fe-9868-1c495298cef9|ambilin-server-2-odc|ACTIVE|Running|devops-backend-01=10.40.1.87, 172.28.218.180|c2-standard-16-1s|odc-r09-oscompute-04|16|32G
+ddb|47c649be-5090-4502-b365-5015f1bb2dd7|ambilin-server-1-odc|ACTIVE|Running|devops-backend-01=10.40.1.147, 172.28.216.224|c2-standard-16-1s|odc-r09-oscompute-04|16|32G
+ddb|b2dd3a76-74e9-4ab4-89f6-f427748064ec|ambilin-redis-2|ACTIVE|Running|devops-backend-01=10.40.1.127|n2-standard-2-1s|odc-r07-oscompute-33|2|8G
+ddb|09f2c417-c645-40e7-8f2c-ce2f1d0ed599|ambilin-redis-1-odc|ACTIVE|Running|devops-backend-01=10.40.1.141, 172.28.216.157|n2-standard-2-1s|odc-r06-oscompute-37|2|8G
+edm|89b7fcc2-349e-4d04-b753-e8cd0cc5be61|Test-Cloudera|ACTIVE|Running|Cloudera_Network=10.148.0.8, 172.28.218.100; edm-prod-devops-10-40-0-0=10.40.0.40; internal-replikasi-cloudera-net=10.50.0.241|c2-standard-4-1s|odc-r09-oscompute-04|4|8G
+admin|185b3950-37f6-49d2-b9fc-eb1eb9df5204|k8s-registry-repo|ACTIVE|Running|admin-net-dev=192.168.88.151; admin-net-prod=192.168.100.229, 172.28.220.129|n2-highcpu-2-1s|odc-r07-oscompute-32|2|2G
+ddb|ef2bf4ea-83bc-440a-964a-61f2ce214724|briapi-snap-bi-log-non-simulator-db-postgres-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.248, 172.28.216.141|k9-standard-l1-1s|odc-r09-oscompute-04|4|8G
+ddb-development|c0677d97-92a3-40d4-af3c-c8dfcafad879|rhel-fsck|ACTIVE|Running|devops-backend-1=10.10.4.139, 172.28.224.30|n2-highcpu-2-1s|odc-r09-oscompute-04|2|2G
+ddb|2dc2f07f-3813-47bd-8d4e-ca54c01a73b6|keceku-server-6|ACTIVE|Running|devops-backend-01=10.40.1.229|c2-standard-16-1s|odc-r09-oscompute-03|16|32G
+ddb|4e39558d-02a0-4996-b737-66c2b545b2dd|keceku-server-4|ACTIVE|Running|devops-backend-01=10.40.1.154|c2-standard-16-1s|odc-r09-oscompute-04|16|32G
+ddb|61c4a008-6a14-4136-9c51-69b726563609|keceku-server-5|ACTIVE|Running|devops-backend-01=10.40.1.232|c2-standard-16-1s|odc-r07-oscompute-33|16|32G
+ddb|4e023bd3-b4e5-4353-826d-d91204c5ee41|briguna-server-4|ACTIVE|Running|devops-backend-01=10.40.1.132|c2-standard-16-1s|odc-r09-oscompute-04|16|32G
+ddb|50ec7ce4-fa36-4414-a02c-977193b975fd|briguna-server-6|ACTIVE|Running|devops-backend-01=10.40.1.112|c2-standard-16-1s|odc-r06-oscompute-39|16|32G
+ddb|862937d7-46a8-4b4b-b907-b474ff3920e2|briguna-server-5|ACTIVE|Running|devops-backend-01=10.40.1.212|c2-standard-16-1s|odc-r07-oscompute-33|16|32G
+ddb-development|5a08f434-97ed-427d-92ca-09c258b6bc95|btech-postgre|ACTIVE|Running|devops-backend-1=10.10.4.99, 172.28.224.173|n2-highcpu-2-1s|odc-r09-oscompute-04|2|2G
+admin|83f99a29-90d4-4a98-a08d-1c96f2705f8b|ubuntu-local-repository|ACTIVE|Running|Dev_Network=172.28.226.218; Prod_Network=172.28.222.234; admin-net-prod=192.168.100.100|m1.xlarge-1s|odc-r09-oscompute-04|8|16G
+ddb|080216a3-554a-4539-a200-71b150da63f4|briapi-snap-bi-non-simulator-db-postgres-prod-odc-1|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.214, 172.28.216.43|k9-standard-l1-1s|odc-r09-oscompute-04|4|8G
+ddb|6cb6f0bc-6fed-4a41-b22b-891ea91e55f1|briapi-snap-bi-non-simulator-db-postgres-prod-odc-3|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.92, 172.28.216.96|k9-standard-l1-1s|odc-r08-oscompute-15|4|8G
+ddb|b9d72888-f34e-4bbb-aa5a-8b605c205208|briapi-snap-bi-non-simulator-db-postgres-prod-odc-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.37, 172.28.216.98|k9-standard-l1-1s|odc-r07-oscompute-30|4|8G
+edm|2cf4225d-4150-4d80-b288-3f3681168705|cloudera-worker-node-4|ACTIVE|Running|Cloudera_Network=10.148.0.82, 172.28.218.19; internal-replikasi-cloudera-net=10.50.0.181, 172.28.120.17|n2-highmem-16-1s|odc-r09-oscompute-04|16|128G
+ddb|dd4316ae-cfd3-4e09-a2fb-23997470e2eb|odc-prd-k8s-worker-02|ACTIVE|Running|devops-backend-01=10.40.1.29|k9-standard-m1-1s|odc-r06-oscompute-37|8|16G
+edm|2cc40688-e821-425c-ae0f-9bd1b7c20b53|node-nifi-hbase-3|ACTIVE|Running|Hbase_Network=10.148.2.118; Prod_Network=172.28.217.201|dedicated-16-128-numa-4|odc-r07-oscompute-23|16|128G
+edm|52ee06f7-35c1-4ed7-aac1-e19dbab320c1|node-nifi-hbase-2|ACTIVE|Running|Hbase_Network=10.148.2.202; Prod_Network=172.28.219.174|dedicated-16-128-numa-4|odc-r09-oscompute-02|16|128G
+edm|565df425-2200-4f8f-86cc-cc8b6dfb9687|node-nifi-hbase-1|ACTIVE|Running|Hbase_Network=10.148.2.197; Prod_Network=172.28.223.8|dedicated-16-128-numa-4|odc-r06-oscompute-36|16|128G
+ddb-development|70f4fe0e-73be-416e-8d6b-a046928b82f4|devops-db-postgres-odc-1|ACTIVE|Running|devops-backend-1=10.10.4.34, 172.28.224.83|c2-standard-4-1s|odc-r07-oscompute-33|4|8G
+ddb-development|e504152d-e374-41e6-b8df-88d82225c73f|devops-db-postgres-odc-2|ACTIVE|Running|Dev_Network=172.28.224.110|c2-standard-4-1s|odc-r06-oscompute-37|4|8G
+admin|dcacda40-6aca-4dac-ba39-06f085419334|_jangan-dihapus_local-repository-rhel-7|ACTIVE|Running|Prod_Network=172.28.219.59; admin-net-prod=192.168.100.110|m1.large-1s|odc-r06-oscompute-37|4|4G
+system-monitoring|2e1556b9-8f03-4308-a88f-3b5a636a991e|grafana-jumphost|SHUTOFF|Shutdown|monitoring-net=192.168.100.104|m1.large-1s|odc-r06-oscompute-39|4|4G
+kafka-production-stretch|21688db2-bb40-421e-8bdd-0b415710127c|Kafka Production Stretch (ZK2) - 1236|ACTIVE|Running|Prod_Network=172.28.217.213; kafka-prod-net=192.168.10.203|kafka-production-8-8|odc-r08-oscompute-20|8|8G
+system-monitoring|4c0b9bb2-d69d-4591-bbca-92812946b147|jumphost-grafana|SHELVED_OFFLOADED|Shutdown|monitoring-net=192.168.100.53|m1.large-1s||4|4G
+edm|b180c6d1-8d06-4587-959c-6c30f34a9c64|local-repository|ACTIVE|Running|Prod_Network=172.28.219.133|m1.large-1s|odc-r07-oscompute-26|4|4G
+edm|ff5dfb1e-9a95-429f-bf35-6c588736100c|hbase-utility-node-1-test|ACTIVE|Running|Hbase_Network=10.148.2.24; Prod_Network=172.28.218.154|n2-highmem-16|odc-r08-oscompute-20|16|128G
+ddb-development|3abc77a8-7645-4b47-bae4-4baedb2aa447|ceria-keycloak_ckey-staging-1-snap|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.206|c2-standard-4-shared|odc-r09-oscompute-09|4|8G
+edm|020c6c59-602d-43dd-a509-727005473506|hbase-utility-node-1|ACTIVE|Running|Hbase_Network=10.148.2.106; Prod_Network=172.28.217.44; replikasi-cloudera-network=172.28.120.60|n2-highmem-32-dedicated-hbase-2|odc-r09-oscompute-01|32|128G
+edm|0293c7e9-8df8-4e09-91d5-56147ea22c42|hbase-master-node-2|ACTIVE|Running|Hbase_Network=10.148.2.69; Prod_Network=172.28.218.143; replikasi-cloudera-network=172.28.120.52|n2-highmem-32-dedicated-hbase-2|odc-r08-oscompute-14|32|128G
+edm|d4a7b673-2079-459b-8066-6e8e795172f2|hbase-master-node-1|ACTIVE|Running|Hbase_Network=10.148.2.185; Prod_Network=172.28.219.121; replikasi-cloudera-network=172.28.120.51|n2-highmem-32-dedicated-hbase-2|odc-r07-oscompute-25|32|128G
+edm|32394d95-6255-483c-8206-3896c52f3cbc|hbase-master-node-3|ACTIVE|Running|Hbase_Network=10.148.2.99; Prod_Network=172.28.218.97; replikasi-cloudera-network=172.28.120.53|n2-highmem-32-dedicated-hbase-2|odc-r07-oscompute-23|32|128G
+edm|b752566f-a2ca-4dbb-a46e-25818dc6330b|btech-test-FIP|ACTIVE|Running||n2-highcpu-2-1s|odc-r09-oscompute-05|2|2G
+system-monitoring|fba86c07-7bc3-49b7-94af-d96f8e290fcc|monitor-latency-gti|ACTIVE|Running|monitoring-net=192.168.100.154, 172.28.216.46|n2-highcpu-8-1s|odc-r08-oscompute-19|8|8G
+admin|df43e14d-1319-4636-82fe-6a7bd34d9152|ntp-local-odc|ACTIVE|Running|admin-net-prod=192.168.100.129, 172.28.217.210|n2-highcpu-2-1s|odc-r09-oscompute-11|2|2G
+kafka-production-stretch|976bb066-d7bd-46f8-90ba-decb2627e13e|Kafka Production Stretch (Broker)-1231--1|ACTIVE|Running|Prod_Network=172.28.216.61; kafka-prod-net=192.168.10.173|kafka-production-48-256|odc-r09-oscompute-03|48|256G
+kafka-production-stretch|b8cad2a3-fc7c-4efa-b6a3-0f0a99e47bc1|Kafka Production Stretch (Broker)-1231--2|ACTIVE|Running|Prod_Network=172.28.216.4; kafka-prod-net=192.168.10.164|kafka-production-48-256|odc-r09-oscompute-05|48|256G
+kafka-production-stretch|fe7cae42-0b48-4fbe-ae11-43741c8633cc|Kafka Production Stretch (Broker)-1231--3|ACTIVE|Running|Prod_Network=172.28.217.151; kafka-prod-net=192.168.10.11|kafka-production-48-256|odc-r07-oscompute-32|48|256G
+admin|b4b447de-dd72-4480-a260-108e577831ce|repo-local-ubuntu-18|ACTIVE|Running|admin-net-prod=192.168.100.153, 172.28.218.186|n2-highcpu-2-1s|odc-r09-oscompute-09|2|2G
+admin|fe4a7633-e5e2-41af-a106-f35ca62420a0|repo-local-ubuntu20|ACTIVE|Running|admin-net-prod=192.168.100.156, 172.28.219.216|n2-highcpu-2-1s|odc-r09-oscompute-09|2|2G
+admin|6d7d3690-9b3e-431c-8c4f-f17fe3638136|ins-proxy-dev|ACTIVE|Running|admin-net-dev=192.168.88.66, 172.28.226.143; admin-net-prod=192.168.100.88|c2-standard-4-1s|odc-r09-oscompute-09|4|8G
+ddb|f50df078-45b3-4fa8-a5d3-b38b22c253f3|briguna-redis-1|ACTIVE|Running|ceria-redis-1-net=10.40.7.90, 172.28.216.101|n2-standard-2-1s|odc-r09-oscompute-03|2|8G
+edm|36d0aaf1-bcec-4e29-9f92-32521fc6fc25|cloudera-worker-node-12|ACTIVE|Running|Cloudera_Network=10.148.0.197, 172.28.218.15; internal-replikasi-cloudera-net=10.50.0.168, 172.28.120.25|n2-highmem-16-1s|odc-r09-oscompute-03|16|128G
+ddb|1180b4f4-8860-4786-85b1-708e92636423|ceria-briguna-db-postgres-prd-odc-1|ACTIVE|Running|ceria-database-1=10.40.8.44, 172.28.216.160|m1.xlarge-1s|odc-r08-oscompute-20|8|16G
+ddb|eb9087af-57d4-42d5-bce5-16218920e414|ceria-briguna-db-postgres-prd-odc-2|ACTIVE|Running|ceria-database-1=10.40.8.222, 172.28.216.240|m1.xlarge-1s|odc-r08-oscompute-19|8|16G
+ddb|c8f597fe-c8f3-4494-9062-9b6d7fa68830|briapi-apigee-mng_server-prod-1|ACTIVE|Running|Prod_Network=172.28.216.204|c2-standard-16-1s|odc-r09-oscompute-04|16|32G
+edm|41eada82-0978-4247-9fa3-189db042e4f2|cloudera-edge-node-1|ACTIVE|Running|Cloudera_Network=10.148.0.92, 172.28.220.164; internal-replikasi-cloudera-net=10.50.0.102, 172.28.120.42|n2-highmem-48-256-1s|odc-r08-oscompute-15|48|256G
+ddb|30898ab1-1f40-44dc-af21-a2d3c3a7351a|cbm-haproxy-db-prd-odc-1|ACTIVE|Running|cbm-database-1-net=10.40.17.216, 172.28.216.72|c2-standard-4-1s|odc-r08-oscompute-19|4|8G
+ddb|c72b0a6d-9456-4ad5-b4da-42b305bfaf02|brimola-mysql-db-report-prd-odc|ACTIVE|Running|brimola-db-net-01=10.40.30.58, 172.28.216.24|db-brimola-24-24|odc-r07-oscompute-32|24|24G
+ddb|a1a357bd-c11d-4f70-bab8-9316e8bf3289|brimola-mysql-db-core-prd-odc|ACTIVE|Running|brimola-db-net-01=10.40.30.208, 172.28.216.246|db-brimola-24-24|odc-r08-oscompute-20|24|24G
+ddb|ab628147-6375-47d4-b8a4-866ac0ce27cd|cbm-percona-db-prd-odc-2|ACTIVE|Running|cbm-database-1-net=10.40.17.106, 172.28.216.39|n2-standard-4-1s|odc-r07-oscompute-27|4|16G
+ddb|0932ca43-e8a7-4020-9fe2-de4c5861d04d|cbm-percona-db-prd-odc-1|ACTIVE|Running|cbm-database-1-net=10.40.17.63, 172.28.216.30|n2-standard-4-1s|odc-r07-oscompute-27|4|16G
+system-monitoring|80706cdd-1626-44e1-8ad7-dde47aca26dc|odc-victoriametrics-1|ACTIVE|Running|Dev_Network=172.28.228.161; monitoring-net=192.168.100.47, 172.28.218.54|m1.xlarge-1s|odc-r07-oscompute-27|8|16G
+kafka-production-stretch|0aa8a7a3-993f-4edc-b41d-6dda5f9cea6c|odc-prom-kafka-prd-stch|ACTIVE|Running|kafka-prod-net=192.168.10.115, 172.28.218.226|c2-standard-4-1s|odc-r07-oscompute-27|4|8G
+edm|d584ae3b-b0da-453b-bc2b-c09cdce495bf|odc-prom-edm|ACTIVE|Running|Cloudera_Network=10.148.0.59; DevOps_Network=10.148.1.12, 172.28.220.194; Dev_Network=172.28.225.39; Hbase_Network=10.148.2.215; edm-dev-devops-10-0-0-0=10.0.0.97; edm-k8s-prod-net=10.40.220.120; edm-prod-devops-10-40-0-0=10.40.0.87|c2-standard-4-1s|odc-r08-oscompute-15|4|8G
+ddb-staging|fcfde90c-931a-4c86-9840-36777ffd25fd|odc-prom-ddb-stg|ACTIVE|Running|k8s-staging-calico=192.168.224.252; net-devops-01=10.255.0.167, 172.28.221.20; net-staging-01-briapi-backend-01=10.30.3.97; net-staging-01-ceria-apps-01=10.30.0.126; net-staging-01-ceria-db-01=10.30.2.248; net-staging-01-ceria-frontend-01=10.30.1.194|c2-standard-4-1s|odc-r08-oscompute-15|4|8G
+ddb-development|9cf94650-0e36-4744-98ad-061de7a940a7|odc-prom-ddb-dev|ACTIVE|Running|Dev_Network=172.28.228.37; devops-backend-1=10.10.4.102; net-development-01-ceria-apps-01=10.10.0.35; net-development-01-ceria-db-01=10.10.2.183; net-development-01-ceria-frontend-01=10.10.1.159; net-development-devops-1=10.10.3.31, 172.28.224.97|c2-standard-4-1s|odc-r07-oscompute-27|4|8G
+ddb|03519217-d21b-4ef3-8c58-c7f91669abb9|odc-prom-ddb|ACTIVE|Running|Briapi-Apps-Net-01=10.40.3.186; Briapi-DB-Net-01=10.40.5.84; Prod_Network=172.28.219.222; briapi-prd-net=10.26.6.83; brimola-db-net-01=10.40.30.236; cbm-database-1-net=10.40.17.122; ceria-database-1=10.40.8.62; ceria-prd-net=10.26.2.163; ceria-redis-1-net=10.40.7.234; devops-backend-01=10.40.1.204; devops-net=10.255.0.183, 172.28.218.68; k8s-prd-net=10.255.1.102; pinang-database-1=10.40.9.197; pinang-prd-net=10.26.0.214|c2-standard-4-1s|odc-r06-oscompute-43|4|8G
+ddb|bfa4dcaf-44a9-4fa0-8c16-32c24d7c5ab4|brimola-rabbitmq-3|ACTIVE|Running|brimola-db-net-01=10.40.30.153, 172.28.216.14|c2-standard-8-1s|odc-r08-oscompute-15|8|16G
+ddb|1ba4e2b2-2c73-4983-b0d2-8817c03f430b|cbm-rabbitmq-1|ACTIVE|Running|cbm-database-1-net=10.40.17.17, 172.28.216.254|c2-standard-8-1s|odc-r07-oscompute-26|8|16G
+ddb|ee540905-0e09-46c7-80fe-4c4b316e2fe2|brimola-rabbitmq-1|ACTIVE|Running|brimola-db-net-01=10.40.30.39, 172.28.216.33|c2-standard-8-1s|odc-r08-oscompute-15|8|16G
+ddb|50458875-f481-4e76-86a2-c90a350c37ef|brimola-rabbitmq-2|ACTIVE|Running|brimola-db-net-01=10.40.30.224, 172.28.216.68|c2-standard-8-1s|odc-r08-oscompute-15|8|16G
+ddb|8e19bffc-078a-479e-bf21-66d8b010a4a1|devops-rundeck|ACTIVE|Running|devops-backend-01=10.40.1.164, 172.28.216.196|c2-standard-8-1s|odc-r08-oscompute-15|8|16G
+edm|eab7d6d9-c423-41da-a676-475db1d0d0aa|ansible-dev|ACTIVE|Running|Prod_Network=172.28.218.183; edm-dev-devops-10-0-0-0=10.0.0.75, 172.28.228.197|n2-standard-4-1s|odc-r07-oscompute-29|4|16G
+edm|cdb8cd9f-298a-41b3-8c0d-4abd0fdcde4c|ansible-prod|ACTIVE|Running|edm-prod-devops-10-40-0-0=10.40.0.198, 172.28.220.188|n2-standard-4-1s|odc-r09-oscompute-06|4|16G
+system-monitoring|c3a7377d-dfc5-42df-a427-c733fe232696|prometheus-edm|ACTIVE|Running|monitoring-net=192.168.100.142, 172.28.219.167|c2-standard-4-1s|odc-r08-oscompute-20|4|8G
+admin|5ee91b14-eef6-4e4e-9c59-8ac03b64df04|RHEL-Local-Repository-ODC|ACTIVE|Running|admin-net-prod=192.168.100.48, 172.28.222.31|k9-standard-w1-1s|odc-r07-oscompute-27|16|32G
+ddb|304e2622-6837-4e7c-a049-2a84c239be4b|devops-repo-rhel-odc-1|ACTIVE|Running|devops-backend-01=10.40.1.116, 172.28.216.17|c2-standard-4-1s|odc-r07-oscompute-27|4|8G
+admin|1d288f4b-d4df-43cf-85d5-6821932cb733|Btech-Convert-VM|ACTIVE|Running|btech-test-2-net=192.168.22.229, 172.28.220.161|btech-win-flav|odc-r09-oscompute-10|16|16G
+ddb|3db525c3-05c3-44ab-aa3f-bf2df563f3df|keceku-odc-postgresql-whitelist-2|ACTIVE|Running|ceria-database-1=10.40.8.194, 172.28.216.113|c2-standard-8-1s|odc-r06-oscompute-40|8|16G
+ddb|61b5b392-1624-4b1b-b919-1d6180433366|keceku-odc-postgresql-main-2|ACTIVE|Running|ceria-database-1=10.40.8.114, 172.28.216.50|c2-standard-8-1s|odc-r07-oscompute-32|8|16G
+ddb|63bb1067-86be-44b2-8784-27b67c9dc454|keceku-odc-postgresql-whitelist-1|ACTIVE|Running|ceria-database-1=10.40.8.39, 172.28.216.36|c2-standard-8-1s|odc-r09-oscompute-11|8|16G
+ddb|a7b48350-f4a0-4eec-9ebe-07513af5d52d|keceku-odc-postgresql-main-1|ACTIVE|Running|Prod_Network=172.28.216.66; ceria-database-1=10.40.8.32|c2-standard-8-1s|odc-r07-oscompute-32|8|16G
+ddb|ca908d54-e965-46fb-8c9c-e851d440ab1d|keceku-redis-1|ACTIVE|Running|Prod_Network=172.28.216.167; ceria-database-1=10.40.8.36|n2-highmem-2-1s|odc-r08-oscompute-22|2|16G
+ddb|329c8910-fe89-424e-a532-864859d82ba8|ceria-minio-odc-4|ACTIVE|Running|ceria-database-1=10.40.8.110, 172.28.216.41|c2-standard-8-1s|odc-r07-oscompute-29|8|16G
+ddb|0df4e101-fda0-4141-8668-3c8b44db133d|ceria-minio-odc-3|ACTIVE|Running|ceria-database-1=10.40.8.117, 172.28.216.168|c2-standard-8-1s|odc-r06-oscompute-39|8|16G
+ddb|42f04758-2c1f-4687-bbca-20335de0b26d|ceria-minio-odc-2|ACTIVE|Running|ceria-database-1=10.40.8.190, 172.28.216.138|c2-standard-8-1s|odc-r09-oscompute-03|8|16G
+ddb|24e32f0e-b4cc-43be-ad23-296361d13e75|ceria-minio-odc-1|ACTIVE|Running|ceria-database-1=10.40.8.16, 172.28.216.112|c2-standard-8-1s|odc-r08-oscompute-16|8|16G
+ddb|08e46716-13c2-4ce5-abdc-20f1ee5349e3|odc-prd-nfs|ACTIVE|Running|devops-backend-01=10.40.1.24, 172.28.216.142|ddb-nfs-8-32|odc-r06-oscompute-40|8|32G
+ddb|c60028e9-d047-47aa-ac42-8d3fca972012|odc-prd-k8s-worker-03|ACTIVE|Running|devops-backend-01=10.40.1.30|k9-standard-m1-1s|odc-r09-oscompute-06|8|16G
+ddb|1e8acd30-1d8c-4f02-9770-0b9dc6069062|odc-prd-k8s-worker-01|ACTIVE|Running|devops-backend-01=10.40.1.28|k9-standard-m1-1s|odc-r06-oscompute-38|8|16G
+ddb|3ab30ffe-c2c6-402d-bcb7-3ef0d0dc6cc3|odc-prd-gluster-03|ACTIVE|Running|devops-backend-01=10.40.1.27, 172.28.216.203|k9-standard-m1-1s|odc-r09-oscompute-11|8|16G
+ddb|246a0c69-f1cc-4a50-8572-fdc88c2a353a|odc-prd-gluster-02|ACTIVE|Running|devops-backend-01=10.40.1.26, 172.28.216.152|k9-standard-m1-1s|odc-r08-oscompute-18|8|16G
+ddb|d2d1f6fc-70bf-42be-b16e-400e6f951d3d|odc-prd-gluster-01|ACTIVE|Running|devops-backend-01=10.40.1.25, 172.28.216.136|k9-standard-m1-1s|odc-r06-oscompute-39|8|16G
+ddb|db623058-8ea9-453f-bbbd-7bc03a870bf3|odc-lb-intranet|ACTIVE|Running|devops-backend-01=10.40.1.23, 172.28.216.134|k9-standard-l1-1s|odc-r06-oscompute-40|4|8G
+ddb|b7d0ccc6-dde2-4a57-9362-6401e8a625a1|odc-lb-internet|ACTIVE|Running|devops-backend-01=10.40.1.22, 172.28.216.143|k9-standard-l1-1s|odc-r09-oscompute-03|4|8G
+ddb|6fd6df36-2ca9-4069-960b-f3e4237a349d|odc-lb-k8s-api|ACTIVE|Running|devops-backend-01=10.40.1.21, 172.28.216.169|k9-standard-l1-1s|odc-r09-oscompute-06|4|8G
+ddb|8868912b-c686-461f-b0c9-035bd7b3fdf4|odc-prd-k8s-master-03|ACTIVE|Running|devops-backend-01=10.40.1.13, 172.28.218.187|k9-standard-m1-1s|odc-r09-oscompute-04|8|16G
+ddb|cb50834b-dabb-4cb2-a7b3-c220d68f6258|odc-prd-k8s-master-02|ACTIVE|Running|devops-backend-01=10.40.1.12, 172.28.218.37|k9-standard-m1-1s|odc-r07-oscompute-29|8|16G
+ddb|80393bbe-3688-4903-b5f7-7823b5452a4b|odc-prd-k8s-master-01|ACTIVE|Running|devops-backend-01=10.40.1.11, 172.28.217.214|k9-standard-m1-1s|odc-r07-oscompute-33|8|16G
+system-monitoring|65d16676-8fa7-4994-9533-c11924bc9d67|prometheus-brimo|ACTIVE|Running|monitoring-net=192.168.100.217, 172.28.219.65|c2-standard-4-1s|odc-r07-oscompute-31|4|8G
+admin|8a809670-1840-4687-90ec-2ff93913b47c|interconnect-test-odc|ACTIVE|Running|admin-net-prod=192.168.100.183, 172.28.222.46|n2-highcpu-4-1s|odc-r09-oscompute-06|4|4G
+admin|efe74451-7124-44f7-8a79-51fc4ff560ab|btech-test-proxy|ACTIVE|Running|admin-net-prod=192.168.100.29; internal-replikasi-cloudera-net=10.50.0.180|n2-highcpu-4-1s|odc-r09-oscompute-09|4|4G
+kafka-production-stretch|e247d417-2de0-4050-889b-56dbe692f6ba|Kafka Production Stretch (ZK) - 1236|ACTIVE|Running|Prod_Network=172.28.218.239; kafka-prod-net=192.168.10.45|kafka-production-8-8|odc-r08-oscompute-18|8|8G
+ddb-development|a5ea0b93-c28e-49af-8d8a-6f2596548fa6|ceria-finacle-core-1-rhel-7-4|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.130, 172.28.224.177|c2-standard-16-1s|odc-r06-oscompute-42|16|32G
+ddb-development|1ecd6bf9-5168-4213-9549-3f52ca1c7f8c|ceria-finacle-core-2-rhel-7-4|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.221, 172.28.224.128|c2-standard-16-1s|odc-r06-oscompute-42|16|32G
+ddb-development|8e7db7a5-53f1-4c5f-b953-2ba25a5dc043|ceria-finacle-dashboard-2-rhel-7-4|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.118, 172.28.224.247|c2-standard-16-1s|odc-r08-oscompute-16|16|32G
+ddb-development|1e89c18d-5ec1-46b1-b824-32fb39c38bb5|ceria-finacle-dashboard-1-rhel-7-4|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.182, 172.28.224.104|c2-standard-16-1s|odc-r08-oscompute-18|16|32G
+ddb-development|ccd89ee5-d954-4231-82cc-b3004ad15d3f|ceria-finacle-app-2-rhel-7-4|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.114, 172.28.224.98|c2-standard-16-1s|odc-r09-oscompute-07|16|32G
+ddb-development|c96b1b5e-127c-4104-9220-60f4cc31b720|ceria-finacle-app-1-rhel-7-4|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.249, 172.28.224.251|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb-development|34f81ab0-7630-4b70-a5b9-2aa021bb4977|ceria-finacle-app-2|SHUTOFF|Shutdown|net-development-01-ceria-frontend-01=10.10.1.20, 172.28.224.74|c2-standard-16-1s|odc-r07-oscompute-28|16|32G
+ddb-development|fbbffc1b-5812-43e5-94cf-8513cf2a361f|ceria-finacle-core-2|SHUTOFF|Shutdown|net-development-01-ceria-apps-01=10.10.0.79, 172.28.224.216|c2-standard-16-1s|odc-r07-oscompute-28|16|32G
+ddb-development|4abe5603-6a42-4637-b8a5-957b3df35a27|ceria-finacle-core-1|SHUTOFF|Shutdown|net-development-01-ceria-apps-01=10.10.0.205, 172.28.224.85|c2-standard-16-1s|odc-r07-oscompute-28|16|32G
+ddb-development|1ecc0979-2b4b-4bdc-b5b2-9275625b72f7|ceria-finacle-dashboard-2|SHUTOFF|Shutdown|net-development-01-ceria-frontend-01=10.10.1.140, 172.28.224.141|c2-standard-16-1s|odc-r07-oscompute-28|16|32G
+ddb-development|5a3b94a2-92a4-4c3a-8182-cbeca98df7e1|ceria-finacle-nfs-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.125, 172.28.224.226|c2-standard-4-1s|odc-r07-oscompute-28|4|8G
+ddb-development|4aa25d4f-c09b-451a-92b1-f5059ebbd8f2|ceria-finacle-db-1|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.157, 172.28.224.108|n2-standard-16-1s|odc-r07-oscompute-28|16|64G
+ddb-development|fa1731ce-b314-49b9-aed9-708492704439|ceria-finacle-haproxy-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.215, 172.28.224.156|c2-standard-16-1s|odc-r06-oscompute-42|16|32G
+ddb-development|47ff9954-3e15-41cf-a884-e155b4a8c5f1|ceria-finacle-app-1|SHUTOFF|Shutdown|net-development-01-ceria-frontend-01=10.10.1.128, 172.28.224.213|c2-standard-16-1s|odc-r07-oscompute-28|16|32G
+ddb-development|18bda044-0f4c-45a2-b98c-fb6d60b0f120|ceria-finacle-dashboard-1|SHUTOFF|Shutdown|net-development-01-ceria-frontend-01=10.10.1.160, 172.28.224.219|c2-standard-16-1s|odc-r07-oscompute-28|16|32G
+ddb|55e7cd0d-403c-434e-87f1-fa6003ee525c|briapi-apigee-ldap-prod-2|ACTIVE|Running|Prod_Network=172.28.216.209|c2-standard-16-1s|odc-r08-oscompute-20|16|32G
+ddb|e0cc1800-f815-4235-b4d4-16657bf05a7d|briapi-apigee-ldap-prod-1|ACTIVE|Running|Prod_Network=172.28.216.87|c2-standard-16-1s|odc-r07-oscompute-30|16|32G
+ddb|d0dfe204-d98d-4368-9bed-291c8da38933|briapi-apigee-msg_processor-prod-10|ACTIVE|Running|Prod_Network=172.28.216.91|c2-standard-16-1s|odc-r09-oscompute-07|16|32G
+ddb|05d4b16f-f778-4027-b152-0f7a4785ced3|briapi-apigee-msg_processor-prod-9|ACTIVE|Running|Prod_Network=172.28.216.31|c2-standard-16-1s|odc-r09-oscompute-06|16|32G
+ddb|66200187-dfdd-4909-bbaf-03be8a94a738|briapi-apigee-msg_processor-prod-8|ACTIVE|Running|Prod_Network=172.28.216.58|c2-standard-16-1s|odc-r08-oscompute-22|16|32G
+ddb|b12769c8-9850-497c-9935-79cecdcdb527|briapi-apigee-msg_processor-prod-7|ACTIVE|Running|Prod_Network=172.28.216.94|c2-standard-16-1s|odc-r09-oscompute-06|16|32G
+ddb|e23f8c6c-3e3d-4471-a05a-55aa5c902084|briapi-apigee-msg_processor-prod-6|ACTIVE|Running|Prod_Network=172.28.216.183|c2-standard-16-1s|odc-r07-oscompute-30|16|32G
+ddb|982d2291-126e-44a2-b688-6ed26e9380af|briapi-apigee-msg_processor-prod-5|ACTIVE|Running|Prod_Network=172.28.216.104|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb|ab072d78-f1fd-4500-9215-f76b7c1ff541|briapi-apigee-msg_processor-prod-4|ACTIVE|Running|Prod_Network=172.28.216.173|c2-standard-16-1s|odc-r08-oscompute-22|16|32G
+ddb|c8264460-45d4-4362-8d55-ef75bc40fc34|briapi-apigee-msg_processor-prod-3|ACTIVE|Running|Prod_Network=172.28.216.52|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb|014d19af-b1d3-4815-a7a7-8b3586fb3c31|briapi-apigee-router-prod-5|ACTIVE|Running|Prod_Network=172.28.216.95|c2-standard-16-1s|odc-r07-oscompute-30|16|32G
+ddb|0efba346-383a-48e0-89f0-4b7d14ff02bf|briapi-apigee-router-prod-4|ACTIVE|Running|Prod_Network=172.28.216.105|c2-standard-16-1s|odc-r08-oscompute-22|16|32G
+ddb|20749e0d-1580-46fa-beb6-bd0456a1f7bd|briapi-apigee-router-prod-3|ACTIVE|Running|Prod_Network=172.28.216.206|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb|3c2cfc53-4603-4f61-8ded-ed84e93fcec5|briapi-apigee-haproxy-prod-1|ACTIVE|Running|Prod_Network=172.28.216.111|c2-standard-16-1s|odc-r07-oscompute-31|16|32G
+ddb|17866fc6-5a24-46f2-92f1-7f00b41024fc|briapi-apigee-devportaldb-prod-1|ACTIVE|Running|Prod_Network=172.28.216.5|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb|90ce71d8-a3f0-4e1b-8c56-4167293762a5|briapi-apigee-devportal-prod-1|ACTIVE|Running|Prod_Network=172.28.216.130|c2-standard-16-1s|odc-r08-oscompute-22|16|32G
+ddb|1c589bae-503c-4805-89e5-e816e903d2ca|briapi-apigee-postgresql-prod-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.189, 172.28.216.187|c2-standard-16-1s|odc-r06-oscompute-39|16|32G
+ddb|34287d1c-241f-4ef9-b2a8-69056059c8db|briapi-apigee-postgresql-prod-1|ACTIVE|Running|Prod_Network=172.28.216.251|c2-standard-16-1s|odc-r09-oscompute-06|16|32G
+ddb|7921c665-f2bc-4f40-99b9-c79f44655168|briapi-apigee-qpid-prod-2|ACTIVE|Running|Prod_Network=172.28.216.75|c2-standard-16-1s|odc-r09-oscompute-03|16|32G
+ddb|198a20c8-fffb-4aba-bdf5-2dca8c034ef1|briapi-apigee-qpid-prod-1|ACTIVE|Running|Prod_Network=172.28.216.16|c2-standard-16-1s|odc-r09-oscompute-11|16|32G
+ddb|a9279349-4b17-4628-b3b9-4ce38ffe26bf|briapi-apigee-mng_server-prod-2|ACTIVE|Running|Prod_Network=172.28.216.77|c2-standard-16-1s|odc-r07-oscompute-33|16|32G
+ddb|6575ade2-ff01-4cee-ae95-9cdbbe04a0b8|briapi-apigee-cassandra-prod-3|ACTIVE|Running|Prod_Network=172.28.216.149|c2-standard-16-1s|odc-r07-oscompute-29|16|32G
+ddb|664eda41-22f3-4477-a1c4-2d41277920c9|briapi-apigee-cassandra-prod-2|ACTIVE|Running|Prod_Network=172.28.216.205|c2-standard-16-1s|odc-r07-oscompute-31|16|32G
+ddb|61566517-60d0-4e01-acfa-1eea6a67ee8e|briapi-apigee-cassandra-prod-1|ACTIVE|Running|Prod_Network=172.28.216.133|c2-standard-16-1s|odc-r07-oscompute-26|16|32G
+ddb|6b792c3d-d1b6-408d-b63c-b946b08da10b|briapi-apigee-msg_processor-prod-2|ACTIVE|Running|Prod_Network=172.28.216.69|c2-standard-16-1s|odc-r07-oscompute-32|16|32G
+ddb|e3588793-4364-4bb9-a3cd-6a9f322941a0|briapi-apigee-msg_processor-prod-1|ACTIVE|Running|Prod_Network=172.28.216.51|c2-standard-16-1s|odc-r06-oscompute-38|16|32G
+ddb|ae51f3c4-1eef-411e-8699-563a5082427e|briapi-apigee-router-prod-2|ACTIVE|Running|Prod_Network=172.28.216.199|c2-standard-16-1s|odc-r08-oscompute-22|16|32G
+ddb|7aa1fc9d-e1d1-421a-9ebe-85b3b3c3a84d|briapi-apigee-router-prod-1|ACTIVE|Running|Prod_Network=172.28.216.145|c2-standard-16-1s|odc-r06-oscompute-39|16|32G
+ddb|3e9e9dea-8c77-4850-b9dd-cb4d9e688b33|devops-ansible-1|ACTIVE|Running|devops-net=10.255.0.105, 172.28.217.90|c2-standard-2-1s|odc-r07-oscompute-32|2|4G
+ddb|067a254d-fbfa-43f3-a873-c34f1133b520|briapi-apigee-haproxy-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.89|c2-standard-16-1s|odc-r09-oscompute-06|16|32G
+ddb|e716f0a4-dd81-4319-bc01-a06ce1371de9|briapi-apigee-devportaldb-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.64|c2-standard-16-1s|odc-r07-oscompute-26|16|32G
+ddb|e9af329f-7fc7-4d1d-95a0-a6cbe9bd8f81|briapi-apigee-postgresql-sandbox-2|ACTIVE|Running|Briapi-DB-Net-01=10.40.5.97, 172.28.216.221|c2-standard-16-1s|odc-r08-oscompute-19|16|32G
+ddb|bc2c31cd-2d8f-4c1e-8a7a-88fd3b6ad996|briapi-apigee-mng_server-sandbox-2|ACTIVE|Running|Prod_Network=172.28.216.47|c2-standard-16-1s|odc-r08-oscompute-16|16|32G
+ddb|f3174a31-d70f-456d-8f5a-3084f48838c7|briapi-apigee-mng_server-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.227|c2-standard-16-1s|odc-r08-oscompute-19|16|32G
+ddb|53a55963-f8fe-415d-a4e8-ee93c651ae81|briapi-apigee-router-sandbox-2|ACTIVE|Running|Prod_Network=172.28.216.22|c2-standard-16-1s|odc-r06-oscompute-39|16|32G
+ddb|dbec5565-6aa0-4b46-a5ab-4210355ff728|briapi-apigee-router-sandbox-1|ACTIVE|Running|Prod_Network=172.28.216.180|c2-standard-16-1s|odc-r07-oscompute-31|16|32G
+ddb|2696deca-7c0c-4738-ac91-d07f219efcb1|test3|ACTIVE|Running|Briapi-Apps-Net-01=10.40.3.82|c2-standard-16-1s|odc-r06-oscompute-40|16|32G
+kubernetes|0c65dae3-2214-4ac3-851f-078d21b9bf2e|k8s-nfs-server|ACTIVE|Running|internal_network=192.168.200.66, 172.28.219.158|k9-standard-m1|odc-r08-oscompute-22|8|16G
+ddb-development|8379924c-3255-435f-ab5c-ca5371c41696|devops-proxy-1|ACTIVE|Running|net-development-devops-1=10.10.3.43, 172.28.225.62|c2-standard-2-1s|odc-r08-oscompute-19|2|4G
+ddb-development|8495f783-d88a-452f-9c84-7b4b393b8dce|devops-softether-vpn-1|ACTIVE|Running|net-development-devops-1=10.10.3.54, 172.28.224.245|c2-standard-2-1s|odc-r06-oscompute-40|2|4G
+|2411bd0c-8414-4a97-bd2a-d630334f4442|8-instances-to-instances-1|PAUSED|Paused|Prod_Network=172.28.218.228|c2-standard-0|odc-r07-oscompute-30|1|1G
+ddb-staging|30e6e476-0817-4a3d-94b8-01ee19b38465|ceria-pem-server-1|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.220|n2-highmem-2|odc-r06-oscompute-38|2|16G
+ddb-staging|6d847fa0-1d02-4eb9-a12f-ba54fe5915c5|devops-pem-server-1|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.229|n2-standard-4|odc-r09-oscompute-11|4|16G
+ddb-staging|d389b480-05ba-44e9-aacb-fb84f13d9428|briapi-apigee-all-in-one|ACTIVE|Running|net-staging-01-briapi-backend-01=10.30.3.54, 172.28.221.2|c2-standard-16|odc-r08-oscompute-17|16|32G
+ddb|1d78f91f-4bb1-45be-b8c1-b4c3ad543efc|pinang-agent-database-pasive-2|ACTIVE|Running|pinang-database-1=10.40.9.38, 172.28.216.163|c2-standard-2|odc-r06-oscompute-37|2|4G
+ddb|c32ffc5d-fac2-4f9b-9b35-eed952caf7d3|pinang-agent-database-pasive-1|ACTIVE|Running|pinang-database-1=10.40.9.243, 172.28.219.180|c2-standard-2|odc-r09-oscompute-11|2|4G
+ddb|799ba472-74d8-42a0-b4db-6fb638526215|pinang-mongodb_secondary-1|ACTIVE|Running|pinang-database-1=10.40.9.170, 172.28.219.19|c2-standard-8|odc-r06-oscompute-39|8|16G
+ddb|dbe5e8f7-0076-4c5b-a9bb-7bc9c51bb324|pinang-mongodb_secondary-2|ACTIVE|Running|pinang-database-1=10.40.9.22, 172.28.218.77|c2-standard-8|odc-r09-oscompute-05|8|16G
+ddb|b2b3da62-184a-4fc9-9a04-dafa4ae92bab|pinang-database-och-slave-node-1|ACTIVE|Running|pinang-database-1=10.40.9.31, 172.28.218.64|c2-standard-16|odc-r07-oscompute-26|16|32G
+ddb|ce091542-91b0-4302-827a-2ea391ceef35|pinang-database-och-slave-node-2|ACTIVE|Running||c2-standard-16|odc-r09-oscompute-05|16|32G
+benchmark-test|5c2602a7-20b6-4024-92e6-e3ef177100d9|cbtool|ACTIVE|Running|benchmark-prod=192.168.1.107, 172.28.217.227|cbtool-flavor|odc-r06-oscompute-37|8|16G
+ddb|dd65647f-88d3-46fc-8422-2171e7231013|devops-minio-4|ACTIVE|Running|devops-net=10.255.0.114|hostbill|odc-r06-oscompute-37|4|8G
+ddb|9950b7e1-39e1-44a2-bf43-a17effda21fd|devops-thanos-1|ACTIVE|Running|devops-net=10.255.0.195|hostbill|odc-r06-oscompute-37|4|8G
+ddb|7b893bec-8c96-45d1-bdf5-ab281c887d8f|devops-minio-3|ACTIVE|Running|devops-net=10.255.0.135|hostbill|odc-r07-oscompute-32|4|8G
+ddb|96a70c1f-cc28-4a4e-a29c-895d689966e1|devops-minio-1|ACTIVE|Running|devops-net=10.255.0.17|hostbill|odc-r07-oscompute-32|4|8G
+ddb|eecc0932-fff1-4b80-98e3-3c6008cd7e2a|devops-minio-2|ACTIVE|Running|devops-net=10.255.0.65|hostbill|odc-r07-oscompute-32|4|8G
+ddb|55f292d0-79e6-4dac-93b3-a4c48aa1658c|devops-grafana-1|ACTIVE|Running|devops-net=10.255.0.25, 172.28.220.119|grafana-flavor|odc-r07-oscompute-32|4|4G
+ddb|2fb40363-1c40-442a-a306-56af6d7c8ba0|ceria-core-edb-1|ACTIVE|Running|ceria-database-1=10.40.8.130, 172.28.218.190|n2-standard-16|odc-r06-oscompute-41|16|64G
+ddb|e5763976-3c5e-44d6-b71d-13ed4e1e224d|ceria-core-edb-2|ACTIVE|Running|ceria-database-1=10.40.8.176, 172.28.216.220|n2-standard-16|odc-r06-oscompute-41|16|64G
+admin|323dd266-3ff6-4651-b7a7-90237cffdc4b|hostbill|ACTIVE|Running|admin-net-prod=192.168.100.5, 172.28.217.194|hostbill|odc-r06-oscompute-41|4|8G
+edm|84808d48-19ae-432c-aebf-4a88bd0902ce|briforce-playground-server-2|ACTIVE|Running|Hbase_Network=10.148.2.212|n2-highcpu-4|odc-r06-oscompute-41|4|4G
+edm|8fe86b6c-754b-485c-a624-aed171d030a4|briforce-playground-server-1|ACTIVE|Running|Hbase_Network=10.148.2.87|n2-highcpu-4|odc-r06-oscompute-41|4|4G
+ddb-development|2445b15c-01da-40da-85c4-2f0e806b4cd3|ceria-och_mongo-staging-3|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.130|n2-standard-4|odc-r06-oscompute-40|4|16G
+ddb-development|e10a120b-6c97-4682-853b-9cc408839121|ceria-nfs-staging-01|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.51|n2-highcpu-4|odc-r06-oscompute-40|4|4G
+ddb-development|5357c80f-f56e-4a1f-a929-ed29338865f4|ceria-database_active_node-staging-1|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.153|c2-standard-16|odc-r09-oscompute-09|16|32G
+ddb-development|541dd97d-a0f8-4466-9a2a-70bcb7477c74|ceria-core_banking_app_server-staging-2|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.183|n2-highcpu-32|odc-r07-oscompute-29|32|32G
+ddb-development|3b0d53aa-9106-4471-9c28-c1afc8750842|ceria-keycloak_ckey-staging-1|SHUTOFF|Shutdown|net-development-01-ceria-apps-01=10.10.0.238|c2-standard-4-shared|odc-r06-oscompute-38|4|8G
+ddb-development|32e2a550-0256-40fe-884a-10449701fbaf|ceria-fi_jee_core-staging-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.87|c2-standard-16|odc-r08-oscompute-19|16|32G
+ddb-development|8838ee1c-29ea-4c65-8d25-1e930fb63055|ceria-fi_jee_core-staging-2|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.41|n2-standard-4|odc-r06-oscompute-40|4|16G
+ddb-development|5cfdae94-8f3d-4314-bfd5-96b23b2fda1c|ceria-core_proxy-staging-1|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.61|c2-standard-8|odc-r07-oscompute-29|8|16G
+ddb-development|327808d3-e69f-4cfe-82fc-a6fe61c7c8f7|ceria-database_slave_node-staging-1|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.194|c2-standard-16|odc-r09-oscompute-09|16|32G
+ddb-development|fe5a1c09-a336-4d5a-8336-5bb2da579e5c|ceria-database_slave_node-staging-2|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.35|c2-standard-16|odc-r06-oscompute-40|16|32G
+ddb-development|d78e1846-4c35-403e-90b5-0e7f622378be|ceria-merchant-dashboard-staging-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.181|n2-standard-4|odc-r07-oscompute-26|4|16G
+ddb-development|e15610f7-acf9-4ceb-bbfc-7aec7f924675|ceria-finacle-dashboard-staging-2|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.245|n2-standard-4|odc-r06-oscompute-40|4|16G
+ddb-development|025d44b7-10d7-40cc-b1e1-8a1b1da77ce2|ceria-keycloack_postgresql-staging-1|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.212, 172.28.224.7|n2-standard-4|odc-r06-oscompute-40|4|16G
+ddb-development|5a3ee901-c969-4e56-94a4-155d19c20e81|ceria-finacle-dashboard-staging-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.229|n2-standard-4|odc-r08-oscompute-18|4|16G
+ddb-development|e92ff5c6-0950-45c0-b88d-01721dc8e85c|ceria-dbg_core_proxy-staging-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.50|n2-standard-4|odc-r08-oscompute-18|4|16G
+ddb-development|feac7e60-3a8a-4b51-b435-e6da48f76a83|ceria-keycloak_ckey-staging-1|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.247|c2-standard-4|odc-r06-oscompute-40|4|8G
+ddb-development|bc0f5e70-5f41-4dce-b87f-96de74225a69|ceria-pinang-intra-digital-bank-1-staginh|ACTIVE|Running|net-development-01-ceria-frontend-01=10.10.1.219|c2-standard-8|odc-r08-oscompute-18|8|16G
+ddb-development|82be613e-0bd7-471a-9156-274fe1e2d2c1|ceria-core_proxy-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.32|c2-standard-8|odc-r06-oscompute-40|8|16G
+ddb-development|a2560995-6eda-46cd-b604-2ad6491127d6|ceria-core_banking_app_server-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.190|c2-standard-16|odc-r06-oscompute-40|16|32G
+ddb-development|288a5863-0c40-42fe-a58d-aac7b1bac6b2|ceria-och_merchant_payment-1|ACTIVE|Running|net-development-01-ceria-apps-01=10.10.0.210|c2-standard-16|odc-r06-oscompute-40|16|32G
+edm|35094b4a-6b5a-4aac-b4cb-57a373e27bda|dns-server-1|ACTIVE|Running|DevOps_Network=10.148.1.14|c2-standard-2|odc-r08-oscompute-20|2|4G
+ddb-staging|1633bf04-9ba4-456f-b6a4-56a748063e5a|devops-openvpn_server-1|ACTIVE|Running|net-devops-01=10.255.0.153, 172.28.217.246|c2-standard-2|odc-r08-oscompute-18|2|4G
+ddb|b94ac049-9916-4f70-bac2-fffcd204f881|ceria-mongodb_secondary-02|ACTIVE|Running|ceria-database-1=10.40.8.174, 172.28.217.245|n2-standard-4|odc-r06-oscompute-40|4|16G
+edm|794cb87c-8ad7-46c7-9da2-7ba12f3f0d4e|hbase-worker-node-1|ACTIVE|Running|Hbase_Network=10.148.2.48; Prod_Network=172.28.220.240; replikasi-cloudera-network=172.28.120.54|dedicated-16-128-numa-2|odc-r06-oscompute-34|16|128G
+edm|90ff8e2d-47a8-42ef-bd51-f15ff41cf6e4|hbase-worker-node-6|ACTIVE|Running|Hbase_Network=10.148.2.55; Prod_Network=172.28.220.180; replikasi-cloudera-network=172.28.120.59|dedicated-16-128-numa-2|odc-r08-oscompute-12|16|128G
+edm|cad7c3af-18d6-4501-94b0-23e3f98fc5ff|hbase-worker-node-5|ACTIVE|Running|Hbase_Network=10.148.2.227; Prod_Network=172.28.222.94; replikasi-cloudera-network=172.28.120.58|dedicated-16-128-numa-2|odc-r06-oscompute-36|16|128G
+edm|d0f589b8-7c87-492d-bf34-a7ba3757fd4e|hbase-worker-node-4|ACTIVE|Running|Hbase_Network=10.148.2.50; Prod_Network=172.28.218.248; replikasi-cloudera-network=172.28.120.57|dedicated-16-128-numa-2|odc-r09-oscompute-02|16|128G
+edm|c13aa975-b7e0-42a8-8aa1-f03f9d76f3c6|cloudera-master-node-3|ACTIVE|Running|Cloudera_Network=10.148.0.74, 172.28.220.62; internal-replikasi-cloudera-net=10.50.0.196, 172.28.120.13|n2-highmem-16|odc-r06-oscompute-42|16|128G
+edm|99f9db5d-9f40-4375-803d-70ff0370a889|proxy-server-1|ACTIVE|Running|DevOps_Network=10.148.1.6|n2-highcpu-2|odc-r06-oscompute-43|2|2G
+ddb|a686ac39-d8e4-45e3-b49c-98a752647137|ceria-mongodb_secondary-01|ACTIVE|Running|ceria-database-1=10.40.8.21, 172.28.219.13|n2-standard-4|odc-r06-oscompute-40|4|16G
+ddb|527f0980-2d34-462d-a26c-d7b33492010b|ceria-merchant_dashboard_server-1|ACTIVE|Running|ceria-prd-net=10.26.2.143|c2-standard-16|odc-r06-oscompute-43|16|32G
+ddb-staging|49cd6764-c6dc-425d-826f-90ab09210b0e|ceria-och_merchant_payment-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.138, 172.28.219.210|c2-standard-16|odc-r08-oscompute-16|16|32G
+ddb-staging|6209cf01-50f9-4ce4-839a-59e0b7bb570f|ceria-core_banking_app_server-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.94|c2-standard-16|odc-r09-oscompute-06|16|32G
+ddb-staging|fa8f7da1-72ff-4fa0-9df5-be1494c7a3a2|ceria-merchant-dashboard-staging|ACTIVE|Running|net-staging-01-ceria-frontend-01=10.30.1.185|c2-standard-16|odc-r09-oscompute-06|16|32G
+ddb-staging|95bc916c-7ec4-44d3-90ca-0eee9f41011f|ceria-core_proxy-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.148|c2-standard-8|odc-r09-oscompute-07|8|16G
+edm|ee9d61a7-d69e-4be2-8e52-3fc256215468|cloudera-utility-node-1|SHUTOFF|Shutdown||n2-highmem-16-30-NEW|odc-r06-oscompute-42|16|128G
+edm|56d69a4d-476a-4f77-88ff-1c1d8e139b09|cloudera-master-node-2|ACTIVE|Running|Cloudera_Network=10.148.0.234, 172.28.220.72; internal-replikasi-cloudera-net=10.50.0.75, 172.28.120.12|n2-highmem-16-resizes|odc-r09-oscompute-09|16|256G
+edm|293f4a92-0d7a-41e9-82e8-4622576b84ef|cloudera-master-node-1|ACTIVE|Running|Cloudera_Network=10.148.0.200, 172.28.216.217; internal-replikasi-cloudera-net=10.50.0.53, 172.28.120.11|n2-highmem-16-resizes|odc-r09-oscompute-09|16|256G
+edm|32e09e09-6b4a-428c-b4e1-1262ecbcf291|cloudera-worker-node-28|ACTIVE|Running|Cloudera_Network=10.148.0.94, 172.28.218.30; internal-replikasi-cloudera-net=10.50.0.145, 172.28.120.41|n2-highmem-48-256-1s|odc-r07-oscompute-31|48|256G
+edm|5973ecbf-0d31-4370-a33f-fabe5d51748b|cloudera-worker-node-27|ACTIVE|Running|Cloudera_Network=10.148.0.189, 172.28.218.174; internal-replikasi-cloudera-net=10.50.0.184, 172.28.120.40|n2-highmem-48-256-1s|odc-r06-oscompute-43|48|256G
+edm|85e1a46f-adb8-46e5-ae1a-23b7f67e98c5|cloudera-worker-node-26|ACTIVE|Running|Cloudera_Network=10.148.0.102, 172.28.218.7; internal-replikasi-cloudera-net=10.50.0.96, 172.28.120.39|n2-highmem-48-256-1s|odc-r06-oscompute-43|48|256G
+edm|33535e4a-cce7-4372-9076-97eb1810c05e|cloudera-worker-node-25|ACTIVE|Running|Cloudera_Network=10.148.0.205, 172.28.218.12; internal-replikasi-cloudera-net=10.50.0.163, 172.28.120.38|n2-highmem-48-256-1s|odc-r06-oscompute-37|48|256G
+edm|81815a04-f6be-4872-b52b-532838cb2703|cloudera-worker-node-24|ACTIVE|Running|Cloudera_Network=10.148.0.211, 172.28.218.17; internal-replikasi-cloudera-net=10.50.0.80, 172.28.120.37|n2-highmem-16|odc-r07-oscompute-33|16|128G
+edm|fcf2294e-812a-4b31-a645-87a82bc7cc9f|cloudera-worker-node-22|ACTIVE|Running|Cloudera_Network=10.148.0.164, 172.28.218.27; internal-replikasi-cloudera-net=10.50.0.170, 172.28.120.35|n2-highmem-16|odc-r06-oscompute-41|16|128G
+edm|c262f7ed-5670-4751-a207-89c94b787102|cloudera-worker-node-21|ACTIVE|Running|Cloudera_Network=10.148.0.130, 172.28.218.2; internal-replikasi-cloudera-net=10.50.0.87, 172.28.120.34|n2-highmem-16|odc-r09-oscompute-11|16|128G
+edm|8986b5e0-56a6-4ecd-a114-078554b57505|cloudera-worker-node-20|ACTIVE|Running|Cloudera_Network=10.148.0.73, 172.28.218.16; internal-replikasi-cloudera-net=10.50.0.101, 172.28.120.33|n2-highmem-16|odc-r09-oscompute-06|16|128G
+edm|988ee0c9-5eae-4770-948b-6c6afca66871|cloudera-worker-node-19|ACTIVE|Running|Cloudera_Network=10.148.0.202, 172.28.218.28; internal-replikasi-cloudera-net=10.50.0.56, 172.28.120.32|n2-highmem-16|odc-r09-oscompute-06|16|128G
+edm|96a72fa6-22b4-4ae4-832b-295400680833|cloudera-worker-node-18|ACTIVE|Running|Cloudera_Network=10.148.0.112, 172.28.218.1; internal-replikasi-cloudera-net=10.50.0.113, 172.28.120.31|n2-highmem-16|odc-r07-oscompute-33|16|128G
+edm|fb888141-73a1-42d8-b548-33ed1129236e|cloudera-worker-node-16|ACTIVE|Running|Cloudera_Network=10.148.0.68, 172.28.218.21; internal-replikasi-cloudera-net=10.50.0.250, 172.28.120.29|n2-highmem-16|odc-r07-oscompute-30|16|128G
+edm|86d81197-047d-487f-ab7c-cd02277fe8d1|cloudera-worker-node-15|ACTIVE|Running|Cloudera_Network=10.148.0.139, 172.28.218.31; internal-replikasi-cloudera-net=10.50.0.123, 172.28.120.28|n2-highmem-16|odc-r08-oscompute-17|16|128G
+edm|a87bdd27-2fcf-476a-a84c-2eb4268d6b83|cloudera-worker-node-14|ACTIVE|Running|Cloudera_Network=10.148.0.160, 172.28.218.245; internal-replikasi-cloudera-net=10.50.0.69, 172.28.120.27|n2-highmem-16|odc-r08-oscompute-19|16|128G
+edm|1d59c325-a790-44c9-9b10-8fd6fd1c8e6f|cloudera-worker-node-13|ACTIVE|Running|Cloudera_Network=10.148.0.40, 172.28.218.34; internal-replikasi-cloudera-net=10.50.0.118, 172.28.120.26|n2-highmem-16|odc-r09-oscompute-11|16|128G
+edm|c8825f84-e3e7-479d-a15b-849c987c2180|cloudera-worker-node-11|ACTIVE|Running|Cloudera_Network=10.148.0.232, 172.28.218.153; internal-replikasi-cloudera-net=10.50.0.167, 172.28.120.24|n2-highmem-16|odc-r08-oscompute-21|16|128G
+edm|9b4d6ef7-313c-40fa-9e7b-75d98a228a13|cloudera-worker-node-10|ACTIVE|Running|Cloudera_Network=10.148.0.203, 172.28.218.6; internal-replikasi-cloudera-net=10.50.0.99, 172.28.120.23|n2-highmem-16|odc-r08-oscompute-18|16|128G
+edm|1efa82d6-6780-4dd7-9478-c96b86dc07d8|cloudera-worker-node-9|ACTIVE|Running|Cloudera_Network=10.148.0.65, 172.28.218.14; internal-replikasi-cloudera-net=10.50.0.127, 172.28.120.22|n2-highmem-16|odc-r06-oscompute-39|16|128G
+edm|1dccda16-2ca7-4171-8c8c-6545263ae381|cloudera-worker-node-8|ACTIVE|Running|Cloudera_Network=10.148.0.250, 172.28.218.135; internal-replikasi-cloudera-net=10.50.0.201, 172.28.120.21|n2-highmem-16|odc-r09-oscompute-07|16|128G
+edm|15c6a673-c798-4cfc-9f08-870d4aa5fcb8|cloudera-worker-node-7|ACTIVE|Running|Cloudera_Network=10.148.0.5, 172.28.218.35; internal-replikasi-cloudera-net=10.50.0.132, 172.28.120.20|n2-highmem-16|odc-r06-oscompute-41|16|128G
+edm|4cd291f0-0d0e-49ac-81b2-f187d1ccd4ce|cloudera-worker-node-6|ACTIVE|Running|Cloudera_Network=10.148.0.42, 172.28.218.36; internal-replikasi-cloudera-net=10.50.0.111, 172.28.120.19|n2-highmem-16|odc-r08-oscompute-16|16|128G
+edm|821d015a-990a-4937-b2e0-9ac87ffabfb7|cloudera-worker-node-5|ACTIVE|Running|Cloudera_Network=10.148.0.96, 172.28.218.10; internal-replikasi-cloudera-net=10.50.0.84, 172.28.120.18|n2-highmem-16|odc-r07-oscompute-27|16|128G
+edm|86054f95-d38a-430f-a5c2-765fdb604317|cloudera-worker-node-1|ACTIVE|Running|Cloudera_Network=10.148.0.162, 172.28.218.103; internal-replikasi-cloudera-net=10.50.0.48, 172.28.120.14|n2-highmem-16|odc-r07-oscompute-32|16|128G
+edm|d2bd1c71-05ce-44ac-ac0a-adf2f35d3481|cloudera-worker-node-3|ACTIVE|Running|Cloudera_Network=10.148.0.249, 172.28.218.11; internal-replikasi-cloudera-net=10.50.0.164, 172.28.120.16|n2-highmem-16-shared|odc-r09-oscompute-04|16|128G
+edm|67d31240-c238-4213-bdbf-443cb27379c9|cloudera-worker-node-2|ACTIVE|Running|Cloudera_Network=10.148.0.79, 172.28.218.38; internal-replikasi-cloudera-net=10.50.0.112, 172.28.120.15|n2-highmem-16|odc-r07-oscompute-29|16|128G
+ddb|681cd400-a7d1-415c-8e27-431a9964f487|dgb_core_ceria_prd_01-1|ACTIVE|Running|ceria-prd-net=10.26.2.191|c2-standard-8|odc-r08-oscompute-17|8|16G
+ddb|c07c5131-c6f9-4b0e-992f-c193cfa242f8|ceria-pinang_intra_digital_bank_2_root-1|ACTIVE|Running|ceria-prd-net=10.26.2.181|c2-standard-8|odc-r09-oscompute-04|8|16G
+ddb|6bf1db9c-c04a-4792-8f77-40f9fdd3fd40|ceria-pinang_intra_digital_bank_1_root-1|ACTIVE|Running|ceria-prd-net=10.26.2.103|c2-standard-8|odc-r09-oscompute-09|8|16G
+ddb|2b1a6b0d-dcf8-4efb-944c-136826b11bf2|ceria-nfs-1|ACTIVE|Running|ceria-prd-net=10.26.2.248|n2-standard-2|odc-r06-oscompute-39|2|8G
+ddb|57f3e182-df1c-4933-9ebb-0953b14c08af|ceria_core_proxy_1|ACTIVE|Running|ceria-prd-net=10.26.2.221|c2-standard-8|odc-r09-oscompute-04|8|16G
+ddb|2acbf610-ac11-4e4f-af95-4671ab7375f3|Ceria-JEE_Core_App_Server-2|ACTIVE|Running|ceria-prd-net=10.26.2.184|c2-standard-16|odc-r07-oscompute-29|16|32G
+ddb|e3d9e011-ae8b-4662-8671-3862db23e4f1|Ceria-Core_Banking_App_Server-1|ACTIVE|Running|ceria-prd-net=10.26.2.60|c2-standard-16|odc-r07-oscompute-29|16|32G
+ddb-staging|c525f459-ed86-45a1-bcb0-2ae714f6cc34|ceria-pinang-intra-digital-bank-1-staginh|ACTIVE|Running|net-staging-01-ceria-frontend-01=10.30.1.51|c2-standard-8|odc-r08-oscompute-16|8|16G
+ddb-staging|5f86af0d-c0c4-4a7d-98ee-c198bf17b294|ceria-keycloak_ckey-staging-1|ACTIVE|Running|net-staging-01-ceria-frontend-01=10.30.1.169|c2-standard-4|odc-r08-oscompute-16|4|8G
+kubernetes|56b4c75d-07b5-4149-b4b5-be84410c0e34|backend-01|ACTIVE|Running|internal_network=192.168.200.145, 172.28.218.142|flavor-debug-2|odc-r08-oscompute-16|2|4G
+kubernetes|a629ca6f-cdab-4afb-95c2-c5b64408afc3|backend-02|ACTIVE|Running|internal_network=192.168.200.131, 172.28.220.17|flavor-debug-2|odc-r07-oscompute-27|2|4G
+ddb-staging|bbda1afc-24a4-4511-9757-2414bec0cd8f|test-devops-och-2|ACTIVE|Running|net-devops-01=10.255.0.112|n2-highcpu-4|odc-r08-oscompute-16|4|4G
+ddb|67c16488-fd18-4adb-8846-1055530668a7|dgb-nas|ACTIVE|Running|pinang-prd-net=10.26.0.151|n2-highcpu-4|odc-r07-oscompute-28|4|4G
+ddb|71c2d8f9-c26e-4abe-b2bc-a403befa5acf|ceria-prod-mongodb-cmon4|ACTIVE|Running|ceria-prd-net=10.26.2.186|n2-highcpu-16|odc-r08-oscompute-16|16|16G
+admin|e291b06c-c68e-4f1f-a76d-110466bd3e40|ins-proxy|ACTIVE|Running|admin-net-prod=192.168.100.104, 172.28.216.125|n2-highcpu-4|odc-r07-oscompute-26|4|4G
+system-monitoring|18b483d2-abb9-47cb-ad24-3dfafcbf5256|grafana|ACTIVE|Running|Dev_Network=172.28.228.27; monitoring-net=192.168.100.192, 172.28.217.42|grafana-flavor-16-32s|odc-r09-oscompute-03|16|32G
+system-monitoring|67aa5f80-6696-407c-90c1-4b88547d362d|minio|ACTIVE|Running|monitoring-net=192.168.100.216, 172.28.220.1|hostbill|odc-r07-oscompute-30|4|8G
+system-monitoring|198dad8f-5474-42ed-9ca9-71398f78485c|thanos|ACTIVE|Running|monitoring-net=192.168.100.215, 172.28.219.205|hostbill|odc-r06-oscompute-39|4|8G
+system-monitoring|0068e5b7-5dd5-4ff9-bf2c-df7d0b88b165|prometheus-1|ACTIVE|Running|monitoring-net=192.168.100.169, 172.28.218.108|hostbill|odc-r08-oscompute-19|4|8G
+system-monitoring|307ac900-e11f-42c3-82d5-576347446051|prometheus-2|ACTIVE|Running|monitoring-net=192.168.100.203, 172.28.220.120|hostbill|odc-r08-oscompute-20|4|8G
+system-monitoring|4819d503-ea81-421a-9f43-efca64969dc2|prometheus-3|ACTIVE|Running|monitoring-net=192.168.100.113, 172.28.216.106|hostbill|odc-r08-oscompute-18|4|8G
+ddb|7751d7b7-e07c-45e7-9633-9346763ed8bd|k8s-worker-09|ACTIVE|Running|k8s-prd-net=10.255.1.168, 172.28.219.131|k9-standard-w1|odc-r07-oscompute-31|16|32G
+ddb|b4df01ba-9399-4156-9b51-3924712a17e9|k8s-nfs-server|ACTIVE|Running|k8s-prd-net=10.255.1.142, 172.28.216.84|k9-standard-m1|odc-r08-oscompute-16|8|16G
+ddb|f6d0198d-7b93-405e-b9e4-abc175ca9ab7|test-server-zaky-1|ACTIVE|Running|devops-net=10.255.0.177|n2-highcpu-4|odc-r07-oscompute-26|4|4G
+ddb|e9ddd00d-bd0e-4f05-a009-9b63a56aa2fa|devops-bastion-production-2|ACTIVE|Running|devops-net=10.255.0.82, 172.28.218.32|flavor-debug-2|odc-r09-oscompute-06|2|4G
+ddb|48a8f008-69f8-4931-a96e-476859f185f9|devops-bastion-production|ACTIVE|Running|devops-net=10.255.0.171, 172.28.216.176|flavor-debug-2|odc-r06-oscompute-40|2|4G
+ddb|4566e72e-9b2c-4422-bd63-45cc3c3099a5|minio-instance|ACTIVE|Running|k8s-prd-net=10.255.1.248, 172.28.218.96|k9-standard-m1|odc-r08-oscompute-16|8|16G
+ddb-staging|8b1b36e2-da0a-4f75-9460-deb2421888e8|devops-och-2|ACTIVE|Running|net-devops-01=10.255.0.94|n2-highcpu-4|odc-r06-oscompute-40|4|4G
+ddb|d13fd224-9631-4973-b3d3-5fb7f5a614f1|k8s-loadbalancer-02|ACTIVE|Running|k8s-prd-net=10.255.1.20, 172.28.216.244|k9-standard-l1|odc-r07-oscompute-31|4|8G
+ddb|fcb6b425-5b25-4bf4-8086-1e0e1cd5b9dd|k8s-loadbalancer-01|ACTIVE|Running|k8s-prd-net=10.255.1.10, 172.28.216.253|k9-standard-l1|odc-r08-oscompute-20|4|8G
+ddb|b042b103-64e8-43b7-a204-3defd4a9dca3|k8s-master-03|ACTIVE|Running|k8s-prd-net=10.255.1.13, 172.28.220.29|k9-standard-m1|odc-r07-oscompute-30|8|16G
+ddb|1294baf1-ca7f-4312-a481-9f6e4f6dabcc|k8s-master-02|ACTIVE|Running|k8s-prd-net=10.255.1.12, 172.28.218.201|k9-standard-m1|odc-r07-oscompute-30|8|16G
+ddb|631e3059-cbb7-4a39-8298-c4a83eea9c79|k8s-master-01|ACTIVE|Running|k8s-prd-net=10.255.1.11, 172.28.219.122|k9-standard-m1|odc-r08-oscompute-22|8|16G
+ddb|5e2fa4a0-2a5b-490c-b28e-f50c3d1ba650|k8s-worker-08-old|SHUTOFF|Shutdown||k9-standard-w1|odc-r08-oscompute-22|16|32G
+ddb|398140c0-af9f-4e1a-8555-ceb51961d279|k8s-worker-07|ACTIVE|Running|k8s-prd-net=10.255.1.27, 172.28.216.82|k9-standard-w1|odc-r06-oscompute-38|16|32G
+ddb|12948242-6b02-471b-88a1-f4bf38ad89ee|k8s-worker-06|ACTIVE|Running|k8s-prd-net=10.255.1.26, 172.28.219.243|k9-standard-w1|odc-r07-oscompute-28|16|32G
+ddb|69f2d4a8-84cd-4f90-9cd0-78e5ec7c7c7a|k8s-worker-05|ACTIVE|Running|k8s-prd-net=10.255.1.25, 172.28.219.114|k9-standard-w1|odc-r06-oscompute-41|16|32G
+ddb|47512de4-75dc-4982-95e3-d98b37e55a51|k8s-worker-04|ACTIVE|Running|k8s-prd-net=10.255.1.24, 172.28.220.38|k9-standard-w1|odc-r09-oscompute-11|16|32G
+ddb|99ad0b70-8af4-4a54-ada0-28927df341a1|k8s-worker-03|ACTIVE|Running|k8s-prd-net=10.255.1.23, 172.28.218.177|k9-standard-w1|odc-r07-oscompute-31|16|32G
+ddb|91de2382-369c-4698-a669-659c37ab26a8|k8s-worker-02|ACTIVE|Running|k8s-prd-net=10.255.1.22, 172.28.216.247|k9-standard-w1|odc-r06-oscompute-39|16|32G
+ddb|b67a9740-e5bb-4783-8670-0f285a933f31|k8s-worker-01|ACTIVE|Running|k8s-prd-net=10.255.1.21, 172.28.217.30|k9-standard-w1|odc-r06-oscompute-41|16|32G
+ddb-staging|a4430a5f-f01d-4236-928a-94df02006a81|ceria_reverse_proxy-1|ACTIVE|Running|net-staging-01-ceria-frontend-01=10.30.1.240|n2-standard-2|odc-r06-oscompute-41|2|8G
+ddb-staging|25edac5b-285e-4445-a249-f8d3c7cf54df|ceria-dbg_core_proxy-staging-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.115|n2-standard-4|odc-r06-oscompute-40|4|16G
+ddb-staging|851e1e07-af95-4f52-beab-4adf6987fc6b|ceria-finacle-dashboard-staging-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.20|n2-standard-4|odc-r06-oscompute-41|4|16G
+ddb|693fe4f5-0eaa-4647-8b28-3ab64fff87de|devops-och-ddb|ACTIVE|Running|ceria-prd-net=10.26.2.177|n2-highcpu-2|odc-r07-oscompute-26|2|2G
+ddb|383cb078-97e1-443f-9b59-68e86a25db9b|ceria-prod-cockroachdb-ccoc1|ACTIVE|Running|ceria-prd-net=10.26.2.151|c2-standard-16|odc-r06-oscompute-41|16|32G
+ddb-staging|2cb94cff-df95-4f47-b553-b0d013b1aab9|ceria-keycloack_postgresql-staging-1|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.230|n2-standard-4|odc-r08-oscompute-22|4|16G
+ddb-staging|60c9eb78-09ec-45ca-84dd-138263d27984|ceria-finacle-dashboard-staging-2|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.77|n2-standard-4|odc-r07-oscompute-27|4|16G
+ddb-staging|467168d1-41a0-4160-b23f-69f0b143d97c|ceria-merchant-dashboard-staging-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.193|n2-standard-4|odc-r09-oscompute-07|4|16G
+ddb-staging|113fc4a6-a187-4e80-a135-8940941dbd56|ceria-database_slave_node-staging-2|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.234|c2-standard-16|odc-r07-oscompute-27|16|32G
+ddb-staging|6ced9793-8332-4aa6-abd4-c18b937b4e2f|rescue-yoga|ACTIVE|Running|net-staging-01-ceria-frontend-01=10.30.1.122|n2-highcpu-2|odc-r07-oscompute-27|2|2G
+ddb-development|ba03371b-2e62-42a8-b44b-20a2f5694cda|server-rescue-yoga|ACTIVE|Running|net-development-01-ceria-db-01=10.10.2.43, 172.28.227.135|n2-highcpu-2|odc-r07-oscompute-27|2|2G
+ddb|31c18511-7295-490a-a55d-d9fd3064ed5f|cassandra-zookeper-02|ACTIVE|Running|briapi-prd-net=10.26.6.41, 172.28.218.18|c2-standard-8|odc-r09-oscompute-07|8|16G
+ddb|a3230abd-d841-43a7-b0cb-3490cb0ea0f9|cassandra-zookeper-03|ACTIVE|Running|briapi-prd-net=10.26.6.71, 172.28.218.234|c2-standard-8|odc-r07-oscompute-27|8|16G
+ddb-staging|ae94eeac-83d4-4d38-9adf-5dd3a55239a2|ceria-database_slave_node-staging-1|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.79|c2-standard-16|odc-r09-oscompute-07|16|32G
+ddb|857098d0-5d12-43f8-9649-34fee1b7aaf3|cassandra-zookeper-01|ACTIVE|Running|briapi-prd-net=10.26.6.121, 172.28.219.53|c2-standard-8|odc-r07-oscompute-27|8|16G
+ddb-staging|42459006-5bca-4bc2-ae97-ac8d030baa9e|ceria-core_proxy-staging-1|ACTIVE|Running|net-staging-01-ceria-frontend-01=10.30.1.17|c2-standard-8|odc-r09-oscompute-07|8|16G
+ddb-staging|c008f34d-2e9f-4b9a-a202-1d69e8c7d4f1|ceria-fi_jee_core-staging-2|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.13|n2-standard-4|odc-r07-oscompute-27|4|16G
+ddb-staging|264881ae-8ba9-4a44-8775-ae57acc8efa2|ceria-fi_jee_core-staging-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.29|n2-standard-4|odc-r09-oscompute-07|4|16G
+ddb-staging|cf345df4-44a1-46bb-abec-402b01338452|ceria-keycloak_ckey-staging-1|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.25|c2-standard-4|odc-r09-oscompute-07|4|8G
+ddb-staging|babe0837-bc76-4c62-bb18-74264dcb1fcb|ceria-core_banking_app_server-staging-2|SHUTOFF|Shutdown|net-staging-01-ceria-apps-01=10.30.0.31|n2-highcpu-32|odc-r09-oscompute-07|32|32G
+ddb-staging|a6f2558b-32ee-4e20-b878-3120d14fd160|ceria-database_active_node-staging-1|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.108|c2-standard-16|odc-r09-oscompute-07|16|32G
+ddb-staging|6c0ac619-3f8f-4030-aac6-34ac0504fbc5|ceria-nfs-staging-01|ACTIVE|Running|net-staging-01-ceria-apps-01=10.30.0.188|n2-highcpu-4|odc-r07-oscompute-30|4|4G
+ddb-staging|f6460505-6459-4238-b572-14814a3c26d1|ceria-och_mongo-staging-3|ACTIVE|Running|net-staging-01-ceria-db-01=10.30.2.117|n2-standard-4|odc-r07-oscompute-31|4|16G
+ddb-staging|5b2a1e8a-0f32-444f-b872-5eed7fcfcbdc|proxy-server|ACTIVE|Running|net-devops-01=10.255.0.172|n2-standard-2|odc-r07-oscompute-26|2|8G
+edm|107c202e-2189-4d77-9655-3326117287be|vpn-server-1|ACTIVE|Running|DevOps_Network=10.148.1.7, 172.28.219.84|n2-highcpu-2|odc-r07-oscompute-30|2|2G
+ddb|0c29af38-b674-4222-b202-ef774042e761|pinang-database-active-node|ACTIVE|Running|pinang-prd-net=10.26.0.79|n2-highcpu-32|odc-r06-oscompute-39|32|32G
+ddb|f71fe29f-23f3-4ad0-901c-cd34bc92758a|rescue-server-fahrul|ACTIVE|Running|briapi-prd-net=10.26.6.47, 172.28.217.156|n2-highcpu-2|odc-r06-oscompute-39|2|2G
+ddb|cefbf6bb-d65c-45d0-8438-520d1c08401c|sandbox-bri-open-api|ACTIVE|Running|briapi-prd-net=10.26.6.51, 172.28.217.221|n2-standard-4|odc-r07-oscompute-29|4|16G
+ddb|3c49b4e7-57c2-4bc0-bbf8-718e5582fb48|sandbox-bri|ACTIVE|Running|briapi-prd-net=10.26.6.229, 172.28.216.123|n2-standard-4|odc-r07-oscompute-30|4|16G
+ddb|6f40c57a-2b8f-486b-9ea3-d5716f9929b0|dev-portal-prod|ACTIVE|Running|briapi-prd-net=10.26.6.177, 172.28.219.93|n2-highcpu-8|odc-r07-oscompute-30|8|8G
+ddb|de694e5a-b820-408e-8a7c-fb7d81954d95|dev-portal-db-postgres|ACTIVE|Running|briapi-prd-net=10.26.6.144, 172.28.217.115|n2-highcpu-8|odc-r09-oscompute-04|8|8G
+ddb|358496f7-6aae-46fd-b4da-472bb1902e14|systemrescue|ACTIVE|Running|briapi-prd-net=10.26.6.50, 172.28.218.170|n2-highcpu-4|odc-r07-oscompute-30|4|4G
+ddb|487e17cc-09ae-4ee5-8fa4-f94eea576bf2|ddb-jumpbox-1|ACTIVE|Running|briapi-prd-net=10.26.6.18, 172.28.217.23|n2-highcpu-4|odc-r07-oscompute-30|4|4G
+ddb|cbbc10ff-6fd5-4fb9-88bf-170cd4f0fb42|Digital Bank Nifi DWH|ACTIVE|Running|pinang-prd-net=10.26.0.27|n2-highcpu-32|odc-r06-oscompute-42|32|32G
+ddb|f4e037a4-846b-4b1d-b16b-3cfd27fd365b|DIGIBANK_PJEE2|ACTIVE|Running|pinang-prd-net=10.26.0.124|n2-highcpu-32|odc-r07-oscompute-32|32|32G
+ddb|e88903f5-6a1a-4f54-8ead-18e69da442af|DIGIBANK-PAD01|ACTIVE|Running|pinang-prd-net=10.26.0.143|n2-highcpu-16|odc-r07-oscompute-30|16|16G
+ddb|e5273807-1088-4698-82c9-1088a99b0259|Ceria Core Banking App Server-1|ACTIVE|Running|ceria-prd-net=10.26.2.110|n2-highcpu-32|odc-r08-oscompute-22|32|32G
+ddb|dea48211-050a-4b39-bec9-708fa6ccd820|Ceria Core Banking App Server-2|ACTIVE|Running|ceria-prd-net=10.26.2.137|n2-highcpu-32|odc-r07-oscompute-30|32|32G
+ddb|c83ceaa1-d780-4572-bfae-3462453d5fc7|dgb-och-ceria-prd-01-root|ACTIVE|Running|ceria-prd-net=10.26.2.71|n2-highcpu-16|odc-r09-oscompute-07|16|16G
+ddb|1c02c7a5-4c50-40d1-b459-55096dc62998|ceria-jee-core-app-1-root|ACTIVE|Running|ceria-prd-net=10.26.2.159|n2-highcpu-32|odc-r07-oscompute-33|32|32G
+ddb|bceb20b4-6c35-4eb6-b76f-aac9ee43e7a2|dgb-core-pinang-prd-01|ACTIVE|Running|pinang-prd-net=10.26.0.116|n2-highcpu-16|odc-r09-oscompute-11|16|16G
+ddb|be733a23-ac1a-430a-b125-edeb4e45c4c9|dgb-och-pinang-prd-01|ACTIVE|Running|pinang-prd-net=10.26.0.158|n2-highcpu-16|odc-r07-oscompute-27|16|16G
+ddb|24d6c4e8-214f-4cc6-8ec7-e23cf1639602|rescue-server-raju|ACTIVE|Running|pinang-prd-net=10.26.0.144|n2-highcpu-2|odc-r08-oscompute-19|2|2G
+ddb|60fda490-0bc7-44b0-8eb0-c558ed30cdb5|Ceria JEE Core App Server-2|ACTIVE|Running|ceria-prd-net=10.26.2.200|n2-highcpu-32|odc-r08-oscompute-18|32|32G
+ddb|5bd8c056-5b80-4054-b7ad-accef5fd6ce4|rescue-server-rama|ACTIVE|Running||n2-highcpu-2|odc-r09-oscompute-05|2|2G
+ddb|c9fdb463-d3c8-4e20-b302-658abad8bcb3|rescue-server-janu|ACTIVE|Running|pinang-prd-net=10.26.0.162, 172.28.216.159|n2-highcpu-2|odc-r08-oscompute-22|2|2G
+ddb|1a545535-1ca3-4ad6-b12a-2204d27c9856|rescue-server-akbar|ACTIVE|Running|pinang-prd-net=10.26.0.210, 172.28.217.137|n2-highcpu-2|odc-r07-oscompute-27|2|2G
+ddb|0b1fa1db-5335-42b0-b865-7db1d9bda360|server-rescue-rifki|ACTIVE|Running|pinang-prd-net=10.26.0.37, 172.28.216.162|n2-highcpu-2|odc-r07-oscompute-27|2|2G
+ddb|1c1a4e35-362f-407a-9716-179250991e32|ceria-nfs|ACTIVE|Running|ceria-prd-net=10.26.2.190, 172.28.216.222|n2-highcpu-4|odc-r09-oscompute-05|4|4G
+ddb|8c4ced99-4e86-4946-891a-669861b9fff6|ceria-intelix-prod-db-server|ACTIVE|Running|ceria-prd-net=10.26.2.87|n2-highcpu-16|odc-r09-oscompute-03|16|16G
+ddb|ee93a145-c9bf-4be5-be1d-3d3ab35edf39|Merchant Dashboard Server|ACTIVE|Running|ceria-prd-net=10.26.2.68, 172.28.216.62|n2-highcpu-32|odc-r07-oscompute-31|32|32G
+ddb|2eb7c9cd-9c13-4dde-8c57-d2815334f770|DIGIBANK_PCPP2|ACTIVE|Running|pinang-prd-net=10.26.0.59|n2-highcpu-16|odc-r09-oscompute-05|16|16G
+ddb|a1b67b8a-4e37-48c1-986f-59d1c29097a3|ceria-core-banking-app2-vol1|ACTIVE|Running|ceria-prd-net=10.26.2.78|n2-highcpu-32|odc-r06-oscompute-38|32|32G
+ddb|15c208a3-a190-48f1-a763-ff5a1974c1f6|ceria-core-banking-app1-vol1|SHUTOFF|Shutdown|ceria-prd-net=10.26.2.99|n2-highcpu-32|odc-r08-oscompute-18|32|32G
+ddb|72ed6494-a34c-4651-8797-1a0bcff26d7e|Ceria Database Active Node|ACTIVE|Running|ceria-prd-net=10.26.2.160|n2-highcpu-32|odc-r06-oscompute-41|32|32G
+ddb|b5b69342-be9e-47bb-8d98-1de2ca1ad7c4|ceria-pinang-intra-digital-bank-1-root|ACTIVE|Running|ceria-prd-net=10.26.2.130|n2-highcpu-16|odc-r09-oscompute-05|16|16G
+ddb|840b416e-f001-4f3c-9249-1db0bfdd7004|ceria-pinang-intra-digital-bank-2-root|ACTIVE|Running|ceria-prd-net=10.26.2.95|n2-highcpu-16|odc-r07-oscompute-27|16|16G
+ddb|4352a8eb-a48a-4194-b9a9-3dfc82239612|DIGIBANK_PJEE1|ACTIVE|Running|pinang-prd-net=10.26.0.15|n2-highcpu-32|odc-r08-oscompute-16|32|32G
+ddb|1d1373ae-246d-40b9-9339-dda435881bc2|agent-pinang-jee2|ACTIVE|Running|pinang-prd-net=10.26.0.31|n2-highcpu-8|odc-r08-oscompute-22|8|8G
+ddb|dfae06b0-2b61-476f-93fa-7a4a6a72210f|element-kyc|ACTIVE|Running|pinang-prd-net=10.26.0.194, 172.28.218.134|n2-highcpu-32|odc-r09-oscompute-11|32|32G
+ddb|22795aba-c8a4-4076-997c-67195b7d77fd|DIGIBANK-PAD02|ACTIVE|Running|pinang-prd-net=10.26.0.48|n2-highcpu-16|odc-r09-oscompute-05|16|16G
+ddb|76ce730b-f425-4d86-a3cb-e402e4b5a8ff|DIGIBANK-RDAT01|ACTIVE|Running|pinang-prd-net=10.26.0.122|n2-highcpu-4|odc-r07-oscompute-33|4|4G
+ddb|b2628788-782c-4bbe-82dc-417bfd33163e|DIGIBANK-RDAT02|ACTIVE|Running|pinang-prd-net=10.26.0.34|n2-highcpu-4|odc-r08-oscompute-18|4|4G
+ddb|4852109d-60f0-475e-9753-10f1cf08b425|dgb-whitelist-ms|ACTIVE|Running|pinang-prd-net=10.26.0.152|n2-highcpu-16|odc-r08-oscompute-22|16|16G
+ddb|4a740ad6-0f69-4355-9ff8-0b7f28c27a0f|pinang-och-mongodb-ha-1-root|ACTIVE|Running|pinang-prd-net=10.26.0.29|n2-highcpu-16|odc-r07-oscompute-28|16|16G
+ddb|faa69a4b-9cdb-4aed-9a5d-b067b876d9a0|Agent-Pinang-JEE-1|ACTIVE|Running|pinang-prd-net=10.26.0.127|n2-highcpu-8|odc-r07-oscompute-27|8|8G
+ddb|769ec3ac-e97f-4a6e-b1c1-95c8626f948e|Agent-Pinang-Web-1|ACTIVE|Running|pinang-prd-net=10.26.0.88|n2-highcpu-4|odc-r06-oscompute-40|4|4G
+ddb|52b3a543-96a3-4ef5-ab76-ef6b168bd1f7|Ceria-Pinang-Finacle-OCH-2|ACTIVE|Running|pinang-prd-net=10.26.0.105|n2-highcpu-32|odc-r07-oscompute-28|32|32G
+ddb|503d4f88-07e9-4707-8e6c-17f4a2faffab|Ceria-Pinang-Finacle-OCH-1|ACTIVE|Running|ceria-prd-net=10.26.2.93|n2-highcpu-32|odc-r08-oscompute-20|32|32G
+ddb|362650e0-823f-4ea7-955b-328749db8ebd|ceria-prod-nodejs-cnjs2|ACTIVE|Running|ceria-prd-net=10.26.2.23|n2-highcpu-8|odc-r09-oscompute-03|8|8G
+ddb|9661eba9-5c6d-468b-9200-0b08402ba896|Agent-Pinang-Web-2|ACTIVE|Running|pinang-prd-net=10.26.0.227|n2-highcpu-4|odc-r09-oscompute-07|4|4G
+ddb|79c0228b-c836-4f94-a8de-75161268f206|ceria-intelix-prod-web-server|ACTIVE|Running|ceria-prd-net=10.26.2.156|n2-highcpu-8|odc-r07-oscompute-29|8|8G
+ddb|44f82476-10b5-4be4-b89d-da24d63558e4|DIGIBANK_PCPP1|ACTIVE|Running|pinang-prd-net=10.26.0.112|n2-highcpu-32|odc-r07-oscompute-26|32|32G
+ddb|edfd48d3-c6df-4407-8006-a1a76f92e053|ceria-prod-keycloak-ckey1|ACTIVE|Running|ceria-prd-net=10.26.2.64|n2-highcpu-8|odc-r09-oscompute-11|8|8G
+ddb|ac8c5e35-d7d0-48c0-8b5a-7af471bb7ea3|dgb-privy-fr-app-root|ACTIVE|Running|pinang-prd-net=10.26.0.147|n2-highcpu-8|odc-r06-oscompute-41|8|8G
+ddb|71ff7878-7036-45bd-b362-6f3a73460588|dgb-privy-fr-db|ACTIVE|Running|pinang-prd-net=10.26.0.140|n2-highcpu-8|odc-r07-oscompute-26|8|8G
+ddb|38d88c0a-30dd-455e-b943-e330d7d0f8fc|dgb-pinang-referral-db-prd-01|ACTIVE|Running|pinang-prd-net=10.26.0.46, 172.28.219.11|n2-highcpu-4|odc-r06-oscompute-43|4|4G
+ddb|6ccb567f-17f9-40ae-8c5e-91b6dca86a61|DIGIBANK-RDAT03|ACTIVE|Running|pinang-prd-net=10.26.0.65|n2-highcpu-2|odc-r09-oscompute-05|2|2G
+ddb|ef09d89e-0f0b-4c80-9ff4-488a9244f346|ceria-core-proxy|ACTIVE|Running|ceria-prd-net=10.26.2.43|n2-highcpu-16|odc-r08-oscompute-15|16|16G
+kubernetes|0d5a4168-8e8f-41c0-a344-152fc7f841f9|k8s-cluster01-worker02|ACTIVE|Running|internal_network=192.168.200.22, 172.28.216.156|k8s-cluster01|odc-r09-oscompute-06|4|4G
+kubernetes|2cfdc703-92c8-4dbd-a220-7522c637db12|k8s-cluster01-worker01|ACTIVE|Running|internal_network=192.168.200.21, 172.28.216.73|k8s-cluster01|odc-r07-oscompute-30|4|4G
+kubernetes|b2a76bc3-574f-40fe-9b3c-a299c656f562|k8s-cluster01-master03|ACTIVE|Running|internal_network=192.168.200.13, 172.28.217.197|k8s-cluster01|odc-r06-oscompute-39|4|4G
+kubernetes|7b969d7e-eb6f-42ba-8588-c5d3d515f455|k8s-cluster01-master02|ACTIVE|Running|internal_network=192.168.200.12, 172.28.217.8|k8s-cluster01|odc-r07-oscompute-33|4|4G
+kubernetes|4af08d09-02bc-4e89-96bc-9772fd9a27b5|k8s-cluster01-master01|ACTIVE|Running|internal_network=192.168.200.11, 172.28.217.243|k8s-cluster01|odc-r08-oscompute-20|4|4G
+kubernetes|05701a8a-23f2-44ff-acb1-3516fb327e34|k8s-cluster01-lb|ACTIVE|Running|internal_network=192.168.200.10, 172.28.219.191|k8s-cluster01|odc-r09-oscompute-05|4|4G

@@ -317,11 +317,13 @@ def generate_vcpu_allocation_plot():
 def list_all_instances():
     # Load data from aio.csv
     data = pd.read_csv('aio.csv', delimiter="|")
+    data_odc = pd.read_csv('aio_odc.csv', delimiter="|")
 
     # Convert data to a list of dictionaries
     data_list = data.to_dict(orient='records')
+    data_list_odc = data_odc.to_dict(orient='records')
 
-    return render_template('list_all_instances.html', data_list=data_list)
+    return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc)
 
 if __name__ == '__main__':
     app.run(debug=True)

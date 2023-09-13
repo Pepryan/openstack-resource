@@ -35,5 +35,36 @@
             {% endfor %}
         </tbody>
     </table>
+    <h1>List All Instances - ODC</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Power State</th>
+                <th>Networks</th>
+                <th>Flavor Name</th>
+                <th>Host</th>
+                <th>vCPU</th>
+                <th>RAM</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instance in data_list_odc %}
+            <tr>
+                <td>{{ instance["ID"] }}</td>
+                <td>{{ instance["Name"] }}</td>
+                <td>{{ instance["Status"] }}</td>
+                <td>{{ instance["Power State"] }}</td>
+                <td>{{ instance["Networks"] }}</td>
+                <td>{{ instance["Flavor Name"] }}</td>
+                <td>{{ instance["Host"] }}</td>
+                <td>{{ instance["CPU"] }}</td>
+                <td>{{ instance["RAM"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
