@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,10 +7,10 @@ import datetime
 app = Flask(__name__)
 
 # Load data from aio.csv
-data = pd.read_csv('aio.csv')
+data = pd.read_csv('aio.csv', delimiter="|")
 # Filter rows where 'Host' column has NaN values
 nan_rows = data[data['Host'].isna()]
-
+# print(data)
 print(nan_rows)
 
 # Function to get vcpus_used for a host from allocation.txt
@@ -311,7 +311,17 @@ def generate_vcpu_allocation_plot():
         # 'vcpu_claimed_to_move': vcpu_claimed_to_move
     }
     return jsonify(response_data)
+    # return send_file(image_path, as_attachment=True)
 
+@app.route('/list_all_instances', methods=['GET'])
+def list_all_instances():
+    # Load data from aio.csv
+    data = pd.read_csv('aio.csv', delimiter="|")
+
+    # Convert data to a list of dictionaries
+    data_list = data.to_dict(orient='records')
+
+    return render_template('list_all_instances.html', data_list=data_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
