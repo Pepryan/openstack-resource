@@ -6,6 +6,8 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - List instance on compute with vCPU
 - Move instance
 - Generate plot vCPUs allocation (work on progress, you can still see the generated image on your project directory)
+- Data will be automated sync with script
+- List all instance with image name, flavor name, VCPUs and RAM
 
 ### Tech used
 - Vanilla javascript, HTML, CSS
@@ -13,8 +15,6 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - flask
 
 ### Still on check (known bugs)
-- Data aio.csv not update (not yet updated as of Sept 2023)
-- Data from allocation.txt and sum of vCPUs not same (because aio.csv not update)
 - Picture when "Generate Plot" can be only see in the "Results" project dir, not yet implement in frontend (still error)
 - Picture plot allocation only listing instance on destination host (instance to move not yet added)
 
