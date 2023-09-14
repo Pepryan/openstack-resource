@@ -8,11 +8,13 @@
     <table>
         <thead>
             <tr>
+                <th>Project</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Status</th>
                 <th>Power State</th>
                 <th>Networks</th>
+                <th>Image Name</th>
                 <th>Flavor Name</th>
                 <th>Host</th>
                 <th>vCPU</th>
@@ -22,11 +24,13 @@
         <tbody>
             {% for instance in data_list %}
             <tr>
+                <td>{{ instance["Project"] }}</td>
                 <td>{{ instance["ID"] }}</td>
                 <td>{{ instance["Name"] }}</td>
                 <td>{{ instance["Status"] }}</td>
                 <td>{{ instance["Power State"] }}</td>
                 <td>{{ instance["Networks"] }}</td>
+                <td>{{ instance["Image Name"] }}</td>
                 <td>{{ instance["Flavor Name"] }}</td>
                 <td>{{ instance["Host"] }}</td>
                 <td>{{ instance["CPU"] }}</td>
@@ -39,6 +43,7 @@
     <table>
         <thead>
             <tr>
+                <th>Project</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Status</th>
@@ -53,6 +58,7 @@
         <tbody>
             {% for instance in data_list_odc %}
             <tr>
+                <td>{{ instance["Project"] }}</td>
                 <td>{{ instance["ID"] }}</td>
                 <td>{{ instance["Name"] }}</td>
                 <td>{{ instance["Status"] }}</td>
