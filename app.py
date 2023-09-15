@@ -325,5 +325,28 @@ def list_all_instances():
 
     return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc)
 
+@app.route('/get_compute_with_free_vcpus', methods=['GET'])
+def get_compute_with_free_vcpus():
+    vcpu_required = int(request.args.get('vcpu'))
+
+    # Lakukan pemrosesan untuk mendapatkan daftar compute dengan vCPU gratis sesuai input
+    compute_list = []
+
+    # Contoh: Loop melalui daftar compute Anda dan periksa vCPU yang tersedia
+    # Anda harus menyesuaikan logika berdasarkan data yang Anda miliki.
+    for compute in data['Host']:
+        vcpus_total = get_vcpus_ratio(compute) * 48  # Hitung total vCPU berdasarkan rasio
+        vcpus_used = get_vcpus_used(compute)  # Dapatkan vCPU yang sudah digunakan
+        vcpus_free = vcpus_total - vcpus_used  # Hitung vCPU yang tersedia
+        if vcpus_free >= vcpu_required:
+            compute_list.append(compute)
+
+    # Mengonversi list ke dalam set untuk menghilangkan duplikasi
+    unique_compute_set = set(compute_list)
+
+    return jsonify({'compute_list': list(unique_compute_set)})
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(debug=True, host="localhost", port=5000)

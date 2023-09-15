@@ -21,6 +21,13 @@
         <div id="vcpuAllocationPlot">
             <!-- Plot will be displayed here -->
         </div>
+        <h1>List Compute Free</h1>
+        <label for="vcpuInput">Masukkan jumlah VCPU:</label>
+        <input type="number" id="vcpuInput" name="vcpuInput" min="1">
+        <button onclick="getComputeWithFreeVCPUs()">Cari Compute</button>
+        <div id="computeList">
+        
+        </div>
     </div>
     <div style="float: left; width: 45%;">
         <h2>Destination Host</h2>
@@ -30,8 +37,8 @@
         <h3 id="destinationHostInfo">Info destination_host</h3>
         <p>vCPUs Used : <span id="vcpusUsedHost">0</span></p>
         <p>Total vCPUs : <span id="totalVCPUsHost">0</span></p>
-        <p>Free vCPUs (Current): <span id="freeVCPUsHost">0</span></p>
-        <p>Free vCPUs (After): <span id="freeVCPUsAfter">0</span></p>
+        <p>Free vCPUs (Before): <span id="freeVCPUsHost">0</span></p>
+        <p>Free vCPUs (Current): <span id="freeVCPUsAfter">0</span></p>
         <p>Total vCPUs to Move: <span id="totalVCPUsToMove">0</span></p>
         
         <h3 id="destinationHostTitle">Instances on destination_host</h3>
@@ -349,6 +356,51 @@
         var vcpuAllocationPlotDiv = document.getElementById('vcpuAllocationPlot');
         vcpuAllocationPlotDiv.innerHTML = '<img src="' + plotFilename + '" alt="vCPU Allocation Plot Generated">';
     }
+
+    function getComputeWithFreeVCPUs() {
+    var vcpuInput = document.getElementById('vcpuInput').value;
+
+    if (vcpuInput <= 0) {
+        alert('Masukkan jumlah VCPU yang valid (minimal 1).');
+        return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/get_compute_with_free_vcpus?vcpu=' + encodeURIComponent(vcpuInput), true);
+    xhr.responseType = 'json';
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var computeList = xhr.response.compute_list;
+            displayComputeWithFreeVCPUs(computeList);
+        }
+    };
+    xhr.send();
+    }
+
+    function displayComputeWithFreeVCPUs(computeList) {
+    var computeListDiv = document.getElementById('computeList');
+    var vcpuInput = document.getElementById('vcpuInput').value;
+    computeListDiv.innerHTML = '<h2>Compute dengan ' + vcpuInput + ' free VCPU</h2>';
+
+    if (computeList.length === 0) {
+        computeListDiv.innerHTML += '<p>Tidak ada compute yang memiliki ' + vcpuInput + ' free VCPU.</p>';
+    } else {
+        // Mengonversi array ke dalam set untuk menghilangkan duplikasi
+        var uniqueComputeSet = new Set(computeList);
+        
+        // Mengonversi set kembali ke array dan mengurutkannya secara alfabetis
+        var sortedUniqueCompute = Array.from(uniqueComputeSet).sort();
+        
+        var ul = document.createElement('ul');
+        sortedUniqueCompute.forEach(function(compute) {
+            var li = document.createElement('li');
+            li.textContent = compute;
+            ul.appendChild(li);
+        });
+        computeListDiv.appendChild(ul);
+    }
+    }
+
 
     window.onload = function() {
     loadSourceHosts();

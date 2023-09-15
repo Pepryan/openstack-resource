@@ -33,7 +33,7 @@ gti-r04-oscompute-34, 1, 1
 gti-r03-oscompute-32, 4, 1
 gti-r03-oscompute-33, 4, 1
 gti-r04-oscompute-35, 1, 1
-gti-r04-oscompute-36, 4, 1
+gti-r04-oscompute-36, 8, 1.5
 gti-r04-oscompute-39, 4, 1
 gti-r04-oscompute-38, 4, 1
 gti-r04-oscompute-37, 4, 1
