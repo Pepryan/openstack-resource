@@ -1,6 +1,10 @@
 # Openstack Resource Allocation Web
 Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-based web application that simplifies OpenStack resource allocation information. With just a few easy clicks, you can swiftly move instances to meet your needs.
 
+### Flow
+- Script get-data-aio.sh collect data from controller > scp the data files to instance reporting
+- Data will be updated every 4 hours
+
 ### Feature
 - Info vCPUs compute
 - List instance on compute with vCPU
