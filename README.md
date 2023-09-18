@@ -3,7 +3,10 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 
 ### Flow
 - Script get-data-aio.sh collect data from controller > scp the data files to instance reporting
-- Data will be updated every 2 hours
+- Data will be updated every 2 hours, on crontab ubuntu controller-1, sync with `get-data-aio.sh` script
+```bash
+11 2-23/2 * * * /bin/bash /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.sh >> /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.log 2>&1
+```
 
 ### Feature
 - Info vCPUs compute
@@ -11,7 +14,7 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - Move instance
 - Generate plot vCPUs allocation (work on progress, you can still see the generated image on your project directory)
 - Data will be automated sync with script
-- List all instance with image name, flavor name, VCPUs and RAM
+- List all instance with necessary metadata, filtering feature, exporting feature
 
 ### Tech used
 - Vanilla javascript, HTML, CSS
@@ -19,7 +22,7 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - flask
 
 ### Feature Development
-- Picture plot allocation only listing instance on destination host (instance to move not still on development)
+- Picture plot allocation only listing instance on destination host ("instance to move" will be on development)
 
 ### Development
 Clone this repo to your machine
