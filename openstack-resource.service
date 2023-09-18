@@ -1,0 +1,15 @@
+# /etc/systemd/system/openstack-resource.service
+[Unit]
+Description = Openstack Resource
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/openstack-resource/
+# Environment="PYTHONPATH=$PYTHONPATH:/home/ubuntu/.local/lib/python3.10/site-packages"
+# Environment=https_proxy=http://172.18.218.34:80
+# Environment=http_proxy=http://172.18.218.34:80
+ExecStart=/home/ubuntu/openstack-resource/venv-opre/bin/python3 app.py
+#Restart=on-failure
+
+[Install]
+WantedBy=default.target
