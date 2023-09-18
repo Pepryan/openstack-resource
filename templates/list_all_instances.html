@@ -2,10 +2,63 @@
 <html>
 <head>
     <title>List All Instances</title>
+        <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+    <style>
+    /* Set lebar kontainer DataTables */
+    .dataTables_wrapper {
+        width: 98%; /* Sesuaikan dengan lebar yang Anda inginkan */
+        margin: 0 auto; /* Untuk membuatnya berada di tengah halaman */
+    }
+    /* Warna latar belakang pada baris ganjil */
+    #dataTable tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    /* Warna latar belakang pada baris genap */
+    #dataTable tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    /* Warna latar belakang pada baris saat dihover */
+    #dataTable tr:hover {
+        background-color: #cce6ff;
+    }
+
+    /* Warna latar belakang pada baris yang sedang dipilih */
+    #dataTable tr.selected {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+    
+    /* Warna latar belakang pada baris ganjil untuk tabel kedua */
+    #dataTableodc tr:nth-child(odd) {
+    background-color: #f9f9f9;
+    }
+
+    /* Warna latar belakang pada baris genap untuk tabel kedua */
+    #dataTableodc tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    /* Warna latar belakang pada baris saat dihover untuk tabel kedua */
+    #dataTableodc tr:hover {
+        background-color: #cce6ff;
+    }
+
+    /* Warna latar belakang pada baris yang sedang dipilih untuk tabel kedua */
+    #dataTableodc tr.selected {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+   
+    </style>
+</head>
 </head>
 <body>
     <h1>List All Instances - GTI</h1>
-    <table>
+    <!-- Di bawah tabel -->
+    <p>Last Updated: {{ aio_last_updated }}</p>
+    <table id="dataTable">
         <thead>
             <tr>
                 <th>Project</th>
@@ -40,7 +93,8 @@
         </tbody>
     </table>
     <h1>List All Instances - ODC</h1>
-    <table>
+    <p>Last Updated: {{ aio_odc_last_updated }}</p>
+    <table id="dataTableodc">
         <thead>
             <tr>
                 <th>Project</th>
@@ -74,5 +128,27 @@
             {% endfor %}
         </tbody>
     </table>
+ 
+    <script src="static/DataTables/datatables.min.js"></script>
+    <!-- <script type="text/javascript" src="static/jquery.dataTables.min.js"></script> -->
+    <!-- <script type="text/javascript" src="static/jquery-3.7.1.slim.min.js"></script> -->
+    <script>
+        // Inisialisasi DataTables pada tabel yang ingin Anda buat dinamis
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "buttons": [
+                'csv', // Tambahkan tombol "Export to CSV"
+            ]
+            });
+        });
+        $(document).ready( function () {
+            $('#dataTableodc').DataTable();
+        });
+        // document.addEventListener("DOMContentLoaded", function () {
+        // $('#dataTable').DataTable();
+        // });
+
+    </script>
 </body>
 </html>

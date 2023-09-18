@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import datetime
+import os
 
 app = Flask(__name__)
 
@@ -315,15 +316,26 @@ def generate_vcpu_allocation_plot():
 
 @app.route('/list_all_instances', methods=['GET'])
 def list_all_instances():
+    aio_csv_path = 'aio.csv'
+    aio_odc_csv_path = 'aio_odc.csv'
+
+    # Ambil data waktu terakhir modifikasi
+    aio_last_updated = os.path.getmtime(aio_csv_path)
+    aio_odc_last_updated = os.path.getmtime(aio_odc_csv_path)
+
+    # Ubah format waktu jika perlu
+    aio_last_updated_str = datetime.datetime.fromtimestamp(aio_last_updated).strftime('%d-%m-%Y %H:%M:%S')
+    aio_odc_last_updated_str = datetime.datetime.fromtimestamp(aio_odc_last_updated).strftime('%d-%m-%Y %H:%M:%S')
+
     # Load data from aio.csv
-    data = pd.read_csv('aio.csv', delimiter="|")
-    data_odc = pd.read_csv('aio_odc.csv', delimiter="|")
+    data = pd.read_csv(aio_csv_path, delimiter="|")
+    data_odc = pd.read_csv(aio_odc_csv_path, delimiter="|")
 
     # Convert data to a list of dictionaries
     data_list = data.to_dict(orient='records')
     data_list_odc = data_odc.to_dict(orient='records')
 
-    return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc)
+    return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc, aio_last_updated=aio_last_updated_str, aio_odc_last_updated=aio_odc_last_updated_str)
 
 @app.route('/get_compute_with_free_vcpus', methods=['GET'])
 def get_compute_with_free_vcpus():
@@ -349,4 +361,4 @@ def get_compute_with_free_vcpus():
 
 if __name__ == '__main__':
     # app.run(debug=True)
-    app.run(debug=True, host="localhost", port=5000)
+    app.run(debug=True, host="localhost", port=5005)

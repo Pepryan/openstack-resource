@@ -3,7 +3,7 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 
 ### Flow
 - Script get-data-aio.sh collect data from controller > scp the data files to instance reporting
-- Data will be updated every 4 hours
+- Data will be updated every 2 hours
 
 ### Feature
 - Info vCPUs compute
