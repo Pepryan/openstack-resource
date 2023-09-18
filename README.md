@@ -18,9 +18,8 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - python
 - flask
 
-### Still on check (known bugs)
-- Picture when "Generate Plot" can be only see in the "Results" project dir, not yet implement in frontend (still error)
-- Picture plot allocation only listing instance on destination host (instance to move not yet added)
+### Feature Development
+- Picture plot allocation only listing instance on destination host (instance to move not still on development)
 
 ### Development
 Clone this repo to your machine
