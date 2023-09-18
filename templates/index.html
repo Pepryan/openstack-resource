@@ -27,19 +27,19 @@
                     <div>
                         <p class="text-green-700">vCPUs Used:</p>
                         <p class="text-green-700">Total vCPUs:</p>
-                        <!-- <p class="text-green-700">Free vCPUs (Before):</p> -->
+                        <p class="text-green-700">Free vCPUs:</p>
                     </div>
                     <div>
                         <p><span id="vcpusUsedSourceHost">0</span></p>
                         <p><span id="totalVCPUsSourceHost">0</span></p>
-                        <!-- <p><span id="freeVCPUsSourceHost">0</span></p> -->
+                        <p><span id="freeVCPUsSourceHost">0</span></p>
                     </div>
                 </div>
                 <h3 id="sourceHostTitle" class="text-xl font-semibold text-green-700">Instances on source_hosts</h3>
                 <table id="sourceHost" class="w-full mt-2">
                     <!-- Your table cells and buttons -->
                 </table>
-                <h2 class="text-2xl font-semibold text-green-800 mt-6">vCPU Allocation Plot</h2>
+                <h2 class="text-2xl font-semibold text-green-800 mt-6">vCPU Allocation Plot (based on Dest Host)</h2>
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     onclick="generateVcpuAllocationPlot()">Generate Plot</button>
                 <div id="vcpuAllocationPlot" class="mt-4">
@@ -47,7 +47,7 @@
                 </div>
                 <h1 class="text-2xl font-semibold text-green-800 mt-6">List Compute Free</h1>
                 <div class="flex items-center mt-2">
-                    <label for="vcpuInput" class="text-green-700 mr-2">Enter number of VCPUs::</label>
+                    <label for="vcpuInput" class="text-green-700 mr-2">Enter number of VCPUs:</label>
                     <input type="number" id="vcpuInput" name="vcpuInput" min="1"
                         class="w-20 px-2 py-1 border rounded">
                     <button onclick="getComputeWithFreeVCPUs()"
@@ -148,6 +148,7 @@
 
                     const moveButton = document.createElement('button');
                     moveButton.textContent = 'Move';
+                    moveButton.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded transition duration-300 ease-in-out';
                     moveButton.onclick = () => moveInstanceToDestination('sourceHostMoveBtn' + index);
                     row.insertCell(2).appendChild(moveButton);
                     moveButton.id = 'sourceHostMoveBtn' + index;
@@ -161,7 +162,7 @@
 
                 document.getElementById('vcpusUsedSourceHost').textContent = hostAllocation.vcpus_used;
                 document.getElementById('totalVCPUsSourceHost').textContent = hostAllocation.vcpus_total;
-                // document.getElementById('freeVCPUsSourceHost').textContent = hostAllocation.vcpus_free;
+                document.getElementById('freeVCPUsSourceHost').textContent = hostAllocation.vcpus_free;
             } catch (error) {
                 console.error('Error loading instances:', error);
             }
@@ -268,7 +269,8 @@
                 }
             } else {
                 // document.getElementById('errorText').textContent = 'Total vCPU of the destination host will exceed the limit.';
-                document.getElementById('errorText').textContent = 'Insufficient vcpus_free on the destination host.';
+                // document.getElementById('errorText').textContent = 'Insufficient vcpus_free on the destination host.';
+                alert('Insufficient vcpus_free on the destination host.')
             }
         } catch (error) {
             console.error('Error moving instance to destination:', error);
@@ -318,6 +320,11 @@
     async function generateVcpuAllocationPlot() {
         const selectedDestinationHost = document.getElementById('destinationHostsDropdown').value;
         const selectedInstancesToMove = [];
+        if (!selectedDestinationHost) {
+            alert('Please select a destination host first.');
+            // clearInstancesToMove();
+            return;
+        }
 
         const instancesToMoveTable = document.getElementById('instancesToMove');
         const rows = instancesToMoveTable.getElementsByTagName('tr');
@@ -329,16 +336,16 @@
 
         try {
             const response = await fetch(`/generate_vcpu_allocation_plot?destination_host=${encodeURIComponent(selectedDestinationHost)}`);
-            const { plot_filename } = await response.json();
-            displayVcpuAllocationPlot(plot_filename);
+            const { image_path } = await response.json();
+            displayVcpuAllocationPlot(image_path);
         } catch (error) {
             console.error('Error generating vCPU allocation plot:', error);
         }
     }
 
-    function displayVcpuAllocationPlot(plotFilename) {
+    function displayVcpuAllocationPlot(image_path) {
         const vcpuAllocationPlotDiv = document.getElementById('vcpuAllocationPlot');
-        vcpuAllocationPlotDiv.innerHTML = `<img src="${plotFilename}" alt="vCPU Allocation Plot Generated">`;
+        vcpuAllocationPlotDiv.innerHTML = `<img src="${image_path}" alt="vCPU Allocation Plot Generated">`;
     }
 
     async function getComputeWithFreeVCPUs() {

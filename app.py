@@ -224,12 +224,12 @@ def generate_vcpu_allocation_plot():
     legend_handles = []
     # vcpu_labels = instances['Name'].tolist()
     # vcpu_labels = data[data['Host'] == destination_host][['Name']]
-    print(data_project)
-    print("Daftar Instance yang Akan Digambar:", vcpu_labels)
-    print(vcpus_destination_host)
-    print(vcpus_used_total)
-    print(host_size)
-    print(enumerate(zip(vcpus_destination_host, vcpu_labels)))
+    # print(data_project)
+    # print("Daftar Instance yang Akan Digambar:", vcpu_labels)
+    # print(vcpus_destination_host)
+    # print(vcpus_used_total)
+    # print(host_size)
+    # print(enumerate(zip(vcpus_destination_host, vcpu_labels)))
 
     # Buat salinan vcpu_labels
     # remaining_labels = vcpu_labels.copy()
@@ -265,9 +265,9 @@ def generate_vcpu_allocation_plot():
 
     # Draw and color remaining small squares with gray
     remaining_squares = (int(host_size)) - int(vcpus_used_total)
-    print(host_size)
-    print(vcpus_used_total)
-    print(remaining_squares)
+    # print(host_size)
+    # print(vcpus_used_total)
+    # print(remaining_squares)
     for _ in range(remaining_squares):
         rect = plt.Rectangle((x_pos, y_pos), small_square_size, small_square_size, color='gray', alpha=0.7)
         ax.add_patch(rect)
@@ -298,7 +298,7 @@ def generate_vcpu_allocation_plot():
 
 
     # Title plot
-    image_path = f'results/{destination_host}_{current_time}.png'
+    image_path = f'static/results/{destination_host}_{current_time}.png'
     plt.title(destination_host)
     plt.savefig(image_path, bbox_inches='tight')
     print(f"{destination_host} exported as {image_path}")
@@ -307,7 +307,7 @@ def generate_vcpu_allocation_plot():
     # return f"results/{destination_host}.png"
     # Return JSON response containing vCPU claimed from destination and to move
     response_data = {
-        'image_path': f"results/{destination_host}.png",
+        'image_path': f"static/results/{destination_host}_{current_time}.png",
         # 'vcpu_claimed_destination': vcpu_claimed_destination,
         # 'vcpu_claimed_to_move': vcpu_claimed_to_move
     }
@@ -361,4 +361,4 @@ def get_compute_with_free_vcpus():
 
 if __name__ == '__main__':
     # app.run(debug=True)
-    app.run(debug=True, host="localhost", port=5005)
+    app.run(debug=True, host="0.0.0.0", port=5005)
