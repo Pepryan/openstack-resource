@@ -143,14 +143,24 @@
 
                 instances.forEach(async (instance, index) => {
                     const row = sourceHostTable.insertRow();
-                    row.insertCell(0).textContent = instance.Name;
-                    row.insertCell(1).textContent = instance.CPU;
+                    row.className = 'hover:bg-blue-200';
+
+                    const cell1 = row.insertCell(0);
+                    cell1.textContent = instance.Name;
+
+                    const cell2 = row.insertCell(1);
+                    cell2.textContent = instance.CPU;
+                    cell2.className = "text-center";
+
+                    const moveButtonCell = row.insertCell(2);
+                    moveButtonCell.style.textAlign = 'center';
+                    moveButtonCell.className = 'py-1';
 
                     const moveButton = document.createElement('button');
                     moveButton.textContent = 'Move';
                     moveButton.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded transition duration-300 ease-in-out';
                     moveButton.onclick = () => moveInstanceToDestination('sourceHostMoveBtn' + index);
-                    row.insertCell(2).appendChild(moveButton);
+                    moveButtonCell.appendChild(moveButton);
                     moveButton.id = 'sourceHostMoveBtn' + index;
                 });
 
@@ -183,9 +193,15 @@
                 if (data.instances) {
                     data.instances.forEach(instance => {
                         const row = destinationHostTable.insertRow();
-                        row.insertCell(0).textContent = instance.Name;
-                        row.insertCell(1).textContent = instance.CPU;
-                    });
+                        row.className = 'hover:bg-blue-200';
+
+                        const cell1 = row.insertCell(0);
+                        cell1.textContent = instance.Name;
+
+                        const cell2 = row.insertCell(1);
+                        cell2.textContent = instance.CPU;
+                        cell2.className = "text-center py-1";
+                        });
                 }
 
                 document.getElementById('destinationHostTitle').textContent = 'Instances on ' + selectedHost;
