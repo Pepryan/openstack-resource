@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 import os
+import csv
 
 app = Flask(__name__)
 
@@ -88,8 +89,8 @@ def get_destination_host_instances():
 def get_instance_vcpus_used():
     instance_name = request.args.get('name')
     instance_host = data[data['Name'] == instance_name]['Host'].values[0]
-    vcpus_ratio = get_vcpus_ratio(instance_host)
-    vcpus_used = get_vcpus_used(instance_host)
+    # vcpus_ratio = get_vcpus_ratio(instance_host)
+    # vcpus_used = get_vcpus_used(instance_host)
     vcpus_used_instance = int(data[data['Name'] == instance_name]['CPU'].values[0])
     return jsonify(vcpus_used_instance)
 
@@ -139,80 +140,64 @@ def get_host_allocation():
 @app.route('/generate_vcpu_allocation_plot', methods=['GET'])
 def generate_vcpu_allocation_plot():
     destination_host = request.args.get('destination_host')
-    # instances_to_move = request.args.getlist('instances_to_move[]')
-
-    # Mendapatkan data vCPU dari seluruh instance pada host tujuan dan instance yang akan dipindahkan
-    vcpus = []
+    file_path = 'aio.csv'
     longest_string = ""
-    # Mendapatkan data vCPU dari seluruh instance pada host tujuan
-    data_destination_host = data[data['Host'] == destination_host]
-    vcpus_destination_host = data_destination_host['CPU'].astype(int).tolist()
-    vcpus.extend(vcpus_destination_host)
+    vcpu_claimed = []
+    vcpu_labels = []
+
+    # Load CSV
+    with open(file_path, 'r', newline='') as csvfile:
+        csvreader = csv.reader(csvfile, delimiter='|')  # Set delimiter to "|"
+        next(csvreader)  # Skip the header row
+        for row in csvreader:
+            if destination_host == row[10]:  # Menggunakan indeks 10 untuk kolom 'Host'
+                if row[3] == 'ACTIVE' or row[3] == 'SHUTOFF':  # Menggunakan indeks 3 untuk kolom 'Status'
+                    vcpu_labels.append(f"{row[3][0]}_{row[0]}__{row[2]}")  # Menggunakan indeks sesuai dengan kolom yang dibutuhkan
+                    vcpu_claimed.append(int(row[11]))  # Menggunakan indeks sesuai dengan kolom 'CPU'
+                    if len(f"{row[0]}__{row[2]}") > len(longest_string):
+                        longest_string = f"{row[0]}__{row[2]}"
+
+    # Load hosts from ratio.txt
+    with open('ratio.txt', 'r') as ratio_file:
+        for line in ratio_file:
+            parts = line.strip().split(',')
+            if len(parts) == 3 and parts[0] == destination_host:
+                ratio_value = float(parts[1])
+                host_size = 48
+                host_size = host_size * ratio_value
+                print("host size",host_size)
+                break  # Stop searching after finding the host
+
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    data_project = data[data['Host'] == destination_host]['Project'].tolist()
-    vcpu_labels = data_destination_host['Name'].tolist()  # Convert the 'Name' column to a list of strings
-    # if len(f"{data_project}__{vcpu_labels}") > len(longest_string):
-    #     longest_string = f"{data_project}__{vcpu_labels}"
-    # print(longest_string)
-
-
-
-    # Mendapatkan data vCPU dari instance yang akan dipindahkan
-    # for instance_name in instances_to_move:
-    #     vcpus_instance = data[data['Name'] == instance_name]['CPU'].astype(int).tolist()
-    #     vcpus.extend(vcpus_instance)
-    
-    # Fetch vCPUs used for the selected host from allocation.txt
-    # vcpus_used = get_vcpus_used(destination_host)
-
-    # Fetch vCPUs ratio for the selected host from ratio.txt
-    vcpus_ratio = get_vcpus_ratio(destination_host)
-    print("ratio compute",vcpus_ratio)
-    print(destination_host)
-
-    # Calculate host size/vCPUs total based on the ratio
-    core_compute = 48  # Assuming a fixed core compute value
-    host_size = core_compute * vcpus_ratio
-    print("host_size atas",host_size)
-
-    # Fetch instances from the selected destination host
-    # instances_destination = data[data['Host'] == destination_host][['Name', 'CPU']]
-    # instances_destination_json = instances_destination.to_dict(orient='records')
-
-    # Append vCPUs used by instances on the destination host
-    # vcpu_claimed_destination = data[data['Host'] == destination_host][['CPU']]
-    # vcpu_claimed_destination = [int(instance['CPU']) for instance in instances_destination_json]
-
-    # Fetch instances that will be moved
-    # instances_to_move = []  # Create a list to store instances to move
-
     # Calculate the new size of the host square
     # vcpus_total = sum(vcpus_destination_host)
-    allocation_file = open('allocation.txt', 'r')
-    vcpus_used_total = 0
+    # allocation_file = open('allocation.txt', 'r')
+    # vcpus_used_total = 0
 
-    for line in allocation_file:
-        parts = line.strip().split()
-        if len(parts) >= 6 and parts[1] == destination_host:
-            vcpus_used_total = int(parts[5]) 
-            break
+    # for line in allocation_file:
+    #     parts = line.strip().split()
+    #     if len(parts) >= 6 and parts[1] == destination_host:
+    #         vcpus_used_total = int(parts[5]) 
+    #         break
 
-    allocation_file.close()
-    # vcpus_used_total = get_vcpus_used(destination_host)
+    # allocation_file.close()
+    # Total number of vCPUs
+    total_vcpus = sum(vcpu_claimed)
+    # print(total_vcpus)
+    # New size of the host square
+
     # Calculate the size of each small square based on the desired number of columns
     num_cols = 16
     small_square_size = host_size / num_cols
 
     # Calculate the number of rows based on the total number of vCPUs and desired number of columns
-    # num_rows = (vcpus_used + num_cols - 1) // num_cols
-    num_rows = (vcpus_used_total + num_cols - 1) // num_cols
-    # num_rows = vcpus_total + num_cols - 1 / num_cols
-
+    num_rows = (total_vcpus + num_cols - 1) // num_cols
+    # print(num_rows)
     # Calculate the total number of small squares
     total_small_squares = num_rows * num_cols
 
     # Create a colormap with the number of colors equal to the number of vCPUs sizes
-    colors = plt.cm.get_cmap('tab20', len(vcpus_destination_host))
+    colors = plt.cm.get_cmap('tab20', len(vcpu_claimed))
 
     # Create a new figure and axis
     fig, ax = plt.subplots()
@@ -222,52 +207,30 @@ def generate_vcpu_allocation_plot():
     y_pos = 0
 
     legend_handles = []
-    # vcpu_labels = instances['Name'].tolist()
-    # vcpu_labels = data[data['Host'] == destination_host][['Name']]
-    # print(data_project)
-    # print("Daftar Instance yang Akan Digambar:", vcpu_labels)
-    # print(vcpus_destination_host)
-    # print(vcpus_used_total)
-    # print(host_size)
-    # print(enumerate(zip(vcpus_destination_host, vcpu_labels)))
-
-    # Buat salinan vcpu_labels
-    # remaining_labels = vcpu_labels.copy()
-    # legend_handles = []
-
-    # Buat salinan vcpu_labels
-    remaining_labels = vcpu_labels.copy()
-    legend_handles = []
-    unique_labels = set()  # Buat daftar label unik untuk semua instance
+    unique_labels = set(vcpu_labels)
 
     # Loop through the vCPUs and draw squares
-    for i, (vcpu, label) in enumerate(zip(vcpus_destination_host, vcpu_labels), start=1):
-        print(f"Instance: {label}, Jumlah vCPU: {vcpu}")
+    for i, (vcpu, label) in enumerate(zip(vcpu_claimed, vcpu_labels)):
         color = colors(i)
         for _ in range(vcpu):
             rect = plt.Rectangle((x_pos, y_pos), small_square_size, small_square_size, color=color, alpha=0.7)
             ax.add_patch(rect)
-
+            
             # Label each small square with the evaluated vcpu_claimed value
             ax.text(x_pos + small_square_size / 2, y_pos + small_square_size / 2, str(vcpu),
                     color='white', ha='center', va='center')
-
+            
             x_pos += small_square_size
             if x_pos >= host_size:
                 x_pos = 0
                 y_pos += small_square_size
 
-        # Tambahkan label ke legenda jika belum ada dalam daftar label yang digunakan
-        if label not in unique_labels:
-            unique_labels.add(label)
+        if label in unique_labels:
             legend_handles.append(rect)
-        print("remaining_labels", remaining_labels)
+            unique_labels.remove(label)
 
     # Draw and color remaining small squares with gray
-    remaining_squares = (int(host_size)) - int(vcpus_used_total)
-    # print(host_size)
-    # print(vcpus_used_total)
-    # print(remaining_squares)
+    remaining_squares = int(host_size - total_vcpus)  # Mengubah ke integer
     for _ in range(remaining_squares):
         rect = plt.Rectangle((x_pos, y_pos), small_square_size, small_square_size, color='gray', alpha=0.7)
         ax.add_patch(rect)
@@ -282,6 +245,8 @@ def generate_vcpu_allocation_plot():
     # Set axis limits and labels
     ax.set_xlim(0, host_size)
     ax.set_ylim(0, host_size)
+    # ax.set_xlabel('vCPU')
+    # ax.set_ylabel('vCPU')
 
     # Set custom tick intervals and labels for x and y axes
     ax.set_xticks([i * small_square_size for i in range(num_cols + 1)])
@@ -290,10 +255,13 @@ def generate_vcpu_allocation_plot():
     ax.set_yticklabels([str(i) for i in range(num_rows + 1)])
 
     # Create a legend using legend handles and unique labels
-    ankor = 1.6 + (len(destination_host) * 0.03)
+    # 1.6
+    # (1.6 + (len(longest_string) * 0.05))
+    ankor = 1.6 + (len(longest_string) * 0.03)
+    print(ankor)
     if ankor > 3.3:
         ankor = 3.325
-    ax.legend(handles=legend_handles, labels=unique_labels, loc='upper right', bbox_to_anchor=(ankor, 1))
+    ax.legend(handles=legend_handles, labels=vcpu_labels, loc='upper right', bbox_to_anchor=(ankor, 1))
 
 
 
@@ -336,6 +304,23 @@ def list_all_instances():
     data_list_odc = data_odc.to_dict(orient='records')
 
     return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc, aio_last_updated=aio_last_updated_str, aio_odc_last_updated=aio_odc_last_updated_str)
+
+# @app.route('/compute_service', methods=['GET'])
+# def compute_service():
+#     compute_service_file = open('compute_service.txt', 'r')
+#     for line in compute_service_file:
+#         compute_list = []
+#         parts = line.strip().split()
+#         compute = print(parts[2], parts[4])
+#         compute_list.append(compute)
+#         # compute_service_file.close()
+#     response_data = {
+#         'compute_list': compute_list
+#         # 'vcpu_claimed_destination': vcpu_claimed_destination,
+#         # 'vcpu_claimed_to_move': vcpu_claimed_to_move
+#     }
+#     return jsonify(response_data)
+#     # return render_template('compute_service.html')
 
 @app.route('/get_compute_with_free_vcpus', methods=['GET'])
 def get_compute_with_free_vcpus():
