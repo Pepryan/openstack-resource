@@ -1,6 +1,6 @@
 #!/bin/bash
 source ~/admin-openrc
-instance_server="172.18.218.129:~/openstack-resource"
+instance_server="172.18.218.129:~/openstack-resource/data"
 project_names=($(openstack project list -c Name -f value))
 output_file="aio.csv"
 
