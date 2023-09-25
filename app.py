@@ -136,6 +136,7 @@ def generate_vcpu_allocation_plot():
     longest_string = ""
     vcpu_claimed = []
     vcpu_labels = []
+    # current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Load CSV
     with open(file_path, 'r', newline='') as csvfile:
@@ -159,8 +160,6 @@ def generate_vcpu_allocation_plot():
                 host_size = host_size * ratio_value
                 print("host size",host_size)
                 break  # Stop searching after finding the host
-
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Total number of vCPUs
     total_vcpus = sum(vcpu_claimed)
@@ -281,6 +280,12 @@ def list_all_instances():
     # Convert data to a list of dictionaries
     data_list = data.to_dict(orient='records')
     # data_list_odc = data_odc.to_dict(orient='records')
+
+    # Modify the data_list to replace empty or NaN values with spaces
+    for instance in data_list:
+        for key, value in instance.items():
+            if pd.isna(value) or value == '':
+                instance[key] = '-'
 
     # return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc, aio_last_updated=aio_last_updated_str, aio_odc_last_updated=aio_odc_last_updated_str)
     return render_template('list_all_instances.html', data_list=data_list, aio_last_updated=aio_last_updated_str)
