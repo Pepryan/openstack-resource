@@ -9,7 +9,7 @@ import csv
 app = Flask(__name__)
 
 # Load data from aio.csv
-data = pd.read_csv('aio.csv', delimiter="|")
+data = pd.read_csv('data/aio.csv', delimiter="|")
 # Filter rows where 'Host' column has NaN values
 nan_rows = data[data['Host'].isna()]
 # print(data)
@@ -17,7 +17,7 @@ print(nan_rows)
 
 # Function to get vcpus_used for a host from allocation.txt
 def get_vcpus_used(host):
-    allocation_file = open('allocation.txt', 'r')
+    allocation_file = open('data/allocation.txt', 'r')
     vcpus_used = 0
 
     for line in allocation_file:
@@ -31,7 +31,7 @@ def get_vcpus_used(host):
 # Function to get vcpus_ratio for a host from ratio.txt
 def get_vcpus_ratio(host):
     vcpus_ratio = 0.0
-    ratio_file = open('ratio.txt', 'r')
+    ratio_file = open('data/ratio.txt', 'r')
     for line in ratio_file:
         parts = line.strip().split(', ')
         if len(parts) == 3 and parts[0] == host:
@@ -89,7 +89,7 @@ def get_instance_vcpus_used():
 @app.route('/get_host_allocation', methods=['GET'])
 def get_host_allocation():
     host = request.args.get('host')
-    allocation_file = open('allocation.txt', 'r')
+    allocation_file = open('data/allocation.txt', 'r')
     vcpus_used = 0
 
     for line in allocation_file:
@@ -100,7 +100,7 @@ def get_host_allocation():
 
     allocation_file.close()
 
-    ratio_file = open('ratio.txt', 'r')
+    ratio_file = open('data/ratio.txt', 'r')
     vcpus_total = 0
 
     for line in ratio_file:
@@ -132,7 +132,7 @@ def get_host_allocation():
 @app.route('/generate_vcpu_allocation_plot', methods=['GET'])
 def generate_vcpu_allocation_plot():
     destination_host = request.args.get('destination_host')
-    file_path = 'aio.csv'
+    file_path = 'data/aio.csv'
     longest_string = ""
     vcpu_claimed = []
     vcpu_labels = []
@@ -150,7 +150,7 @@ def generate_vcpu_allocation_plot():
                         longest_string = f"{row[0]}__{row[2]}"
 
     # Load hosts from ratio.txt
-    with open('ratio.txt', 'r') as ratio_file:
+    with open('data/ratio.txt', 'r') as ratio_file:
         for line in ratio_file:
             parts = line.strip().split(',')
             if len(parts) == 3 and parts[0] == destination_host:
@@ -247,23 +247,23 @@ def generate_vcpu_allocation_plot():
 
 
     # Title plot
-    image_path = f'static/results/{destination_host}_{current_time}.png'
+    # image_path = f'static/results/{destination_host}_{current_time}.png'
+    image_path = f'static/results/{destination_host}.png'
     plt.title(destination_host)
     plt.savefig(image_path, bbox_inches='tight')
     print(f"{destination_host} exported as {image_path}")
 
     # Return the image path to be displayed in the HTML
-    # return f"results/{destination_host}.png"
-    # Return JSON response containing vCPU claimed from destination and to move
     response_data = {
-        'image_path': f"static/results/{destination_host}_{current_time}.png",
+        # 'image_path': f"static/results/{destination_host}_{current_time}.png",
+        'image_path': f"static/results/{destination_host}.png",
     }
     return jsonify(response_data)
     # return send_file(image_path, as_attachment=True)
 
 @app.route('/list_all_instances', methods=['GET'])
 def list_all_instances():
-    aio_csv_path = 'aio.csv'
+    aio_csv_path = 'data/aio.csv'
     # aio_odc_csv_path = 'aio_odc.csv'
 
     # Ambil data waktu terakhir modifikasi
@@ -314,10 +314,11 @@ def get_compute_with_free_vcpus():
         vcpus_used = get_vcpus_used(compute)  # Dapatkan vCPU yang sudah digunakan
         vcpus_free = vcpus_total - vcpus_used  # Hitung vCPU yang tersedia
         # Cek apakah vcpus_total sama dengan 48
-        if vcpus_total == 48:
-            compute_list.append(f"{compute} (dedicated)")  # Tambahkan keterangan "dedicated"
-        elif vcpus_free >= vcpu_required:
-            compute_list.append(compute)
+        if vcpus_free >= vcpu_required:
+            if vcpus_total == 48:
+                compute_list.append(f"{compute} (dedicated)")  # Tambahkan keterangan "dedicated"
+            else:
+                compute_list.append(compute)
 
     # Mengonversi list ke dalam set untuk menghilangkan duplikasi
     unique_compute_set = set(compute_list)
@@ -327,8 +328,8 @@ def get_compute_with_free_vcpus():
 @app.route('/list_all_flavors', methods=['GET'])
 def list_all_flavors():
     # Baca data dari berkas CSV
-    flavor_data = pd.read_csv('flavors.csv', delimiter='|')
-    flavor_last_updated = os.path.getmtime('flavors.csv')
+    flavor_data = pd.read_csv('data/flavors.csv', delimiter='|')
+    flavor_last_updated = os.path.getmtime('data/flavors.csv')
     flavor_last_updated_str = datetime.datetime.fromtimestamp(flavor_last_updated).strftime('%d-%m-%Y %H:%M:%S')
     
     # Fungsi untuk mengganti angka di kolom ketiga
