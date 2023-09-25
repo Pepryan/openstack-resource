@@ -44,5 +44,5 @@ pip install -r requirements.txt
 ##### Run app
 ```bash
 python app.py
-buka browser localhost:5000
+open browser localhost:[port]
 ```
