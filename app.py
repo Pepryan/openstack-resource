@@ -17,14 +17,6 @@ print(nan_rows)
 
 # Function to get vcpus_used for a host from allocation.txt
 def get_vcpus_used(host):
-    # vcpus_used = 0
-    # allocation_file = open('allocation.txt', 'r')
-    # for line in allocation_file:
-    #     parts = line.strip().split()
-    #     if len(parts) >= 3 and parts[2] == host:
-    #         vcpus_used += int(parts[5])
-    # allocation_file.close()
-    # return vcpus_used
     allocation_file = open('allocation.txt', 'r')
     vcpus_used = 0
 
@@ -169,18 +161,7 @@ def generate_vcpu_allocation_plot():
                 break  # Stop searching after finding the host
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    # Calculate the new size of the host square
-    # vcpus_total = sum(vcpus_destination_host)
-    # allocation_file = open('allocation.txt', 'r')
-    # vcpus_used_total = 0
 
-    # for line in allocation_file:
-    #     parts = line.strip().split()
-    #     if len(parts) >= 6 and parts[1] == destination_host:
-    #         vcpus_used_total = int(parts[5]) 
-    #         break
-
-    # allocation_file.close()
     # Total number of vCPUs
     total_vcpus = sum(vcpu_claimed)
     # print(total_vcpus)
@@ -276,8 +257,6 @@ def generate_vcpu_allocation_plot():
     # Return JSON response containing vCPU claimed from destination and to move
     response_data = {
         'image_path': f"static/results/{destination_host}_{current_time}.png",
-        # 'vcpu_claimed_destination': vcpu_claimed_destination,
-        # 'vcpu_claimed_to_move': vcpu_claimed_to_move
     }
     return jsonify(response_data)
     # return send_file(image_path, as_attachment=True)
@@ -285,25 +264,26 @@ def generate_vcpu_allocation_plot():
 @app.route('/list_all_instances', methods=['GET'])
 def list_all_instances():
     aio_csv_path = 'aio.csv'
-    aio_odc_csv_path = 'aio_odc.csv'
+    # aio_odc_csv_path = 'aio_odc.csv'
 
     # Ambil data waktu terakhir modifikasi
     aio_last_updated = os.path.getmtime(aio_csv_path)
-    aio_odc_last_updated = os.path.getmtime(aio_odc_csv_path)
+    # aio_odc_last_updated = os.path.getmtime(aio_odc_csv_path)
 
     # Ubah format waktu jika perlu
     aio_last_updated_str = datetime.datetime.fromtimestamp(aio_last_updated).strftime('%d-%m-%Y %H:%M:%S')
-    aio_odc_last_updated_str = datetime.datetime.fromtimestamp(aio_odc_last_updated).strftime('%d-%m-%Y %H:%M:%S')
+    # aio_odc_last_updated_str = datetime.datetime.fromtimestamp(aio_odc_last_updated).strftime('%d-%m-%Y %H:%M:%S')
 
     # Load data from aio.csv
     data = pd.read_csv(aio_csv_path, delimiter="|")
-    data_odc = pd.read_csv(aio_odc_csv_path, delimiter="|")
+    # data_odc = pd.read_csv(aio_odc_csv_path, delimiter="|")
 
     # Convert data to a list of dictionaries
     data_list = data.to_dict(orient='records')
-    data_list_odc = data_odc.to_dict(orient='records')
+    # data_list_odc = data_odc.to_dict(orient='records')
 
-    return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc, aio_last_updated=aio_last_updated_str, aio_odc_last_updated=aio_odc_last_updated_str)
+    # return render_template('list_all_instances.html', data_list=data_list, data_list_odc=data_list_odc, aio_last_updated=aio_last_updated_str, aio_odc_last_updated=aio_odc_last_updated_str)
+    return render_template('list_all_instances.html', data_list=data_list, aio_last_updated=aio_last_updated_str)
 
 # @app.route('/compute_service', methods=['GET'])
 # def compute_service():
@@ -329,19 +309,43 @@ def get_compute_with_free_vcpus():
     # Lakukan pemrosesan untuk mendapatkan daftar compute dengan vCPU gratis sesuai input
     compute_list = []
 
-    # Contoh: Loop melalui daftar compute Anda dan periksa vCPU yang tersedia
-    # Anda harus menyesuaikan logika berdasarkan data yang Anda miliki.
     for compute in data['Host']:
         vcpus_total = get_vcpus_ratio(compute) * 48  # Hitung total vCPU berdasarkan rasio
         vcpus_used = get_vcpus_used(compute)  # Dapatkan vCPU yang sudah digunakan
         vcpus_free = vcpus_total - vcpus_used  # Hitung vCPU yang tersedia
-        if vcpus_free >= vcpu_required:
+        # Cek apakah vcpus_total sama dengan 48
+        if vcpus_total == 48:
+            compute_list.append(f"{compute} (dedicated)")  # Tambahkan keterangan "dedicated"
+        elif vcpus_free >= vcpu_required:
             compute_list.append(compute)
 
     # Mengonversi list ke dalam set untuk menghilangkan duplikasi
     unique_compute_set = set(compute_list)
 
     return jsonify({'compute_list': list(unique_compute_set)})
+
+@app.route('/list_all_flavors', methods=['GET'])
+def list_all_flavors():
+    # Baca data dari berkas CSV
+    flavor_data = pd.read_csv('flavors.csv', delimiter='|')
+    flavor_last_updated = os.path.getmtime('flavors.csv')
+    flavor_last_updated_str = datetime.datetime.fromtimestamp(flavor_last_updated).strftime('%d-%m-%Y %H:%M:%S')
+    
+    # Fungsi untuk mengganti angka di kolom ketiga
+    def format_ram(ram):
+        if ram >= 1024:
+            return str(ram // 1024) + 'G'
+        else:
+            return str(ram) + 'M'
+
+    # Menggunakan fungsi apply untuk mengganti isi kolom ketiga (RAM)
+    flavor_data['RAM'] = flavor_data['RAM'].apply(format_ram)
+
+    # Konversi data menjadi daftar dictionary untuk pengiriman ke template
+    flavor_data = flavor_data.to_dict(orient='records')
+
+    return render_template('list_all_flavors.html', flavor_data=flavor_data, flavor_last_updated=flavor_last_updated_str)
+
 
 
 if __name__ == '__main__':
