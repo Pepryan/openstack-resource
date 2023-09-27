@@ -9,28 +9,31 @@ import csv
 app = Flask(__name__)
 data = pd.read_csv('data/aio.csv', delimiter="|")
 nan_rows = data[data['Host'].isna()]
-print(nan_rows)
+# print(nan_rows)
 
-def get_vcpus_used(host):
-    allocation_file = open('data/allocation.txt', 'r')
-    vcpus_used = 0
-    for line in allocation_file:
-        parts = line.strip().split()
-        if len(parts) >= 6 and parts[1] == host:
-            vcpus_used = int(parts[5]) 
-            break
-    allocation_file.close()
-    return vcpus_used
+class DataHost:
+    @staticmethod
+    def get_vcpus_used(host):
+        allocation_file = open('data/allocation.txt', 'r')
+        vcpus_used = 0
+        for line in allocation_file:
+            parts = line.strip().split()
+            if len(parts) >= 6 and parts[1] == host:
+                vcpus_used = int(parts[5]) 
+                break
+        allocation_file.close()
+        return vcpus_used
 
-def get_vcpus_ratio(host):
-    vcpus_ratio = 0.0
-    ratio_file = open('data/ratio.txt', 'r')
-    for line in ratio_file:
-        parts = line.strip().split(', ')
-        if len(parts) == 3 and parts[0] == host:
-            vcpus_ratio = float(parts[1])
-    ratio_file.close()
-    return vcpus_ratio
+    @staticmethod
+    def get_vcpus_ratio(host):
+        vcpus_ratio = 0.0
+        ratio_file = open('data/ratio.txt', 'r')
+        for line in ratio_file:
+            parts = line.strip().split(', ')
+            if len(parts) == 3 and parts[0] == host:
+                vcpus_ratio = float(parts[1])
+        ratio_file.close()
+        return vcpus_ratio
 
 class Formatter:
     @staticmethod
@@ -81,8 +84,8 @@ def get_destination_host_instances():
     host = request.args.get('host')
     instances = data[data['Host'] == host][['Name', 'CPU']]
     instances_json = instances.to_dict(orient='records')
-    vcpus_used = get_vcpus_used(host)
-    vcpus_ratio = get_vcpus_ratio(host)    
+    vcpus_used = DataHost.get_vcpus_used(host)
+    vcpus_ratio = DataHost.get_vcpus_ratio(host)    
     vcpus_total = vcpus_ratio * 48  
     vcpus_free = vcpus_total - vcpus_used
     return jsonify({
@@ -102,26 +105,13 @@ def get_instance_vcpus_used():
 @app.route('/get_host_allocation', methods=['GET'])
 def get_host_allocation():
     host = request.args.get('host')
-    allocation_file = open('data/allocation.txt', 'r')
     vcpus_used = 0
-    for line in allocation_file:
-        parts = line.strip().split()
-        if len(parts) >= 6 and parts[1] == host:
-            vcpus_used = int(parts[5]) 
-            break
-    allocation_file.close()
-    ratio_file = open('data/ratio.txt', 'r')
     vcpus_total = 0
-    for line in ratio_file:
-        parts = line.strip().split(', ')
-        if len(parts) == 3 and parts[0] == host:
-            vcpus_ratio = float(parts[1])
-            break
-    ratio_file.close()
+    vcpus_used = DataHost.get_vcpus_used(host)
+    vcpus_ratio = DataHost.get_vcpus_ratio(host)
     
     core_compute = 48  
     vcpus_total = core_compute * vcpus_ratio
-    
     vcpus_free = vcpus_total - vcpus_used
     
     response_data = {
@@ -247,8 +237,8 @@ def get_compute_with_free_vcpus():
     
     compute_list = []
     for compute in data['Host']:
-        vcpus_total = get_vcpus_ratio(compute) * 48  
-        vcpus_used = get_vcpus_used(compute)  
+        vcpus_total = DataHost.get_vcpus_ratio(compute) * 48  
+        vcpus_used = DataHost.get_vcpus_used(compute)  
         vcpus_free = vcpus_total - vcpus_used  
         
         if vcpus_free >= vcpu_required:
