@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allocation Data</title>
+    <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+    <style>
+    .dataTables_wrapper {
+        width: 99%;
+        margin: 0 auto;
+    }
+    #allocation-table tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    #allocation-table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    #allocation-table tr:hover {
+        background-color: #cce6ff;
+    }
+
+    #allocation-table tr.selected {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+    #allocation-table th.text-center {
+        text-align: center;
+    }
+
+    #allocation-table td.text-center {
+        text-align: center;
+    }
+    #allocation-table th.border-right, #allocation-table td.border-right {
+        border-right: 1px solid #000;
+    }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <h1>Allocation Data</h1>
+    <p>Last Updated: {{ allocation_last_updated }}</p>
+        <table id="allocation-table">
+        <thead>
+            <tr>
+                <th rowspan="2">vCPUs Ratio</th>
+                <th rowspan="2" class="border-right">Compute Name</th>
+                <th colspan="4" class="text-center border-right">vCPUs</th>
+                <th colspan="3" class="text-center">Memory (RAM)</th>
+            </tr>
+            <tr>
+                <th>Used</th>
+                <th>Core</th>
+                <th>VCPUs Capacity</th>
+                <th class="border-right">Available</th>
+                <th>Used</th>
+                <th>Memory Capacity</th>
+                <th>Available (GB)</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+                <tr>
+                    <td>{{ item['vCPUs Ratio'] }}</td>
+                    <td class="border-right">{{ item['Compute Name'] }}</td>
+                    <td>{{ item['VCPUs']['Used'] }}</td>
+                    <td>{{ item['VCPUs']['Core'] }}</td>
+                    <td>{{ item['VCPUs']['Capacity'] }}</td>
+                    <td class="border-right">{{ item['VCPUs']['Available'] }}</td>
+                    <td>{{ item['Memory']['Used'] }}</td>
+                    <td>{{ item['Memory']['Capacity'] }}</td>
+                    <td>{{ item['Memory']['Available (GB)'] }}</td>
+                    <!-- {% if 'Reserved' in item %}
+                        <input type="text" name="cpu_reserved" value="{{ item['Reserved']['CPU'] }}">
+                        <input type="text" name="ram_reserved" value="{{ item['Reserved']['RAM'] }}">
+                        <textarea name="keterangan">{{ item['Reserved']['Kebutuhan'] }}</textarea> -->
+                    <!-- {% else %} -->
+                        <!-- Tampilkan pesan atau elemen kosong jika 'Reserved' tidak ada -->
+                    <!-- {% endif %} -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script src="static/DataTables/datatables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#allocation-table').DataTable({
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            "pageLength": -1,
+            buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf','print'],
+            dom: 'Bfrtip',
+            fixedHeader: true,
+            // scrollX : true,
+            // responsive: true,
+            initComplete: function () {
+            var table = this;
+            this.api().columns().every(function () {
+                var column = this;
+                var header = $(column.header());
+                var originalHeaderText = header.text();
+                header.empty();
+
+                var headerContainer = $('<div class="header-container"></div>').appendTo(header);
+                $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
+                var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
+                    .appendTo(headerContainer)
+                    .on('keyup', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            // .search(val ? '^' + val + '$' : '', true, false) -> for exact match, use regex
+                            .search(this.value) // -> smart search
+                            .draw();
+                    });
+            });
+            }  
+            });
+        } );
+    </script>
+</body>
+</html>

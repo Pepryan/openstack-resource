@@ -42,6 +42,7 @@
 </head>
 </head>
 <body>
+    {% include 'navbar.html' %}
     <h1>List All Instances - GTI</h1>
     <!-- Di bawah tabel -->
     <p>Last Updated: {{ aio_last_updated }}</p>
@@ -117,14 +118,13 @@
     </table> -->
  
     <script src="static/DataTables/datatables.min.js"></script>
-    <!-- <script type="text/javascript" src="static/jquery.dataTables.min.js"></script> -->
-    <!-- <script type="text/javascript" src="static/jquery-3.7.1.slim.min.js"></script> -->
     <script>
         $(document).ready(function () {
         $('#dataTable').DataTable({
             "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
             buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf','print'],
             dom: 'Bfrtip',
+            fixedHeader: true,
             // scrollX : true,
             // responsive: true,
             initComplete: function () {
