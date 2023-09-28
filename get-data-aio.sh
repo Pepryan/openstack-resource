@@ -67,19 +67,20 @@ openstack hypervisor list --long -f value > allocation.txt
 openstack flavor list --all --long -f value | sed 's/ /|/g' | sed 's/,|/, /g' > flavors.csv
 sed -i '1iID|Name|RAM|Disk|Ephemeral|VCPUs|Is Public|Swap|RXTX Factor|Properties' flavors.csv
 
-# file_hosts="hosts.txt"
-# for host in $(cat "$file_hosts"); do
-#     ssh_result=$(ssh "$host" "sudo cat /etc/nova/nova.conf")
+openstack hypervisor list -c "Hypervisor Hostname" -f value > temp_hosts.txt
+file_hosts='temp_hosts.txt'
+
+for host in $(cat "$file_hosts"); do
+    ssh_result=$(ssh "$host" "sudo cat /etc/nova/nova.conf")
   
-#     cpu_ratio=$(echo "$ssh_result" | grep -oP "cpu_allocation_ratio = \K\d+(\.\d+)?")
+    cpu_ratio=$(echo "$ssh_result" | grep -oP "cpu_allocation_ratio = \K\d+(\.\d+)?")
+    ram_ratio=$(echo "$ssh_result" | grep -oP "ram_allocation_ratio = \K\d+(\.\d+)?")
 
-#     ram_ratio=$(echo "$ssh_result" | grep -oP "ram_allocation_ratio = \K\d+(\.\d+)?")
+    cpu_ratio=$(echo "$cpu_ratio" | sed 's/\.0$//')
+    #ram_ratio=$(echo "$ram_ratio" | sed 's/\.0$//')
+    echo "$host, $cpu_ratio, $ram_ratio"
+done > ratio.txt
 
-#     cpu_ratio=$(echo "$cpu_ratio" | sed 's/\.0$//')
-#     #ram_ratio=$(echo "$ram_ratio" | sed 's/\.0$//')
-#     echo "$host, $cpu_ratio, $ram_ratio"
-# done > ratio.txt
-
-scp aio.csv allocation.txt flavors.csv ubuntu@${instance_server}
+scp aio.csv allocation.txt flavors.csv ratio.txt ubuntu@${instance_server}
 
 # rm -f temp_*
