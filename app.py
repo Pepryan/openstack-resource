@@ -5,11 +5,14 @@ import numpy as np
 import datetime
 import os
 import csv
+# import json
 
 app = Flask(__name__)
 data = pd.read_csv('data/aio.csv', delimiter="|")
 nan_rows = data[data['Host'].isna()]
 # print(nan_rows)
+
+# reserved_data_file = 'data/reserved_data.json'
 
 class DataHost:
     @staticmethod
@@ -264,6 +267,92 @@ def list_all_flavors():
     
     flavor_data = flavor_data.to_dict(orient='records')
     return render_template('list_all_flavors.html', flavor_data=flavor_data, flavor_last_updated=flavor_last_updated_str)
+
+@app.route('/allocation')
+def allocation():
+    with open('data/allocation.txt', 'r') as allocation_file:
+        allocation_data = allocation_file.readlines()
+
+    with open('data/ratio.txt', 'r') as ratio_file:
+        ratio_data = ratio_file.readlines()
+
+    allocation_last_updated = os.path.getmtime('data/allocation.txt')
+    allocation_last_updated_str = datetime.datetime.fromtimestamp(allocation_last_updated).strftime('%d-%m-%Y %H:%M:%S')
+
+    formatted_data = []
+
+    for allocation_line, ratio_line in zip(allocation_data, ratio_data):
+        allocation_parts = allocation_line.strip().split()
+        ratio_parts = ratio_line.strip().split()
+        if len(allocation_parts) >= 6 and len(ratio_parts) >= 3:
+            compute_name = allocation_parts[1]
+            vcpus_used = int(allocation_parts[5])
+            vcpus_ratio = DataHost.get_vcpus_ratio(compute_name)
+            core = 48
+            vcpus_capacity = int(vcpus_ratio * 48)
+
+            memory_used = int(allocation_parts[7])
+            memory_ratio = float(ratio_parts[2]) 
+
+            memory_capacity = int(allocation_parts[8]) * memory_ratio
+
+            formatted_data.append({
+                'vCPUs Ratio': f"1:{int(vcpus_ratio)}",
+                'Compute Name': compute_name,
+                'VCPUs': {
+                    'Used': vcpus_used,
+                    'Core': core,
+                    'Capacity': vcpus_capacity,
+                    'Available': vcpus_capacity - vcpus_used
+                },
+                'Memory': {
+                    'Used': memory_used,
+                    'Capacity': memory_capacity,
+                    'Available (GB)': f"{float(memory_capacity - memory_used)/1024:.2f}"
+                },
+                # 'Reserved': {
+                #     'CPU': '', 
+                #     'RAM': '',
+                #     'Kebutuhan': ''
+                # }
+                # 'Final': {
+                #     'CPU': '-', 
+                #     'RAM': '-'
+                # }
+            })
+
+    return render_template('allocation.html', data=formatted_data, allocation_last_updated=allocation_last_updated_str)
+
+# @app.route('/save_reserved', methods=['POST'])
+# def save_reserved():
+#     if request.method == 'POST':
+#         compute_name = request.args.get('compute_name')
+#         cpu_reserved = request.form.get('cpu_reserved')
+#         ram_reserved = request.form.get('ram_reserved')
+#         keterangan = request.form.get('keterangan')
+
+#         # Baca data Reserved dari file jika sudah ada
+#         reserved_data = {}
+#         if os.path.exists(reserved_data_file):
+#             with open(reserved_data_file, 'r') as f:
+#                 reserved_data = json.load(f)
+
+#         # Simpan data Reserved yang baru atau perbarui yang sudah ada
+#         reserved_data[compute_name] = {
+#             'CPU': cpu_reserved,
+#             'RAM': ram_reserved,
+#             'Kebutuhan': keterangan
+#         }
+
+#         # Tulis data Reserved ke file JSON
+#         with open(reserved_data_file, 'w') as f:
+#             json.dump(reserved_data, f, indent=4)
+
+#         # Redirect kembali ke halaman /allocation
+#         return redirect('/allocation')
+#     else:
+#         return 'Method not allowed', 405
+
 
 if __name__ == '__main__':    
     app.run(debug=True, host="0.0.0.0", port=5005)

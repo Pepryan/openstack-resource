@@ -8,18 +8,6 @@
         width: 99%;
         margin: 0 auto;
     }
-    /* th, td { white-space: nowrap; } */
-    /* div.dataTables_wrapper {
-        width: 98%;
-        margin: 0 auto;
-    } */
- 
-    /* th input {
-        width: 90%;
-    }
-    .dataTables_scrollHeadInner{
-        margin: 0 auto;
-    } */
     #dataTable tr:nth-child(odd) {
         background-color: #f2f2f2;
     }
@@ -36,12 +24,11 @@
         background-color: #007bff;
         color: #ffffff;
     }
-    
-   
     </style>
 </head>
 </head>
 <body>
+    {% include 'navbar.html' %}
     <h1>List All Flavors - GTI</h1>
     <p>Last Updated: {{ flavor_last_updated }}</p>
     <!-- Di bawah tabel -->
@@ -81,8 +68,6 @@
 
  
     <script src="static/DataTables/datatables.min.js"></script>
-    <!-- <script type="text/javascript" src="static/jquery.dataTables.min.js"></script> -->
-    <!-- <script type="text/javascript" src="static/jquery-3.7.1.slim.min.js"></script> -->
     <script>
         $(document).ready(function () {
         $('#dataTable').DataTable({
@@ -90,6 +75,7 @@
             "pageLength": -1,
             buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf','print'],
             dom: 'Bfrtip',
+            fixedHeader: true,
             // scrollX : true,
             // responsive: true,
             initComplete: function () {
@@ -113,9 +99,9 @@
                             .search(this.value) // -> smart search
                             .draw();
                     });
+                });
+            }  
             });
-        }  
-        });
         });
     </script>
 </body>
