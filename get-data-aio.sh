@@ -45,7 +45,7 @@ while IFS= read -r flavor_id; do
                 ram_unit="M"
             fi
 
-            echo "$vcpus|$ram_gb$ram_unit"
+            echo "$vcpus|$ram ($ram_gb $ram_unit)"
         else
             # echo "$flavor_id"
             echo "-"
