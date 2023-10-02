@@ -290,11 +290,13 @@ def allocation():
             vcpus_ratio = DataHost.get_vcpus_ratio(compute_name)
             core = 48
             vcpus_capacity = int(vcpus_ratio * 48)
+            vcpus_usage_percentage = round((vcpus_used / vcpus_capacity) * 100, 2)
 
             memory_used = int(allocation_parts[7])
             memory_ratio = float(ratio_parts[2]) 
 
             memory_capacity = int(allocation_parts[8]) * memory_ratio
+            memory_usage_percentage = round((memory_used / memory_capacity) * 100, 2)
 
             formatted_data.append({
                 'vCPUs Ratio': f"1:{int(vcpus_ratio)}",
@@ -303,12 +305,14 @@ def allocation():
                     'Used': vcpus_used,
                     'Core': core,
                     'Capacity': vcpus_capacity,
-                    'Available': vcpus_capacity - vcpus_used
+                    'Available': vcpus_capacity - vcpus_used,
+                    'Usage Percentage': vcpus_usage_percentage
                 },
                 'Memory': {
                     'Used': memory_used,
                     'Capacity': memory_capacity,
-                    'Available (GB)': f"{float(memory_capacity - memory_used)/1024:.2f}"
+                    'Available (GB)': f"{float(memory_capacity - memory_used)/1024:.2f}",
+                    'Usage Percentage': memory_usage_percentage
                 },
                 # 'Reserved': {
                 #     'CPU': '', 
