@@ -47,16 +47,18 @@
             <tr>
                 <th rowspan="2">vCPUs Ratio</th>
                 <th rowspan="2" class="border-right">Compute Name</th>
-                <th colspan="4" class="text-center border-right">vCPUs</th>
-                <th colspan="3" class="text-center">Memory (RAM)</th>
+                <th colspan="5" class="text-center border-right">vCPUs</th>
+                <th colspan="4" class="text-center">Memory (RAM)</th>
             </tr>
             <tr>
                 <th>Used</th>
                 <th>Core</th>
                 <th>VCPUs Capacity</th>
+                <th>Usage Percentage</th>
                 <th class="border-right">Available</th>
                 <th>Used</th>
                 <th>Memory Capacity</th>
+                <th>Usage Percentage</th>
                 <th>Available (GB)</th>
                 
             </tr>
@@ -69,9 +71,11 @@
                     <td>{{ item['VCPUs']['Used'] }}</td>
                     <td>{{ item['VCPUs']['Core'] }}</td>
                     <td>{{ item['VCPUs']['Capacity'] }}</td>
+                    <td>{{ item['VCPUs']['Usage Percentage'] }}%</td>
                     <td class="border-right">{{ item['VCPUs']['Available'] }}</td>
                     <td>{{ item['Memory']['Used'] }}</td>
                     <td>{{ item['Memory']['Capacity'] }}</td>
+                    <td>{{ item['Memory']['Usage Percentage'] }}%</td>
                     <td>{{ item['Memory']['Available (GB)'] }}</td>
                     <!-- {% if 'Reserved' in item %}
                         <input type="text" name="cpu_reserved" value="{{ item['Reserved']['CPU'] }}">
