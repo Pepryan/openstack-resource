@@ -1,0 +1,77 @@
+{
+    "gti-r01-oscompute-01": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "gti-r01-oscompute-02": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "gti-r02-oscompute-13": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "gti-r01-oscompute-07": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "sabrina-appchatbot-1"
+    },
+    "gti-r02-oscompute-18": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "sabrina-appchatbot-2"
+    },
+    "gti-r03-oscompute-27": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "sabrina-dbchatbot-1"
+    },
+    "gti-r03-oscompute-28": {
+        "CPU": "4",
+        "RAM": "16",
+        "Kebutuhan": "plan devops-confluent-ksql-svc-1"
+    },
+    "gti-r04-oscompute-37": {
+        "CPU": "18",
+        "RAM": "68",
+        "Kebutuhan": "plan migrate ceria-och-mongo-1,2&senyum-minio-1"
+    },
+    "gti-r04-oscompute-39": {
+        "CPU": "16",
+        "RAM": "32",
+        "Kebutuhan": "plan briapi-apigee-router-sandbox-1"
+    },
+    "gti-r04-oscompute-43": {
+        "CPU": "16",
+        "RAM": "88",
+        "Kebutuhan": "plan devops-confluent-broker-svc-2 & sabrina-appchatbot-2"
+    },
+    "gti-r05-oscompute-45": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "sabrina-dbchatbot-2"
+    },
+    "gti-r05-oscompute-53": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "sabrina-dbchatbot-3"
+    },
+    "gti-r02-oscompute-17": {
+        "CPU": "1",
+        "RAM": "2",
+        "Kebutuhan": ""
+    },
+    "gti-r01-oscompute-04": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "gti-r05-oscompute-46": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    }
+}
