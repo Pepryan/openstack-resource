@@ -17,12 +17,11 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - and many more
 
 ### Tech used
-- Vanilla javascript, HTML, CSS
+- Javascript, HTML, CSS
 - python
 - flask
-
-### Feature Development
-- Picture plot allocation only listing instance on destination host ("instance to move" will be on development)
+- matplotlib
+- No Database required (just use txt, csv and json for storing data)
 
 ### Development
 Clone this repo to your machine
@@ -39,6 +38,7 @@ source venv/bin/activate
 ##### Install Dependencies
 ```bash
 pip install -r requirements.txt
+pip install matplotlib
 ```
 
 ##### Run app
