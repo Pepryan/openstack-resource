@@ -324,10 +324,27 @@ def allocation():
                 'RAM': '',
                 'Kebutuhan': ''
             })
-             # Hitung Availability After Reservation
-            cpu_availability_after_reservation = vcpus_capacity - vcpus_used - (int(reserved_item['CPU']) if reserved_item['CPU'] else 0)
-            ram_availability_after_reservation = memory_capacity - memory_used - (int(reserved_item['RAM']) if reserved_item['RAM'] else 0)
-            ram_availability_after_reservation = round(ram_availability_after_reservation / 1024, 2)
+            # Hitung Availability After Reservation
+            # cpu_availability_after_reservation = vcpus_capacity - vcpus_used - (int(reserved_item['CPU']) if reserved_item['CPU'] else 0)
+            # print(int(reserved_item['RAM']))
+            # reserved_item_byte = int(reserved_item['RAM']) * 1024
+            # ram_availability_after_reservation = memory_capacity - memory_used - reserved_item_byte if reserved_item_byte else 
+            # ram_availability_after_reservation = memory_capacity - memory_used - (int(reserved_item['RAM']) if reserved_item['RAM'] else 0)
+            # ram_availability_after_reservation = round(ram_availability_after_reservation / 1024, 2)
+
+            # Hitung Availability After Reservation untuk CPU
+            if reserved_item['CPU']:
+                cpu_availability_after_reservation = vcpus_capacity - vcpus_used - int(reserved_item['CPU'])
+            else:
+                cpu_availability_after_reservation = vcpus_capacity - vcpus_used
+
+            # Hitung Availability After Reservation untuk RAM
+            try:
+                ram_reserved = int(reserved_item['RAM']) * 1024
+            except ValueError:
+                ram_reserved = 0
+
+            ram_availability_after_reservation = round((memory_capacity - memory_used - ram_reserved) / 1024, 2)
 
 
             formatted_data.append({
