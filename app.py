@@ -5,7 +5,7 @@ import numpy as np
 import datetime
 import os
 import csv
-# import json
+import json
 
 app = Flask(__name__)
 data = pd.read_csv('data/aio.csv', delimiter="|")
@@ -64,6 +64,16 @@ class Formatter:
     @staticmethod
     def format_properties(properties):
         return '-' if pd.isna(properties) else properties
+    
+def update_or_add_reserved_data(data, compute_name, cpu, ram, kebutuhan):
+    if compute_name not in data:
+        data[compute_name] = {}
+    if cpu:
+        data[compute_name]['CPU'] = cpu
+    if ram:
+        data[compute_name]['RAM'] = ram
+    if kebutuhan:
+        data[compute_name]['Kebutuhan'] = kebutuhan
 
 @app.route('/')
 def index():
@@ -298,6 +308,28 @@ def allocation():
             memory_capacity = int(allocation_parts[8]) * memory_ratio
             memory_usage_percentage = round((memory_used / memory_capacity) * 100, 2)
 
+            reserved_data_file = 'data/reserved.json'
+            reserved_data = {}
+
+            if os.path.exists(reserved_data_file):
+                with open(reserved_data_file, 'r') as f:
+                    try:
+                        reserved_data = json.load(f)
+                    except json.decoder.JSONDecodeError:
+                        # Tangani jika file JSON kosong atau tidak valid
+                        reserved_data = {}
+
+            reserved_item = reserved_data.get(compute_name, {
+                'CPU': '',
+                'RAM': '',
+                'Kebutuhan': ''
+            })
+             # Hitung Availability After Reservation
+            cpu_availability_after_reservation = vcpus_capacity - vcpus_used - (int(reserved_item['CPU']) if reserved_item['CPU'] else 0)
+            ram_availability_after_reservation = memory_capacity - memory_used - (int(reserved_item['RAM']) if reserved_item['RAM'] else 0)
+            ram_availability_after_reservation = round(ram_availability_after_reservation / 1024, 2)
+
+
             formatted_data.append({
                 'vCPUs Ratio': f"1:{int(vcpus_ratio)}",
                 'Compute Name': compute_name,
@@ -314,18 +346,62 @@ def allocation():
                     'Available (GB)': f"{float(memory_capacity - memory_used)/1024:.2f}",
                     'Usage Percentage': memory_usage_percentage
                 },
-                # 'Reserved': {
-                #     'CPU': '', 
-                #     'RAM': '',
-                #     'Kebutuhan': ''
-                # }
-                # 'Final': {
-                #     'CPU': '-', 
-                #     'RAM': '-'
-                # }
+                'Reserved': {
+                    'CPU': reserved_item['CPU'],
+                    'RAM': reserved_item['RAM'],
+                    'Kebutuhan': reserved_item['Kebutuhan']
+                },
+                'CPU Availability After Reservation': cpu_availability_after_reservation,
+                'RAM Availability After Reservation': ram_availability_after_reservation
             })
 
     return render_template('allocation.html', data=formatted_data, allocation_last_updated=allocation_last_updated_str)
+
+@app.route('/save_reserved', methods=['POST'])
+def save_reserved():
+    try:
+        data = request.get_json()
+
+        # Pastikan 'data' memiliki format yang sesuai
+        if not isinstance(data, dict):
+            raise ValueError("Data tidak valid.")
+
+        reserved_data_file = 'data/reserved.json'
+        reserved_data = {}
+
+        # Baca data JSON yang sudah ada (jika ada)
+        if os.path.exists(reserved_data_file):
+            with open(reserved_data_file, 'r') as f:
+                try:
+                    reserved_data = json.load(f)
+                except json.decoder.JSONDecodeError:
+                    # Tangani jika file JSON kosong atau tidak valid
+                    reserved_data = {}
+
+        for compute_name, compute_data in data.items():
+            cpu = compute_data.get('CPU', '') 
+            ram = compute_data.get('RAM', '')  # Memberikan nilai default "" jika key tidak ada
+            kebutuhan = compute_data.get('Kebutuhan', '')
+
+            # Jika key tidak ada dalam data komputer, tambahkan dengan nilai kosong
+            if compute_name not in reserved_data:
+                reserved_data[compute_name] = {"CPU": "", "RAM": "", "Kebutuhan": ""}
+
+            # Perbarui atau tambahkan data sesuai dengan nama komputer
+            reserved_data[compute_name]["CPU"] = cpu
+            reserved_data[compute_name]["RAM"] = ram
+            reserved_data[compute_name]["Kebutuhan"] = kebutuhan
+
+        # Simpan data ke dalam file JSON
+        with open(reserved_data_file, 'w') as f:
+            json.dump(reserved_data, f, indent=4)
+
+        return jsonify({"success": True}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+    
 
 # @app.route('/save_reserved', methods=['POST'])
 # def save_reserved():

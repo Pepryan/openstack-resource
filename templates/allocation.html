@@ -42,48 +42,63 @@
     {% include 'navbar.html' %}
     <h1>Allocation Data</h1>
     <p>Last Updated: {{ allocation_last_updated }}</p>
+    <!-- <p>All Host/Compute have 48 core</p> -->
         <table id="allocation-table">
         <thead>
             <tr>
                 <th rowspan="2">vCPUs Ratio</th>
                 <th rowspan="2" class="border-right">Compute Name</th>
-                <th colspan="5" class="text-center border-right">vCPUs</th>
-                <th colspan="4" class="text-center">Memory (RAM)</th>
+                <th colspan="4" class="text-center border-right">vCPUs</th>
+                <th colspan="4" class="text-center border-right">Memory (RAM)</th>
+                <th colspan="3">Reserved</th>
+                <th colspan="2">Availability After Reservation</th>
+                <!-- <th rowspan="2" class="exclude-export">Action</th> -->
             </tr>
             <tr>
                 <th>Used</th>
-                <th>Core</th>
+                <!-- <th>Core</th> -->
                 <th>VCPUs Capacity</th>
                 <th>Usage Percentage</th>
                 <th class="border-right">Available</th>
                 <th>Used</th>
                 <th>Memory Capacity</th>
                 <th>Usage Percentage</th>
-                <th>Available (GB)</th>
-                
+                <th class="border-right">Available (GB)</th>
+                <th>Reserved VCPUs</th>
+                <th>Reserved Memory</th>
+                <th>Kebutuhan</th>
+                <th>Final CPU</th>
+                <th>Final RAM</th>
             </tr>
         </thead>
         <tbody>
             {% for item in data %}
                 <tr>
                     <td>{{ item['vCPUs Ratio'] }}</td>
-                    <td class="border-right">{{ item['Compute Name'] }}</td>
+                    <td class="border-right computeName">{{ item['Compute Name'] }}</td>
                     <td>{{ item['VCPUs']['Used'] }}</td>
-                    <td>{{ item['VCPUs']['Core'] }}</td>
+                    <!-- <td>{{ item['VCPUs']['Core'] }}</td> -->
                     <td>{{ item['VCPUs']['Capacity'] }}</td>
                     <td>{{ item['VCPUs']['Usage Percentage'] }}%</td>
                     <td class="border-right">{{ item['VCPUs']['Available'] }}</td>
                     <td>{{ item['Memory']['Used'] }}</td>
                     <td>{{ item['Memory']['Capacity'] }}</td>
                     <td>{{ item['Memory']['Usage Percentage'] }}%</td>
-                    <td>{{ item['Memory']['Available (GB)'] }}</td>
-                    <!-- {% if 'Reserved' in item %}
-                        <input type="text" name="cpu_reserved" value="{{ item['Reserved']['CPU'] }}">
-                        <input type="text" name="ram_reserved" value="{{ item['Reserved']['RAM'] }}">
-                        <textarea name="keterangan">{{ item['Reserved']['Kebutuhan'] }}</textarea> -->
-                    <!-- {% else %} -->
-                        <!-- Tampilkan pesan atau elemen kosong jika 'Reserved' tidak ada -->
-                    <!-- {% endif %} -->
+                    <td class="border-right">{{ item['Memory']['Available (GB)'] }}</td>
+                    <td>
+                        <textarea class="cpu-input" placeholder="VCPUs">{{ item['Reserved']['CPU'] }}</textarea>
+                    </td>
+                    <td>
+                        <textarea class="ram-input" placeholder="Memory">{{ item['Reserved']['RAM'] }}</textarea>
+                    </td>
+                    <td>
+                        <textarea class="keterangan-input" placeholder="Kebutuhan/Keterangan">{{ item['Reserved']['Kebutuhan'] }}</textarea>
+                        <button class="save-button">Save</button>
+                    </td>
+                    <td>{{ item['CPU Availability After Reservation'] }}</td>
+                    <td>{{ item['RAM Availability After Reservation'] }}</td>
+                    <!-- <td>
+                    </td> -->
                 </tr>
             {% endfor %}
         </tbody>
@@ -94,7 +109,17 @@
             $('#allocation-table').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
             "pageLength": -1,
-            buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf','print'],
+            buttons: [
+            {
+                extend: 'colvis',
+                columns: ':not(.exclude-export)' // Hanya kolom yang tidak memiliki kelas 'exclude-export' yang akan di-ekspor
+            },
+            'pageLength',
+            'csv',
+            'excel',
+            'pdf',
+            'print'
+            ],
             dom: 'Bfrtip',
             fixedHeader: true,
             // scrollX : true,
@@ -124,6 +149,112 @@
             }  
             });
         } );
+    
+// Fungsi untuk memeriksa apakah nilai adalah angka
+function isValidNumber(value) {
+    return /^[0-9]*$/.test(value) || value === "";
+}
+
+   // Menambahkan event listener untuk tombol "Simpan"
+const saveButtons = document.querySelectorAll(".save-button");
+saveButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        // Ambil elemen baris yang berisi tombol "Simpan" yang diklik
+        const row = button.closest("tr");
+
+        // Ambil data yang ingin Anda simpan dari elemen baris
+        const computeName = row.querySelector(".computeName").textContent.trim();
+        const cpuInput = row.querySelector(".cpu-input");
+        const ramInput = row.querySelector(".ram-input");
+        const keteranganInput = row.querySelector(".keterangan-input");
+
+        // Ambil nilai dari textarea
+        let cpuValue = cpuInput.value.trim();
+        let ramValue = ramInput.value.trim();
+        let keteranganValue = keteranganInput.value.trim();
+
+         // Validasi apakah cpuValue dan ramValue hanya berisi angka
+        if (!isValidNumber(cpuValue)) {
+            alert("Masukkan angka saja pada vCPUs.");
+            // Lakukan refresh cache (Ctrl+F5)
+            location.reload(true);
+            return;
+        }
+
+        if (!isValidNumber(ramValue)) {
+            alert("Masukkan angka saja pada Memory (RAM).");
+            // Lakukan refresh cache (Ctrl+F5)
+            location.reload(true);
+            return;
+        }
+
+        console.log(cpuValue);
+        console.log(ramValue);
+        console.log(keteranganValue);
+
+        // Setel nilai textarea menjadi string kosong jika kosong
+        if (cpuValue === null || cpuValue === undefined || cpuValue === "") {
+            cpuValue = "";
+            cpuInput.value = ""; // Perbarui textarea dengan string kosong
+        }
+        if (ramValue === null || ramValue === undefined || ramValue === "") {
+            ramValue = "";
+            ramInput.value = ""; // Perbarui textarea dengan string kosong
+        }
+        if (keteranganValue === null || keteranganValue === undefined || keteranganValue === "") {
+            keteranganValue = "";
+            keteranganInput.value = ""; // Perbarui textarea dengan string kosong
+        }
+
+        // Buat objek data yang akan disimpan ke dalam JSON
+        const dataToSave = {
+            [computeName]: {
+                CPU: cpuValue,
+                RAM: ramValue,
+                Kebutuhan: keteranganValue,
+            },
+        };
+        
+
+        // Tambahkan kunci 'CPU', 'RAM', dan 'Kebutuhan' jika kosong
+        // if (cpuValue === "") {
+        //     dataToSave[computeName].CPU = "";
+        // }
+        // if (ramValue === "") {
+        //     dataToSave[computeName].RAM = "";
+        // }
+        // if (keteranganValue === "") {
+        //     dataToSave[computeName].Kebutuhan = "";
+        // }
+
+        console.log(dataToSave)
+
+        // Kirim data ke endpoint di backend untuk disimpan
+        fetch("/save_reserved", {
+            method: "POST",
+            body: JSON.stringify(dataToSave),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                if (result.success) {
+                    alert("Data berhasil disimpan.");
+                      // Lakukan refresh cache (Ctrl+F5)
+                    location.reload(true);
+                } else {
+                    alert("Terjadi kesalahan saat menyimpan data.");
+                }
+            })
+            .catch((error) => {
+                console.error("Terjadi kesalahan:", error);
+                alert("Terjadi kesalahan saat menyimpan data.");
+            });
+    });
+});
+
+        
     </script>
 </body>
 </html>
