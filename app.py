@@ -129,6 +129,7 @@ def read_reserved_data():
 # Fungsi untuk menghitung total reserved untuk suatu rasio alokasi
 def calculate_total_reserved_allocation_ratio(ratio, formatted_data, reserved_data):
     total_reserved = 0
+    total_reserved_memory = 0
 
     for item in formatted_data:
         vcpus_ratio = item['vCPUs Ratio']
@@ -140,13 +141,14 @@ def calculate_total_reserved_allocation_ratio(ratio, formatted_data, reserved_da
                 reserved_item = reserved_data[compute_name]
                 if reserved_item['CPU']:
                     total_reserved += int(reserved_item['CPU'])
-                # if reserved_item['RAM']:
-                    # total_reserved += int(reserved_item['RAM']) * 1024  # Konversi dari GB ke MB
+                if reserved_item['RAM']:
+                    total_reserved_memory += int(reserved_item['RAM']) * 1024  # Konversi dari GB ke MB
 
-    return total_reserved
+    return total_reserved, total_reserved_memory
 
 def calculate_total_maintenance_allocation_ratio(ratio, formatted_data, reserved_data):
     total_maintenance = 0
+    total_maintenance_memory = 0
 
     for item in formatted_data:
         vcpus_ratio = item['vCPUs Ratio']
@@ -165,7 +167,12 @@ def calculate_total_maintenance_allocation_ratio(ratio, formatted_data, reserved
                     available_vcpus = vcpus_capacity - vcpus_used
                     total_maintenance += available_vcpus
 
-    return total_maintenance
+                    memory_capacity = item['Memory']['Capacity']
+                    memory_used = item['Memory']['Used']
+                    available_memory = memory_capacity - memory_used
+                    total_maintenance_memory += available_memory
+
+    return total_maintenance, total_maintenance_memory
 
 
 
@@ -487,22 +494,26 @@ def allocation():
     percentage_total_available_shared = round((total_available_shared / total_capacity_shared) * 100, 2)
 
     # Hitung Total Reserved untuk Dedicated (1:1)
-    total_reserved_1_1 = calculate_total_reserved_allocation_ratio('1:1', formatted_data, reserved_data)
+    total_reserved_1_1, total_reserved_memory_1_1 = calculate_total_reserved_allocation_ratio('1:1', formatted_data, reserved_data)
 
     # Hitung Total Reserved untuk Shared (1:4)
-    total_reserved_1_4 = calculate_total_reserved_allocation_ratio('1:4', formatted_data, reserved_data)
+    total_reserved_1_4, total_reserved_memory_1_4 = calculate_total_reserved_allocation_ratio('1:4', formatted_data, reserved_data)
 
     # Hitung Total Reserved untuk Shared (1:8)
-    total_reserved_1_8 = calculate_total_reserved_allocation_ratio('1:8', formatted_data, reserved_data)
+    total_reserved_1_8, total_reserved_memory_1_8 = calculate_total_reserved_allocation_ratio('1:8', formatted_data, reserved_data)
+
+    total_reserved_memory_all = round((total_reserved_memory_1_1 + total_reserved_memory_1_4 + total_reserved_memory_1_8) / 1048576, 2)
 
     # Hitung Total Maintenance untuk Dedicated (1:1)
-    total_maintenance_1_1 = calculate_total_maintenance_allocation_ratio('1:1', formatted_data, reserved_data)
+    total_maintenance_1_1, total_maintenance_memory_1_1 = calculate_total_maintenance_allocation_ratio('1:1', formatted_data, reserved_data)
 
     # Hitung Total Maintenance untuk Shared (1:4)
-    total_maintenance_1_4 = calculate_total_maintenance_allocation_ratio('1:4', formatted_data, reserved_data)
+    total_maintenance_1_4, total_maintenance_memory_1_4 = calculate_total_maintenance_allocation_ratio('1:4', formatted_data, reserved_data)
 
     # Hitung Total Maintenance untuk Shared (1:8)
-    total_maintenance_1_8 = calculate_total_maintenance_allocation_ratio('1:8', formatted_data, reserved_data)
+    total_maintenance_1_8, total_maintenance_memory_1_8 = calculate_total_maintenance_allocation_ratio('1:8', formatted_data, reserved_data)
+
+    total_maintenance_memory_all = round((total_maintenance_memory_1_1 + total_maintenance_memory_1_4 + total_maintenance_memory_1_8) / 1048576, 2)
 
     total_available_final_1_1 = total_available_1_1 - total_reserved_1_1 - total_maintenance_1_1
     total_available_final_1_4 = total_available_1_4 - total_reserved_1_4 - total_maintenance_1_4
@@ -511,6 +522,8 @@ def allocation():
     total_capacity_memory_all = round((total_capacity_memory_1_1 + total_capacity_memory_1_4 + total_capacity_memory_1_8) / 1048576, 2)
     total_usage_memory_all = round((total_usage_memory_1_1 + total_usage_memory_1_4 + total_usage_memory_1_8) / 1048576, 2)
     total_available_memory_all = round((total_available_memory_1_1 + total_available_memory_1_4 + total_available_memory_1_8) / 1048576, 2)
+
+    total_available_memory_final = round(total_available_memory_all - total_reserved_memory_all - total_maintenance_memory_all, 2)
 
     # return render_template('allocation.html', data=formatted_data, allocation_last_updated=allocation_last_updated_str)
 
@@ -550,7 +563,11 @@ def allocation():
 
     total_capacity_memory_all=total_capacity_memory_all,
     total_usage_memory_all=total_usage_memory_all,
-    total_available_memory_all=total_available_memory_all
+    total_available_memory_all=total_available_memory_all,
+
+    total_reserved_memory_all=total_reserved_memory_all,
+    total_maintenance_memory_all=total_maintenance_memory_all,
+    total_available_memory_final=total_available_memory_final
 
     )
 
