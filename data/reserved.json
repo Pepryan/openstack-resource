@@ -60,8 +60,8 @@
         "Kebutuhan": "sabrina-dbchatbot-3"
     },
     "gti-r02-oscompute-17": {
-        "CPU": "1",
-        "RAM": "2",
+        "CPU": "",
+        "RAM": "",
         "Kebutuhan": ""
     },
     "gti-r01-oscompute-04": {
@@ -72,11 +72,36 @@
     "gti-r05-oscompute-46": {
         "CPU": "",
         "RAM": "",
-        "Kebutuhan": ""
+        "Kebutuhan": "backup for maintenance"
     },
     "gti-r02-oscompute-12": {
         "CPU": "",
         "RAM": "",
         "Kebutuhan": ""
+    },
+    "gti-r05-oscompute-47": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "Backup for maintenance"
+    },
+    "gti-r05-oscompute-49": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "gti-r05-oscompute-48": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
+    },
+    "gti-r06-oscompute-61": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
+    },
+    "gti-r02-oscompute-14": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
     }
 }

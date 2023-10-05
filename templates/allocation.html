@@ -36,12 +36,114 @@
     #allocation-table th.border-right, #allocation-table td.border-right {
         border-right: 1px solid #000;
     }
+    #summary-table{
+        margin-bottom: 2%;
+    }
+
     </style>
 </head>
 <body>
     {% include 'navbar.html' %}
     <h1>Allocation Data</h1>
     <p>Last Updated: {{ allocation_last_updated }}</p>
+    <p><em>Note: Please write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource during maintenance.</em></p>
+    <center>
+    <table id="summary-table" border="2">
+    <thead>
+        <tr>
+            <th rowspan="2">{{site_name}}</th>
+            <th colspan="5">Summary vCPU</th>
+            <th rowspan="2">Summary RAM (TB)</th>
+            <th rowspan="2">Summary RAM (%)</th>
+            <th rowspan="2">Summary Disk (TB)</th>
+            <th rowspan="2">Summary Disk (%)</th>
+        </tr>
+        <tr>
+            <td>Dedicated (1:1)</td>
+            <td>Dedicated (%)</td>
+            <td>Shared (1:4)</td>
+            <td>Shared (1:8)</td>
+            <td>Shared (%)</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Total Capacity</td>
+            <td>{{total_capacity_1_1}}</td>
+            <td>{{percentage_total_capacity_1_1}}%</td>
+            <td>{{total_capacity_1_4}}</td>
+            <td>{{total_capacity_1_8}}</td>
+            <td>100%</td>
+            <td>{{total_capacity_memory_all}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+
+            <td>Total Usage</td>
+            <td>{{total_usage_1_1}}</td>
+            <td>{{percentage_total_usage_1_1}}%</td>
+            <td>{{total_usage_1_4}}</td>
+            <td>{{total_usage_1_8}}</td>
+            <td>{{percentage_total_usage_shared}}%</td>
+            <td>{{total_usage_memory_all}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Total Available (RAW)</td>
+            <td>{{total_available_raw_1_1}}</td>
+            <td>{{percentage_total_available_1_1}}%</td>
+            <td>{{total_available_raw_1_4}}</td>
+            <td>{{total_available_raw_1_8}}</td>
+            <!-- <td>{{percentage_total_available_1_4}}</td> -->
+            <td>{{percentage_total_available_shared}}%</td>
+            <td>{{total_available_memory_all}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Total Reserved</td>
+            <td>{{total_reserved_1_1}}</td>
+            <td></td>
+            <td>{{total_reserved_1_4}}</td>
+            <td>{{total_reserved_1_8}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Total Maintenance</td>
+            <td>{{total_maintenance_1_1}}</td>
+            <td></td>
+            <td>{{total_maintenance_1_4}}</td>
+            <td>{{total_maintenance_1_8}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Total Available (Final)</td>
+            <td>{{total_available_final_1_1}}</td>
+            <td></td>
+            <td>{{total_available_final_1_4}}</td>
+            <td>{{total_available_final_1_8}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+</center>
     <!-- <p>All Host/Compute have 48 core</p> -->
         <table id="allocation-table">
         <thead>
@@ -73,7 +175,11 @@
         </thead>
         <tbody>
             {% for item in data %}
-                <tr>
+                <tr
+                {% if "backup for maintenance" in item['Reserved']['Kebutuhan'].lower() %}
+                    style="background-color: rgb(255, 217, 0);"
+                {% endif %}
+                >
                     <td>{{ item['vCPUs Ratio'] }}</td>
                     <td class="border-right computeName">{{ item['Compute Name'] }}</td>
                     <td>{{ item['VCPUs']['Used'] }}</td>
@@ -103,6 +209,7 @@
             {% endfor %}
         </tbody>
     </table>
+
     <script src="static/DataTables/datatables.min.js"></script>
     <script src="static/allocation.js"></script> 
 </body>
