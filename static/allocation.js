@@ -1,6 +1,6 @@
 $(document).ready( function () {
             $('#allocation-table').DataTable({
-                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
             "pageLength": -1,
             buttons: [
             {
@@ -14,7 +14,7 @@ $(document).ready( function () {
             'print'
             ],
             dom: 'Bfrtip',
-            fixedHeader: true,
+            // fixedHeader: true,
             // scrollX : true,
             // responsive: true,
             initComplete: function () {

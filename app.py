@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
+# import numpy as np
 import datetime
 import os
 import csv
@@ -65,6 +65,110 @@ class Formatter:
     def format_properties(properties):
         return '-' if pd.isna(properties) else properties
     
+def calculate_total_capacity_allocation_ratio(ratio, formatted_data):
+    total_capacity = 0
+    total_capacity_memory = 0
+
+    # Loop melalui data yang telah diformat sebelumnya
+    for item in formatted_data:
+        vcpus_ratio = item['vCPUs Ratio']
+        compute_name = item['Compute Name']
+
+        # Cek apakah host/compute memiliki rasio yang sesuai
+        if vcpus_ratio == ratio:
+            vcpus_capacity = item['VCPUs']['Capacity']
+            total_capacity += vcpus_capacity
+
+            memory_capacity = item['Memory']['Capacity']
+            total_capacity_memory += memory_capacity
+
+    return total_capacity, total_capacity_memory
+
+def calculate_total_usage_allocation_ratio(ratio, formatted_data):
+    total_usage = 0
+    total_usage_memory = 0
+
+    # Loop melalui data yang telah diformat sebelumnya
+    for item in formatted_data:
+        vcpus_ratio = item['vCPUs Ratio']
+        compute_name = item['Compute Name']
+
+        # Cek apakah host/compute memiliki rasio yang sesuai
+        if vcpus_ratio == ratio:
+            vcpus_usage = item['VCPUs']['Used']
+            total_usage += vcpus_usage
+
+            memory_usage = item['Memory']['Used']
+            total_usage_memory += memory_usage
+
+    return total_usage, total_usage_memory
+
+def calculate_total_available_allocation_ratio(ratio, formatted_data):
+    total_capacity, total_capacity_memory = calculate_total_capacity_allocation_ratio(ratio, formatted_data)
+    total_usage, total_usage_memory = calculate_total_usage_allocation_ratio(ratio, formatted_data)
+    total_available = total_capacity - total_usage
+    total_available_memory = total_capacity_memory - total_usage_memory
+
+    return total_available, total_available_memory
+
+# Fungsi untuk membaca data dari reserved.json
+def read_reserved_data():
+    reserved_data_file = 'data/reserved.json'
+    reserved_data = {}
+
+    if os.path.exists(reserved_data_file):
+        with open(reserved_data_file, 'r') as f:
+            try:
+                reserved_data = json.load(f)
+            except json.decoder.JSONDecodeError:
+                # Tangani jika file JSON kosong atau tidak valid
+                reserved_data = {}
+
+    return reserved_data
+
+# Fungsi untuk menghitung total reserved untuk suatu rasio alokasi
+def calculate_total_reserved_allocation_ratio(ratio, formatted_data, reserved_data):
+    total_reserved = 0
+
+    for item in formatted_data:
+        vcpus_ratio = item['vCPUs Ratio']
+        compute_name = item['Compute Name']
+
+        if vcpus_ratio == ratio:
+            # Cek apakah host/compute memiliki rasio yang sesuai
+            if compute_name in reserved_data:
+                reserved_item = reserved_data[compute_name]
+                if reserved_item['CPU']:
+                    total_reserved += int(reserved_item['CPU'])
+                # if reserved_item['RAM']:
+                    # total_reserved += int(reserved_item['RAM']) * 1024  # Konversi dari GB ke MB
+
+    return total_reserved
+
+def calculate_total_maintenance_allocation_ratio(ratio, formatted_data, reserved_data):
+    total_maintenance = 0
+
+    for item in formatted_data:
+        vcpus_ratio = item['vCPUs Ratio']
+        compute_name = item['Compute Name']
+
+        if vcpus_ratio == ratio:
+            # Cek apakah host/compute memiliki rasio yang sesuai
+            if compute_name in reserved_data:
+                reserved_item = reserved_data[compute_name]
+                kebutuhan = reserved_item.get('Kebutuhan', '')
+
+                # Periksa apakah ada kebutuhan "Backup for maintenance" (case insensitive)
+                if "backup for maintenance" in kebutuhan.lower():
+                    vcpus_capacity = item['VCPUs']['Capacity']
+                    vcpus_used = item['VCPUs']['Used']
+                    available_vcpus = vcpus_capacity - vcpus_used
+                    total_maintenance += available_vcpus
+
+    return total_maintenance
+
+
+
 def update_or_add_reserved_data(data, compute_name, cpu, ram, kebutuhan):
     if compute_name not in data:
         data[compute_name] = {}
@@ -286,6 +390,9 @@ def allocation():
     with open('data/ratio.txt', 'r') as ratio_file:
         ratio_data = ratio_file.readlines()
 
+    first_line = ratio_data[0].strip()
+    site_name = first_line.split('-')[0].upper()
+
     allocation_last_updated = os.path.getmtime('data/allocation.txt')
     allocation_last_updated_str = datetime.datetime.fromtimestamp(allocation_last_updated).strftime('%d-%m-%Y %H:%M:%S')
 
@@ -308,29 +415,13 @@ def allocation():
             memory_capacity = int(allocation_parts[8]) * memory_ratio
             memory_usage_percentage = round((memory_used / memory_capacity) * 100, 2)
 
-            reserved_data_file = 'data/reserved.json'
-            reserved_data = {}
-
-            if os.path.exists(reserved_data_file):
-                with open(reserved_data_file, 'r') as f:
-                    try:
-                        reserved_data = json.load(f)
-                    except json.decoder.JSONDecodeError:
-                        # Tangani jika file JSON kosong atau tidak valid
-                        reserved_data = {}
+            reserved_data = read_reserved_data()
 
             reserved_item = reserved_data.get(compute_name, {
                 'CPU': '',
                 'RAM': '',
                 'Kebutuhan': ''
             })
-            # Hitung Availability After Reservation
-            # cpu_availability_after_reservation = vcpus_capacity - vcpus_used - (int(reserved_item['CPU']) if reserved_item['CPU'] else 0)
-            # print(int(reserved_item['RAM']))
-            # reserved_item_byte = int(reserved_item['RAM']) * 1024
-            # ram_availability_after_reservation = memory_capacity - memory_used - reserved_item_byte if reserved_item_byte else 
-            # ram_availability_after_reservation = memory_capacity - memory_used - (int(reserved_item['RAM']) if reserved_item['RAM'] else 0)
-            # ram_availability_after_reservation = round(ram_availability_after_reservation / 1024, 2)
 
             # Hitung Availability After Reservation untuk CPU
             if reserved_item['CPU']:
@@ -371,8 +462,97 @@ def allocation():
                 'CPU Availability After Reservation': cpu_availability_after_reservation,
                 'RAM Availability After Reservation': ram_availability_after_reservation
             })
+    
+    total_capacity_1_1, total_capacity_memory_1_1 = calculate_total_capacity_allocation_ratio('1:1', formatted_data)
+    total_capacity_1_4, total_capacity_memory_1_4 = calculate_total_capacity_allocation_ratio('1:4', formatted_data)
+    total_capacity_1_8, total_capacity_memory_1_8 = calculate_total_capacity_allocation_ratio('1:8', formatted_data)
 
-    return render_template('allocation.html', data=formatted_data, allocation_last_updated=allocation_last_updated_str)
+    total_usage_1_1, total_usage_memory_1_1 = calculate_total_usage_allocation_ratio('1:1', formatted_data)
+    total_usage_1_4, total_usage_memory_1_4 = calculate_total_usage_allocation_ratio('1:4', formatted_data)
+    total_usage_1_8, total_usage_memory_1_8 = calculate_total_usage_allocation_ratio('1:8', formatted_data)
+
+    total_available_1_1, total_available_memory_1_1 = calculate_total_available_allocation_ratio('1:1', formatted_data)
+    total_available_1_4, total_available_memory_1_4 = calculate_total_available_allocation_ratio('1:4', formatted_data)
+    total_available_1_8, total_available_memory_1_8 = calculate_total_available_allocation_ratio('1:8', formatted_data)
+
+    percentage_total_capacity_1_1 = round((total_capacity_1_1 / total_capacity_1_1) * 100, 2)
+    percentage_total_usage_1_1 = round((total_usage_1_1 / total_capacity_1_1) * 100, 2)
+    percentage_total_available_1_1 = round((total_available_1_1 / total_capacity_1_1) * 100, 2)
+
+    total_usage_shared = total_usage_1_4 + total_usage_1_8
+    total_available_shared = total_available_1_4 + total_available_1_8
+    total_capacity_shared = total_capacity_1_4 + total_capacity_1_8
+    percentage_total_capacity_shared = 100
+    percentage_total_usage_shared = round((total_usage_shared / total_capacity_shared) * 100, 2)
+    percentage_total_available_shared = round((total_available_shared / total_capacity_shared) * 100, 2)
+
+    # Hitung Total Reserved untuk Dedicated (1:1)
+    total_reserved_1_1 = calculate_total_reserved_allocation_ratio('1:1', formatted_data, reserved_data)
+
+    # Hitung Total Reserved untuk Shared (1:4)
+    total_reserved_1_4 = calculate_total_reserved_allocation_ratio('1:4', formatted_data, reserved_data)
+
+    # Hitung Total Reserved untuk Shared (1:8)
+    total_reserved_1_8 = calculate_total_reserved_allocation_ratio('1:8', formatted_data, reserved_data)
+
+    # Hitung Total Maintenance untuk Dedicated (1:1)
+    total_maintenance_1_1 = calculate_total_maintenance_allocation_ratio('1:1', formatted_data, reserved_data)
+
+    # Hitung Total Maintenance untuk Shared (1:4)
+    total_maintenance_1_4 = calculate_total_maintenance_allocation_ratio('1:4', formatted_data, reserved_data)
+
+    # Hitung Total Maintenance untuk Shared (1:8)
+    total_maintenance_1_8 = calculate_total_maintenance_allocation_ratio('1:8', formatted_data, reserved_data)
+
+    total_available_final_1_1 = total_available_1_1 - total_reserved_1_1 - total_maintenance_1_1
+    total_available_final_1_4 = total_available_1_4 - total_reserved_1_4 - total_maintenance_1_4
+    total_available_final_1_8 = total_available_1_8 - total_reserved_1_8 - total_maintenance_1_8
+
+    total_capacity_memory_all = round((total_capacity_memory_1_1 + total_capacity_memory_1_4 + total_capacity_memory_1_8) / 1048576, 2)
+    total_usage_memory_all = round((total_usage_memory_1_1 + total_usage_memory_1_4 + total_usage_memory_1_8) / 1048576, 2)
+    total_available_memory_all = round((total_available_memory_1_1 + total_available_memory_1_4 + total_available_memory_1_8) / 1048576, 2)
+
+    # return render_template('allocation.html', data=formatted_data, allocation_last_updated=allocation_last_updated_str)
+
+    return render_template('allocation.html', data=formatted_data, site_name=site_name,allocation_last_updated=allocation_last_updated_str, 
+    
+    total_capacity_1_1=total_capacity_1_1, 
+    total_usage_1_1=total_usage_1_1, 
+    total_available_raw_1_1=total_available_1_1,
+
+    percentage_total_capacity_1_1=percentage_total_capacity_1_1,
+    percentage_total_usage_1_1=percentage_total_usage_1_1,
+    percentage_total_available_1_1=percentage_total_available_1_1,
+    
+    total_capacity_1_4=total_capacity_1_4, 
+    total_usage_1_4=total_usage_1_4, 
+    total_available_raw_1_4=total_available_1_4,
+
+    total_capacity_1_8=total_capacity_1_8, 
+    total_usage_1_8=total_usage_1_8, 
+    total_available_raw_1_8=total_available_1_8,
+
+    percentage_total_capacity_shared=percentage_total_capacity_shared,
+    percentage_total_usage_shared=percentage_total_usage_shared,
+    percentage_total_available_shared=percentage_total_available_shared,
+
+    total_reserved_1_1=total_reserved_1_1,
+    total_reserved_1_4=total_reserved_1_4,
+    total_reserved_1_8=total_reserved_1_8,
+
+    total_maintenance_1_1=total_maintenance_1_1,
+    total_maintenance_1_4=total_maintenance_1_4,
+    total_maintenance_1_8=total_maintenance_1_8,
+
+    total_available_final_1_1=total_available_final_1_1,
+    total_available_final_1_4=total_available_final_1_4,
+    total_available_final_1_8=total_available_final_1_8,
+
+    total_capacity_memory_all=total_capacity_memory_all,
+    total_usage_memory_all=total_usage_memory_all,
+    total_available_memory_all=total_available_memory_all
+
+    )
 
 @app.route('/save_reserved', methods=['POST'])
 def save_reserved():
@@ -417,33 +597,6 @@ def save_reserved():
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
-
-    
-
-# @app.route('/save_reserved', methods=['POST'])
-# def save_reserved():
-#     if request.method == 'POST':
-#         compute_name = request.args.get('compute_name')
-#         cpu_reserved = request.form.get('cpu_reserved')
-#         ram_reserved = request.form.get('ram_reserved')
-#         keterangan = request.form.get('keterangan')
-
-#         # Baca data Reserved dari file jika sudah ada
-#         reserved_data = {}
-#         if os.path.exists(reserved_data_file):
-#             with open(reserved_data_file, 'r') as f:
-#                 reserved_data = json.load(f)
-
-#         # Simpan data Reserved yang baru atau perbarui yang sudah ada
-#         reserved_data[compute_name] = {
-#             'CPU': cpu_reserved,
-#             'RAM': ram_reserved,
-#             'Kebutuhan': keterangan
-#         }
-
-#         # Tulis data Reserved ke file JSON
-#         with open(reserved_data_file, 'w') as f:
-#             json.dump(reserved_data, f, indent=4)
 
 #         # Redirect kembali ke halaman /allocation
 #         return redirect('/allocation')
