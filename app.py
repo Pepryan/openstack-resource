@@ -495,6 +495,7 @@ def allocation():
 
     # Hitung Total Reserved untuk Dedicated (1:1)
     total_reserved_1_1, total_reserved_memory_1_1 = calculate_total_reserved_allocation_ratio('1:1', formatted_data, reserved_data)
+    percentage_total_reserved_1_1 = round((total_reserved_1_1 / total_capacity_1_1) * 100, 2)
 
     # Hitung Total Reserved untuk Shared (1:4)
     total_reserved_1_4, total_reserved_memory_1_4 = calculate_total_reserved_allocation_ratio('1:4', formatted_data, reserved_data)
@@ -502,28 +503,39 @@ def allocation():
     # Hitung Total Reserved untuk Shared (1:8)
     total_reserved_1_8, total_reserved_memory_1_8 = calculate_total_reserved_allocation_ratio('1:8', formatted_data, reserved_data)
 
-    total_reserved_memory_all = round((total_reserved_memory_1_1 + total_reserved_memory_1_4 + total_reserved_memory_1_8) / 1048576, 2)
+    percentage_total_reserved_shared = round((total_reserved_1_4 + total_reserved_1_8)/total_capacity_shared * 100, 2)
+
 
     # Hitung Total Maintenance untuk Dedicated (1:1)
     total_maintenance_1_1, total_maintenance_memory_1_1 = calculate_total_maintenance_allocation_ratio('1:1', formatted_data, reserved_data)
+    percentage_total_maintenance_1_1=round((total_maintenance_1_1 / total_capacity_1_1) * 100, 2)
 
     # Hitung Total Maintenance untuk Shared (1:4)
     total_maintenance_1_4, total_maintenance_memory_1_4 = calculate_total_maintenance_allocation_ratio('1:4', formatted_data, reserved_data)
 
     # Hitung Total Maintenance untuk Shared (1:8)
     total_maintenance_1_8, total_maintenance_memory_1_8 = calculate_total_maintenance_allocation_ratio('1:8', formatted_data, reserved_data)
-
-    total_maintenance_memory_all = round((total_maintenance_memory_1_1 + total_maintenance_memory_1_4 + total_maintenance_memory_1_8) / 1048576, 2)
+    percentage_total_maintenance_shared=round((total_maintenance_1_4 + total_maintenance_1_8) / total_capacity_shared * 100, 2)
 
     total_available_final_1_1 = total_available_1_1 - total_reserved_1_1 - total_maintenance_1_1
     total_available_final_1_4 = total_available_1_4 - total_reserved_1_4 - total_maintenance_1_4
     total_available_final_1_8 = total_available_1_8 - total_reserved_1_8 - total_maintenance_1_8
+    percentage_total_available_final_1_1 = round((total_available_final_1_1 / total_capacity_1_1)*100, 2)
+    percentage_total_available_final_shared = round((total_available_final_1_4 + total_available_final_1_8) / total_capacity_shared * 100, 2)
 
     total_capacity_memory_all = round((total_capacity_memory_1_1 + total_capacity_memory_1_4 + total_capacity_memory_1_8) / 1048576, 2)
     total_usage_memory_all = round((total_usage_memory_1_1 + total_usage_memory_1_4 + total_usage_memory_1_8) / 1048576, 2)
     total_available_memory_all = round((total_available_memory_1_1 + total_available_memory_1_4 + total_available_memory_1_8) / 1048576, 2)
+    total_reserved_memory_all = round((total_reserved_memory_1_1 + total_reserved_memory_1_4 + total_reserved_memory_1_8) / 1048576, 2)
+    total_maintenance_memory_all = round((total_maintenance_memory_1_1 + total_maintenance_memory_1_4 + total_maintenance_memory_1_8) / 1048576, 2)
 
     total_available_memory_final = round(total_available_memory_all - total_reserved_memory_all - total_maintenance_memory_all, 2)
+
+    percentage_total_usage_memory_all = round(total_usage_memory_all / total_capacity_memory_all * 100, 2)
+    percentage_total_available_memory_all = round(total_available_memory_all / total_capacity_memory_all * 100, 2)
+    percentage_total_reserved_memory_all = round(total_reserved_memory_all / total_capacity_memory_all * 100, 2)
+    percentage_total_maintenance_memory_all = round(total_maintenance_memory_all / total_capacity_memory_all * 100, 2)
+    percentage_total_available_memory_final_all = round(total_available_memory_final / total_capacity_memory_all * 100, 2)
 
     # return render_template('allocation.html', data=formatted_data, allocation_last_updated=allocation_last_updated_str)
 
@@ -548,6 +560,12 @@ def allocation():
     percentage_total_capacity_shared=percentage_total_capacity_shared,
     percentage_total_usage_shared=percentage_total_usage_shared,
     percentage_total_available_shared=percentage_total_available_shared,
+    percentage_total_reserved_1_1=percentage_total_reserved_1_1,
+    percentage_total_maintenance_1_1=percentage_total_maintenance_1_1,
+    percentage_total_available_final_1_1=percentage_total_available_final_1_1,
+    percentage_total_reserved_shared=percentage_total_reserved_shared,
+    percentage_total_maintenance_shared=percentage_total_maintenance_shared,
+    percentage_total_available_final_shared=percentage_total_available_final_shared,
 
     total_reserved_1_1=total_reserved_1_1,
     total_reserved_1_4=total_reserved_1_4,
@@ -567,7 +585,13 @@ def allocation():
 
     total_reserved_memory_all=total_reserved_memory_all,
     total_maintenance_memory_all=total_maintenance_memory_all,
-    total_available_memory_final=total_available_memory_final
+    total_available_memory_final=total_available_memory_final,
+
+    percentage_total_usage_memory_all=percentage_total_usage_memory_all,
+    percentage_total_available_memory_all=percentage_total_available_memory_all,
+    percentage_total_reserved_memory_all=percentage_total_reserved_memory_all,
+    percentage_total_maintenance_memory_all=percentage_total_maintenance_memory_all,
+    percentage_total_available_memory_final_all=percentage_total_available_memory_final_all
 
     )
 
