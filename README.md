@@ -14,6 +14,7 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - Generate plot vCPUs allocation
 - Data will be automated sync with script
 - List all instance with necessary metadata, filtering feature, exporting feature
+- Automatically calculate allocation data
 - and many more
 
 ### Tech used
@@ -21,7 +22,7 @@ Welcome to OpenStack Resource Allocation Web, a lightweight and minimal Python-b
 - python
 - flask
 - matplotlib
-- No Database required (just use txt, csv and json for storing data)
+- No Database required (just use txt, csv and json for get/storing data)
 
 ### Development
 Clone this repo to your machine
