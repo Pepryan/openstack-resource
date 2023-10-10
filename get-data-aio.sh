@@ -82,6 +82,8 @@ for host in $(cat "$file_hosts"); do
     echo "$host, $cpu_ratio, $ram_ratio"
 done > ratio.txt
 
-scp aio.csv allocation.txt flavors.csv ratio.txt ubuntu@${instance_server}
+ceph df > cephdf.txt
+
+scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt ubuntu@${instance_server}
 
 # rm -f temp_*

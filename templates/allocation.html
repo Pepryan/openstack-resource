@@ -50,7 +50,9 @@
     {% include 'navbar.html' %}
     <h1>Allocation Data</h1>
     <p>Last Updated: {{ allocation_last_updated }}</p>
-    <p><em>Note: Please write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource.</em></p>
+    <p><em>Note: <br>
+        <ul> <li>Please write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource.</li><br>
+        <li>Disk calculation used as 1 PiB = 1125.9 TB</li></ul></em></p>
     <center>
     <table id="summary-table" border="2">
     <thead>
@@ -81,8 +83,8 @@
             <td>100%</td>
             <td>{{total_capacity_memory_all}}</td>
             <td>100%</td>
-            <td></td>
-            <td></td>
+            <td>{{total_capacity_disk_tb}}</td>
+            <td>100%</td>
         </tr>
         <tr>
 
@@ -94,8 +96,8 @@
             <td>{{percentage_total_usage_shared}}%</td>
             <td>{{total_usage_memory_all}}</td>
             <td>{{percentage_total_usage_memory_all }}%</td>
-            <td></td>
-            <td></td>
+            <td>{{raw_used_disk_tb}}</td>
+            <td>{{raw_used_percentage_disk}}%</td>
         </tr>
         <tr>
             <td>Total Available (RAW)</td>
@@ -107,8 +109,8 @@
             <td>{{percentage_total_available_shared}}%</td>
             <td>{{total_available_memory_all}}</td>
             <td>{{percentage_total_available_memory_all}}%</td>
-            <td></td>
-            <td></td>
+            <td>{{avail_disk_tb}}</td>
+            <td>{{avail_percentage_disk}}%</td>
         </tr>
         <tr>
             <td>Total Reserved</td>
@@ -119,8 +121,8 @@
             <td>{{percentage_total_reserved_shared}}%</td>
             <td>{{total_reserved_memory_all}}</td>
             <td>{{percentage_total_reserved_memory_all}}%</td>
-            <td></td>
-            <td></td>
+            <td>0</td>
+            <td>0%</td>
         </tr>
         <tr>
             <td>Total Maintenance</td>
@@ -131,8 +133,8 @@
             <td>{{percentage_total_maintenance_shared}}%</td>
             <td>{{total_maintenance_memory_all}}</td>
             <td>{{percentage_total_maintenance_memory_all}}%</td>
-            <td></td>
-            <td></td>
+            <td>0</td>
+            <td>0%</td>
         </tr>
         <tr>
             <td>Total Available (Final)</td>
@@ -143,8 +145,8 @@
             <td>{{percentage_total_available_final_shared}}%</td>
             <td>{{total_available_memory_final}}</td>
             <td>{{percentage_total_available_memory_final_all}}%</td>
-            <td></td>
-            <td></td>
+            <td>{{avail_disk_tb}}</td>
+            <td>{{avail_percentage_disk}}%</td>
         </tr>
     </tbody>
 </table>

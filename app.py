@@ -6,6 +6,7 @@ import datetime
 import os
 import csv
 import json
+import re
 
 app = Flask(__name__)
 data = pd.read_csv('data/aio.csv', delimiter="|")
@@ -174,7 +175,42 @@ def calculate_total_maintenance_allocation_ratio(ratio, formatted_data, reserved
 
     return total_maintenance, total_maintenance_memory
 
+def extract_cephdf_data():
+    # Initialize variables to store the extracted values
+    total = avail = raw_used = raw_used_percentage = "N/A"
 
+    # Open the file and read it line by line
+    with open("data/cephdf.txt", "r") as file:
+        lines = file.readlines()
+
+        # Initialize a section flag
+        in_raw_storage_section = False
+
+        for line in lines:
+            # Check if the line starts with "RAW STORAGE" to identify the section
+            if line.startswith("--- RAW STORAGE ---"):
+                in_raw_storage_section = True
+                continue
+            elif line.startswith("--- POOLS ---"):
+                in_raw_storage_section = False
+                continue
+
+            # Process lines in the "RAW STORAGE" section
+            if in_raw_storage_section:
+                parts = re.split(r'\s{2,}', line.strip())
+                if len(parts) == 6 and parts[0] == "TOTAL":
+                    total = parts[1]
+                    avail = parts[2]
+                    raw_used = parts[3]
+                    raw_used_percentage = parts[5]
+    # print(total, avail, raw_used, raw_used_percentage)
+    # Return the extracted values as a dictionary
+    return {
+        "Total": total,
+        "Avail": avail,
+        "Raw Used": raw_used,
+        "%Raw Used": raw_used_percentage
+    }
 
 def update_or_add_reserved_data(data, compute_name, cpu, ram, kebutuhan):
     if compute_name not in data:
@@ -397,6 +433,21 @@ def allocation():
     with open('data/ratio.txt', 'r') as ratio_file:
         ratio_data = ratio_file.readlines()
 
+    # Call the function to extract data
+    cephdf_data = extract_cephdf_data()
+
+    # Access the extracted values
+    total_capacity_disk = cephdf_data["Total"]
+    # avail_disk = cephdf_data["Avail"]
+    raw_used_disk = cephdf_data["Raw Used"]
+    raw_used_percentage_disk = cephdf_data["%Raw Used"]
+
+    # Convert total capacity from PiB to TB and multiply by 1125.9
+    total_capacity_disk_tb = float(total_capacity_disk.split()[0]) * 1125.9
+    raw_used_disk_tb = float(raw_used_disk.split()[0]) * 1125.9
+    avail_disk_tb = float(total_capacity_disk_tb - raw_used_disk_tb)
+    avail_percentage_disk = float(100 - float(raw_used_percentage_disk))
+
     first_line = ratio_data[0].strip()
     site_name = first_line.split('-')[0].upper()
 
@@ -591,8 +642,13 @@ def allocation():
     percentage_total_available_memory_all=percentage_total_available_memory_all,
     percentage_total_reserved_memory_all=percentage_total_reserved_memory_all,
     percentage_total_maintenance_memory_all=percentage_total_maintenance_memory_all,
-    percentage_total_available_memory_final_all=percentage_total_available_memory_final_all
+    percentage_total_available_memory_final_all=percentage_total_available_memory_final_all,
 
+    total_capacity_disk_tb=total_capacity_disk_tb,
+    raw_used_disk_tb=raw_used_disk_tb,
+    raw_used_percentage_disk=raw_used_percentage_disk,
+    avail_disk_tb=avail_disk_tb,
+    avail_percentage_disk=avail_percentage_disk
     )
 
 @app.route('/save_reserved', methods=['POST'])
