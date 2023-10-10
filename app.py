@@ -443,10 +443,12 @@ def allocation():
     raw_used_percentage_disk = cephdf_data["%Raw Used"]
 
     # Convert total capacity from PiB to TB and multiply by 1125.9
-    total_capacity_disk_tb = float(total_capacity_disk.split()[0]) * 1125.9
-    raw_used_disk_tb = float(raw_used_disk.split()[0]) * 1125.9
-    avail_disk_tb = float(total_capacity_disk_tb - raw_used_disk_tb)
-    avail_percentage_disk = float(100 - float(raw_used_percentage_disk))
+    # total_capacity_disk_tb = float(total_capacity_disk.split()[0]) * 1125.9
+    total_capacity_disk_tb = float(total_capacity_disk.split()[0]) * 1024
+    # raw_used_disk_tb = round(float(raw_used_disk.split()[0]) * 1125.9, 2)
+    raw_used_disk_tb = round(float(raw_used_disk.split()[0]) * 1024, 2)
+    avail_disk_tb = round(float(total_capacity_disk_tb - raw_used_disk_tb), 2)
+    avail_percentage_disk = round(float(100 - float(raw_used_percentage_disk)), 2)
 
     first_line = ratio_data[0].strip()
     site_name = first_line.split('-')[0].upper()
