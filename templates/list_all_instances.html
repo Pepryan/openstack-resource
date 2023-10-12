@@ -40,7 +40,6 @@
    
     </style>
 </head>
-</head>
 <body>
     {% include 'navbar.html' %}
     <h1>List All Instances</h1>
@@ -60,6 +59,7 @@
                 <th>Host</th>
                 <th>vCPU</th>
                 <th>RAM</th>
+                <th>Attached Volumes</th> 
             </tr>
         </thead>
         <tbody>
@@ -76,6 +76,7 @@
                 <td>{{ instance["Host"] }}</td>
                 <td>{{ instance["CPU"] }}</td>
                 <td>{{ instance["RAM"] }}</td>
+                <td>{{ instance["Volumes"] | safe}}</td>
             </tr>
             {% endfor %}
         </tbody>
