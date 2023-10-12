@@ -84,6 +84,8 @@ done > ratio.txt
 
 ceph df > cephdf.txt
 
-scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt ubuntu@${instance_server}
+openstack volume list --all-projects -f json > volumes.json
+
+scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt volumes.json ubuntu@${instance_server}
 
 # rm -f temp_*

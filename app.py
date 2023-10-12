@@ -375,21 +375,79 @@ def generate_vcpu_allocation_plot():
     }
     return jsonify(response_data)
     
-@app.route('/list_all_instances', methods=['GET'])
+@app.route('/list-all-instances', methods=['GET'])
 def list_all_instances():
     aio_csv_path = 'data/aio.csv'
     aio_last_updated = os.path.getmtime(aio_csv_path)
     aio_last_updated_str = datetime.datetime.fromtimestamp(aio_last_updated).strftime('%d-%m-%Y %H:%M:%S')
     
     data = pd.read_csv(aio_csv_path, delimiter="|")
-
     data_list = data.to_dict(orient='records')
 
+    # Load the JSON data that contains volume information
+    with open('data/volumes.json', 'r') as volumes_file:
+        volumes_data = json.load(volumes_file)
+
+    # Create a dictionary to store volume information by server_id
+    volume_info_by_server = {}
+    for volume in volumes_data:
+        attachments = volume.get("Attached to", [])  # Get the "Attached to" list or an empty list
+        if attachments:
+            server_id = attachments[0]["server_id"]
+            device = attachments[0]["device"]
+            volume_name = volume["Name"] if volume["Name"] else volume["ID"]  # Use the volume ID if the volume name is empty
+            volume_size = volume.get("Size", "-")  # Use "-" if the volume size is empty
+            if server_id not in volume_info_by_server:
+                volume_info_by_server[server_id] = []
+            volume_info_by_server[server_id].append({"device": device, "name": volume_name, "size": volume_size})
+
+    # Update the instance data with volume information
     for instance in data_list:
+        server_id = instance["ID"]
+        if server_id in volume_info_by_server:
+            volumes = volume_info_by_server[server_id]
+            # Sort volumes by device name
+            volumes.sort(key=lambda vol: vol["device"])
+
+            # Create a list of volume information strings
+            volume_info = [f"{vol['name']} (Size: {vol['size']}, Device: {vol['device']})" for vol in volumes]
+            # instance["Volumes"] = ", ".join(volume_info)
+            instance["Volumes"] = "<br>".join(volume_info)
+        else:
+            instance["Volumes"] = '-'
+
         for key, value in instance.items():
             if pd.isna(value) or value == '':
                 instance[key] = '-'
+
     return render_template('list_all_instances.html', data_list=data_list, aio_last_updated=aio_last_updated_str)
+
+@app.route('/volumes', methods=['GET'])
+def list_all_volumes():
+    volumes_json_path = 'data/volumes.json'
+    
+    # Get the last modified timestamp of the volumes.json file
+    volumes_last_updated = os.path.getmtime(volumes_json_path)
+    
+    # Convert the timestamp to a human-readable date and time format
+    volumes_last_updated_str = datetime.datetime.fromtimestamp(volumes_last_updated).strftime('%d-%m-%Y %H:%M:%S')
+    
+    # Load volumes data from the JSON file
+    with open(volumes_json_path, 'r') as json_file:
+        volumes_data = json.load(json_file)
+    
+    # Iterate through volumes and replace empty values with '-'
+    for volume in volumes_data:
+        for key, value in volume.items():
+            if isinstance(value, (list, dict)):
+                # Handle cases where the value is a list or dictionary
+                if not value:
+                    volume[key] = '-'
+            elif pd.isna(value) or value == '':
+                volume[key] = '-'
+    
+    return render_template('volumes.html', data_list=volumes_data, aio_last_updated=volumes_last_updated_str)
+
 
 @app.route('/get_compute_with_free_vcpus', methods=['GET'])
 def get_compute_with_free_vcpus():
@@ -410,7 +468,7 @@ def get_compute_with_free_vcpus():
     unique_compute_set = set(compute_list)
     return jsonify({'compute_list': list(unique_compute_set)})
 
-@app.route('/list_all_flavors', methods=['GET'])
+@app.route('/list-all-flavors', methods=['GET'])
 def list_all_flavors():
     flavor_data = pd.read_csv('data/flavors.csv', delimiter='|')
     flavor_last_updated = os.path.getmtime('data/flavors.csv')
