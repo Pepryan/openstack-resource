@@ -1,3 +1,4 @@
 Flask==2.1.1
+Werkzeug==2.3.7
 #matplotlib==3.4.3 install matplotlib manual via pip install matplotlib
 pandas==2.1.0
