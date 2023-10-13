@@ -84,7 +84,45 @@ done > ratio.txt
 
 ceph df > cephdf.txt
 
+### GTI
 openstack volume list --all-projects -f json > volumes.json
+
+### ODC (because error when volume list --all-projects)
+# Membuat file JSON kosong
+# echo "" > volumes.json
+
+# # Mendapatkan daftar project
+# project_list=$(openstack project list -f value -c ID)
+
+# # Melakukan loop melalui setiap project
+# for project_id in $project_list; do
+#     # Mendapatkan daftar volume untuk project saat ini dan menambahkannya ke file JSON
+#     if openstack volume list --project $project_id -f json | jq -e '. | length > 0' > /dev/null; then
+#         openstack volume list --project $project_id -f json > volumes-$project_id.json
+#         sed -i '1d' volumes-$project_id.json
+#         sed -i '$d' volumes-$project_id.json  # Menghapus baris terakhir
+#         sed -i '$d' volumes-$project_id.json  # Menghapus baris terakhir lagi
+#         echo "}," >> volumes-$project_id.json
+#         cat volumes-$project_id.json >> volumes-all-project.json
+#     # else
+#         # echo ""
+#         # echo "Skipping project $project_id as it has no volumes."
+#         # no volumes
+#         # volumes-095f7c918dd94ce39ef5374e90eb2419.json
+#         # volumes-21078c1bf3b148bbbeda74ba5a2ef77f.json
+#         # volumes-b4c0f99260ae41d3ab7cb3b88811b697.json
+#         # volumes-cb0d55d804d24bd9aa47c5560f942fc4.json
+#     fi
+# done
+
+# mv volumes-all-project.json volumes.json
+# rm -f volumes-*.json
+# sed -i '1s/^/\[/;1!b' volumes.json
+# sed -i '$d' volumes.json  # Menghapus baris terakhir
+# # sed -i '$d' volumes.json  # Menghapus baris terakhir lagi
+# echo "}" >> volumes.json
+# echo "]" >> volumes.json
+
 
 scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt volumes.json ubuntu@${instance_server}
 
