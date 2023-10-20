@@ -1,157 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List All Instances</title>
-        <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/DataTables/datatables.min.css">
     <style>
-    .dataTables_wrapper {
-        width: 99%;
-        margin: 0 auto;
-    }
-    /* th, td { white-space: nowrap; } */
-    /* div.dataTables_wrapper {
-        width: 98%;
-        margin: 0 auto;
-    } */
- 
-    /* th input {
-        width: 90%;
-    }
-    .dataTables_scrollHeadInner{
-        margin: 0 auto;
-    } */
-    #dataTable tr:nth-child(odd) {
-        background-color: #f2f2f2;
-    }
+        .dataTables_wrapper {
+            width: 99%;
+            margin: 0 auto;
+        }
 
-    #dataTable tr:nth-child(even) {
-        background-color: #ffffff;
-    }
+        #dataTable tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
 
-    #dataTable tr:hover {
-        background-color: #cce6ff;
-    }
+        #dataTable tr:nth-child(even) {
+            background-color: #ffffff;
+        }
 
-    #dataTable tr.selected {
-        background-color: #007bff;
-        color: #ffffff;
-    }
-    
-   
+        #dataTable tr:hover {
+            background-color: #cce6ff;
+        }
+
+        #dataTable tr.selected {
+            background-color: #007bff;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
-    {% include 'navbar.html' %}
-    <h1>List All Instances</h1>
-    <!-- Di bawah tabel -->
-    <p>Last Updated: {{ aio_last_updated }}</p>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Project</th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Power State</th>
-                <th>Networks</th>
-                <th>Image Name</th>
-                <th>Flavor Name</th>
-                <th>Host</th>
-                <th>vCPU</th>
-                <th>RAM</th>
-                <th>Attached Volumes</th> 
-            </tr>
-        </thead>
-        <tbody>
-            {% for instance in data_list %}
-            <tr>
-                <td>{{ instance["Project"] }}</td>
-                <td>{{ instance["ID"] }}</td>
-                <td>{{ instance["Name"] }}</td>
-                <td>{{ instance["Status"] }}</td>
-                <td>{{ instance["Power State"] }}</td>
-                <td>{{ instance["Networks"] }}</td>
-                <td>{{ instance["Image Name"] }}</td>
-                <td>{{ instance["Flavor Name"] }}</td>
-                <td>{{ instance["Host"] }}</td>
-                <td>{{ instance["CPU"] }}</td>
-                <td>{{ instance["RAM"] }}</td>
-                <td>{{ instance["Volumes"] | safe}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <!-- <h1>List All Instances - ODC</h1>
-    <p>Last Updated: {{ aio_odc_last_updated }}</p>
-    <table id="dataTableodc">
-        <thead>
-            <tr>
-                <th>Project</th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Power State</th>
-                <th>Networks</th>
-                <th>Image Name</th>
-                <th>Flavor Name</th>
-                <th>Host</th>
-                <th>vCPU</th>
-                <th>RAM</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for instance in data_list_odc %}
-            <tr>
-                <td>{{ instance["Project"] }}</td>
-                <td>{{ instance["ID"] }}</td>
-                <td>{{ instance["Name"] }}</td>
-                <td>{{ instance["Status"] }}</td>
-                <td>{{ instance["Power State"] }}</td>
-                <td>{{ instance["Networks"] }}</td>
-                <td>{{ instance["Image Name"] }}</td>
-                <td>{{ instance["Flavor Name"] }}</td>
-                <td>{{ instance["Host"] }}</td>
-                <td>{{ instance["CPU"] }}</td>
-                <td>{{ instance["RAM"] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
- 
+    <header>
+        <!-- Include navigation bar -->
+        {% include 'navbar.html' %}
+    </header>
+    <main>
+        <h1>List All Instances</h1>
+        <!-- Di bawah tabel -->
+        <p>Last Updated: {{ aio_last_updated }}</p>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Power State</th>
+                    <th>Networks</th>
+                    <th>Image Name</th>
+                    <th>Flavor Name</th>
+                    <th>Host</th>
+                    <th>vCPU</th>
+                    <th>RAM</th>
+                    <th>Attached Volumes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for instance in data_list %}
+                <tr>
+                    <td>{{ instance["Project"] }}</td>
+                    <td>{{ instance["ID"] }}</td>
+                    <td>{{ instance["Name"] }}</td>
+                    <td>{{ instance["Status"] }}</td>
+                    <td>{{ instance["Power State"] }}</td>
+                    <td>{{ instance["Networks"] }}</td>
+                    <td>{{ instance["Image Name"] }}</td>
+                    <td>{{ instance["Flavor Name"] }}</td>
+                    <td>{{ instance["Host"] }}</td>
+                    <td>{{ instance["CPU"] }}</td>
+                    <td>{{ instance["RAM"] }}</td>
+                    <td>{{ instance["Volumes"] | safe }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
     <script src="static/DataTables/datatables.min.js"></script>
     <script>
         $(document).ready(function () {
-        $('#dataTable').DataTable({
-            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-            buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf','print'],
-            dom: 'Bfrtip',
-            // fixedHeader: true,
-            // scrollX : true,
-            // responsive: true,
-            initComplete: function () {
-            var table = this;
-            this.api().columns().every(function () {
-                var column = this;
-                var header = $(column.header());
-                var originalHeaderText = header.text();
-                header.empty();
+            $('#dataTable').DataTable({
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf', 'print'],
+                dom: 'Bfrtip',
+                initComplete: function () {
+                    var table = this;
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var header = $(column.header());
+                        var originalHeaderText = header.text();
+                        header.empty();
 
-                var headerContainer = $('<div class="header-container"></div>').appendTo(header);
-                $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
-                var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
-                    .appendTo(headerContainer)
-                    .on('keyup', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        column
-                            // .search(val ? '^' + val + '$' : '', true, false) -> for exact match, use regex
-                            .search(this.value) // -> smart search
-                            .draw();
+                        var headerContainer = $('<div class="header-container"></div>').appendTo(header);
+                        $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
+                        var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
+                            .appendTo(headerContainer)
+                            .on('keyup', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search(this.value)
+                                    .draw();
+                            });
                     });
+                }
             });
-        }  
-        });
         });
     </script>
 </body>
