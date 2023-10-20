@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instance Openstack Management Migration</title>
-    <link href="static/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/tailwind.min.css">
 </head>
-
 <body class="bg-blue-100">
-    {% include 'navbar.html' %}
-    <div class="container mx-auto p-4">
+    <header>
+        <!-- Include navigation bar -->
+        {% include 'navbar.html' %}
+    </header>
+    <main class="container mx-auto p-4">
         <h1 class="text-3xl font-semibold text-blue-800 mb-4">Instance Openstack Management Migration</h1>
-        <div class="grid grid-cols-2 gap-4">
+        <section class="grid grid-cols-2 gap-4">
             <!-- Source Host Section -->
-            <div>
+            <article>
                 <h2 class="text-2xl font-semibold text-green-800">Source Host</h2>
                 <div class="mb-4">
-                    <select id="sourceHostsDropdown" onchange="loadInstances()"
-                        class="w-full px-4 py-2 border rounded">
+                    <select id="sourceHostsDropdown" onchange="loadInstances()" class="w-full px-4 py-2 border rounded">
                         <!-- Hosts will be loaded here -->
                     </select>
                 </div>
@@ -38,31 +40,26 @@
                     <!-- Your table cells and buttons -->
                 </table>
                 <h2 class="text-2xl font-semibold text-green-800 mt-6">vCPU Allocation Plot (based on Dest Host)</h2>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onclick="generateVcpuAllocationPlot()">Generate Plot</button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="generateVcpuAllocationPlot()">Generate Plot</button>
                 <div id="vcpuAllocationPlot" class="mt-4">
                     <!-- Plot will be displayed here -->
                 </div>
-                <h1 class="text-2xl font-semibold text-green-800 mt-6">List Compute Free</h1>
+                <h2 class="text-2xl font-semibold text-green-800 mt-6">List Compute Free</h2>
                 <div class="flex items-center mt-2">
                     <label for="vcpuInput" class="text-green-700 mr-2">Enter number of VCPUs:</label>
-                    <input type="number" id="vcpuInput" name="vcpuInput" min="1"
-                        class="w-20 px-2 py-1 border rounded">
-                    <button onclick="getComputeWithFreeVCPUs()"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">Search
-                        Compute</button>
+                    <input type="number" id="vcpuInput" name="vcpuInput" min="1" class="w-20 px-2 py-1 border rounded">
+                    <button onclick="getComputeWithFreeVCPUs()" class="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">Search Compute</button>
                 </div>
                 <div id="computeList" class="mt-4">
                     <!-- Compute list will be displayed here -->
                 </div>
-            </div>
+            </article>
 
             <!-- Destination Host Section -->
-            <div>
+            <article>
                 <h2 class="text-2xl font-semibold text-green-800">Destination Host</h2>
                 <div class="mb-4">
-                    <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()"
-                        class="w-full px-4 py-2 border rounded">
+                    <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()" class="w-full px-4 py-2 border rounded">
                         <!-- Hosts will be loaded here -->
                     </select>
                 </div>
@@ -83,15 +80,13 @@
                         <p><span id="totalVCPUsToMove">0</span></p>
                     </div>
                 </div>
-                <h3 id="destinationHostTitle" class="text-xl font-semibold text-green-700 mt-6">Instances on
-                    destination_host</h3>
+                <h3 id="destinationHostTitle" class="text-xl font-semibold text-green-700 mt-6">Instances on destination_host</h3>
                 <table id="destinationHost" class="w-full mt-2">
                     <!-- Instances will be loaded here -->
                 </table>
                 <p id="errorText" class="text-red-500 mt-4"></p>
                 <h2 class="text-2xl font-semibold text-green-800 mt-6">Instances to Move</h2>
-                <button onclick="clearInstancesToMove()"
-                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Clear Instances</button>
+                <button onclick="clearInstancesToMove()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Clear Instances</button>
                 <table id="instancesToMove" class="w-full mt-2">
                     <thead>
                         <tr>
@@ -103,12 +98,9 @@
                         <!-- Instances to move will be loaded here -->
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-    
- <script src="static/main.js"></script> 
-
-
+            </article>
+        </section>
+    </main>
+    <script src="static/main.js"></script>
 </body>
 </html>
