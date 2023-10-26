@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List All Instances</title>
     <link rel="stylesheet" href="static/DataTables/datatables.min.css">
+    <link rel="stylesheet" href="static/tailwind.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet"> -->
     <style>
-        .dataTables_wrapper {
-            width: 99%;
-            margin: 0 auto;
-        }
-
+        /* Beberapa gaya tambahan */
         #dataTable tr:nth-child(odd) {
             background-color: #f2f2f2;
         }
@@ -34,46 +32,47 @@
         <!-- Include navigation bar -->
         {% include 'navbar.html' %}
     </header>
-    <main>
-        <h1>List All Instances</h1>
-        <!-- Di bawah tabel -->
-        <p>Last Updated: {{ aio_last_updated }}</p>
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>Project</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Power State</th>
-                    <th>Networks</th>
-                    <th>Image Name</th>
-                    <th>Flavor Name</th>
-                    <th>Host</th>
-                    <th>vCPU</th>
-                    <th>RAM</th>
-                    <th>Attached Volumes</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for instance in data_list %}
-                <tr>
-                    <td>{{ instance["Project"] }}</td>
-                    <td>{{ instance["ID"] }}</td>
-                    <td>{{ instance["Name"] }}</td>
-                    <td>{{ instance["Status"] }}</td>
-                    <td>{{ instance["Power State"] }}</td>
-                    <td>{{ instance["Networks"] }}</td>
-                    <td>{{ instance["Image Name"] }}</td>
-                    <td>{{ instance["Flavor Name"] }}</td>
-                    <td>{{ instance["Host"] }}</td>
-                    <td>{{ instance["CPU"] }}</td>
-                    <td>{{ instance["RAM"] }}</td>
-                    <td>{{ instance["Volumes"] | safe }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <main class="mx-4 mt-8">
+        <h1 class="text-2xl font-bold mb-4">List All Instances</h1>
+        <p class="mb-4">Last Updated: {{ aio_last_updated }}</p>
+        <div class="overflow-x-auto"> 
+            <table id="dataTable" class="w-full border-collapse border">
+                <thead>
+                    <tr>
+                        <th class="border">Project</th>
+                        <th class="border">ID</th>
+                        <th class="border">Name</th>
+                        <th class="border">Status</th>
+                        <th class="border">Power State</th>
+                        <th class="border">Networks</th>
+                        <th class="border">Image Name</th>
+                        <th class="border">Flavor Name</th>
+                        <th class="border">Host</th>
+                        <th class="border">vCPU</th>
+                        <th class="border">RAM</th>
+                        <th class="border">Attached Volumes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instance in data_list %}
+                    <tr>
+                        <td class="border">{{ instance["Project"] }}</td>
+                        <td class="border">{{ instance["ID"] }}</td>
+                        <td class="border">{{ instance["Name"] }}</td>
+                        <td class="border">{{ instance["Status"] }}</td>
+                        <td class="border">{{ instance["Power State"] }}</td>
+                        <td class="border">{{ instance["Networks"] }}</td>
+                        <td class="border">{{ instance["Image Name"] }}</td>
+                        <td class="border">{{ instance["Flavor Name"] }}</td>
+                        <td class="border">{{ instance["Host"] }}</td>
+                        <td class="border">{{ instance["CPU"] }}</td>
+                        <td class="border">{{ instance["RAM"] }}</td>
+                        <td class="border">{{ instance["Volumes"] | safe }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </main>
     <script src="static/DataTables/datatables.min.js"></script>
     <script>
@@ -102,6 +101,10 @@
                                     .search(this.value)
                                     .draw();
                             });
+                        // input.css('max-width', '100px');
+                        if (originalHeaderText === 'Project' || originalHeaderText === 'vCPU' || originalHeaderText === 'RAM') {
+                            input.css('max-width', '60px');
+                        }
                     });
                 }
             });
