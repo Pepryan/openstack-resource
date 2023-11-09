@@ -88,7 +88,7 @@ ceph df > cephdf.txt
 openstack volume list --all-projects -f json > volumes.json
 
 ### ODC (because error when volume list --all-projects)
-# Membuat file JSON kosong
+# # Membuat file JSON kosong
 # echo "" > volumes.json
 
 # # Mendapatkan daftar project

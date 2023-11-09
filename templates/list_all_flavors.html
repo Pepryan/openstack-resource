@@ -3,6 +3,7 @@
 <head>
     <title>List All Flavors</title>
         <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="static/tailwind.min.css">
     <style>
     .dataTables_wrapper {
         width: 99%;
@@ -29,10 +30,12 @@
 </head>
 <body>
     {% include 'navbar.html' %}
-    <h1>List All Flavors</h1>
-    <p>Last Updated: {{ flavor_last_updated }}</p>
+    <main class="mx-4 mt-8">
+    <h1 class="text-2xl font-bold mb-4">List All Flavors</h1>
+    <p  class="mb-4">Last Updated: {{ flavor_last_updated }}</p>
     <!-- Di bawah tabel -->
     <!-- <p>Last Updated: {{ aio_last_updated }}</p> -->
+    <div class="overflow-x-auto"> 
     <table id="dataTable">
         <thead>
             <tr>
@@ -65,6 +68,8 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
+    </main>
 
  
     <script src="static/DataTables/datatables.min.js"></script>
@@ -75,7 +80,7 @@
             "pageLength": -1,
             buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf','print'],
             dom: 'Bfrtip',
-            fixedHeader: true,
+            // fixedHeader: true,
             // scrollX : true,
             // responsive: true,
             initComplete: function () {
