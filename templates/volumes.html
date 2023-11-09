@@ -3,6 +3,7 @@
 <head>
     <title>List All Volumes</title>
     <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/tailwind.min.css">
     <style>
         .dataTables_wrapper {
             width: 99%;
@@ -25,37 +26,39 @@
 </head>
 <body>
     {% include 'navbar.html' %}
-    <h1>List All Volumes</h1>
-    <p>Last Updated: {{ aio_last_updated }}</p>
+    <main class="mx-4 mt-8">
+    <h1 class="text-2xl font-bold mb-4">List All Volumes</h1>
+    <p class="mb-4">Last Updated: {{ aio_last_updated }}</p>
+    <div class="overflow-x-auto"> 
     <table id="dataTable">
         <thead>
             <tr>
-                <th>ID Volumes</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Size</th>
-                <th>Type</th>
-                <th>Bootable</th>
-                <th>Attached to</th>
-                <th>Properties</th>
+                <th class="border">ID Volumes</th>
+                <th class="border">Name</th>
+                <th class="border">Status</th>
+                <th class="border">Size</th>
+                <th class="border">Type</th>
+                <th class="border">Bootable</th>
+                <th class="border">Attached to</th>
+                <th class="border">Properties</th>
             </tr>
         </thead>
         <tbody>
             {% for volume in data_list %}
             <tr>
-                <td>{{ volume["ID"] }}</td>
-                <td>{{ volume["Name"] }}</td>
-                <td>{{ volume["Status"] }}</td>
-                <td>{{ volume["Size"] }}</td>
-                <td>{{ volume["Type"] }}</td>
-                <td>
+                <td class="border">{{ volume["ID"] }}</td>
+                <td class="border">{{ volume["Name"] }}</td>
+                <td class="border">{{ volume["Status"] }}</td>
+                <td class="border">{{ volume["Size"] }}</td>
+                <td class="border">{{ volume["Type"] }}</td>
+                <td class="border">
                     {% if volume["Bootable"] == "true" %}
                         Yes
                     {% else %}
                         No
                     {% endif %}
                 </td>
-                <td>
+                <td class="border">
                     {% if volume["Attached to"] %}
                         <!-- <ul> -->
                             {% for attachment in volume["Attached to"] %}
@@ -68,11 +71,13 @@
                         Empty Data
                     {% endif %}
                 </td>
-                <td>{{ volume["Properties"] }}</td>
+                <td class="border">{{ volume["Properties"] }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
+    </main>
     <script src="static/DataTables/datatables.min.js"></script>
     <script>
         $(document).ready(function () {
