@@ -36,7 +36,7 @@
         <h1 class="text-2xl font-bold mb-4">List All Instances</h1>
         <p class="mb-4">Last Updated: {{ aio_last_updated }}</p>
         <div class="overflow-x-auto"> 
-            <table id="dataTable" class="w-full border-collapse border">
+            <table id="dataTable" class="w-full border-collapse border" data-order="[]">
                 <thead>
                     <tr>
                         <th class="border">Project</th>
@@ -79,7 +79,7 @@
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf', 'print'],
+                buttons: ['colvis', 'pageLength', 'excel', 'print'],
                 dom: 'Bfrtip',
                 initComplete: function () {
                     var table = this;
