@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Allocation Data</title>
     <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/tailwind.min.css">
     <style>
     .dataTables_wrapper {
         width: 99%;
@@ -42,22 +43,34 @@
 
     #summary-table td {
         text-align: center;
+        border-width: 2px;
+        /* border-color: black; */
+        padding: 5px;
+    }
+    #summary-table th {
+        text-align: center;
+        border-width: 2px;
+        /* border-color: black; */
+        padding: 5px;
     }
 
     </style>
 </head>
 <body>
-    {% include 'navbar.html' %}
-    <h1>Allocation Data</h1>
+    <header>
+        {% include 'navbar.html' %}
+    </header>
+    <main class="mx-4 mt-8">
+    <h1 class="text-2xl font-bold mb-4">Allocation Data</h1>
     <p>Last Updated: {{ allocation_last_updated }}</p>
     <p><em>Note: <br>
-        <ul> <li>Please write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource.</li>
-        <li>Please write the cpu and ram reserved needed in the Kebutuhan column to mark it as a reserved resource, and calculate it.</li>
+        <ul> <li>Please write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource then click save to calculate.</li>
+        <li>Please write the cpu and ram reserved needed in the Kebutuhan column to mark it as a reserved resource, and click save to calculate.</li>
         <li>Disk calculation used as 1 PiB = 1024 TB</li>
         <!-- <li>Percentage total used summary disk column use "%RAW USED"</li> -->
         </ul></em></p>
     <center>
-    <table id="summary-table" border="2">
+    <table class="border" id="summary-table">
     <thead>
         <tr>
             <th rowspan="2">{{site_name}}</th>
@@ -155,6 +168,7 @@
 </table>
 </center>
     <!-- <p>All Host/Compute have 48 core</p> -->
+        <div class="overflow-x-auto"> 
         <table id="allocation-table">
         <thead>
             <tr>
@@ -209,7 +223,7 @@
                     </td>
                     <td>
                         <textarea class="keterangan-input" placeholder="Kebutuhan/Keterangan">{{ item['Reserved']['Kebutuhan'] }}</textarea>
-                        <button class="save-button">Save</button>
+                        <button class="button">Save</button>
                     </td>
                     <td>{{ item['CPU Availability After Reservation'] }}</td>
                     <td>{{ item['RAM Availability After Reservation'] }}</td>
@@ -219,6 +233,8 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
+    </main>
 
     <script src="static/DataTables/datatables.min.js"></script>
     <script src="static/allocation.js"></script> 

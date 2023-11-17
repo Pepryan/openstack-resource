@@ -28,7 +28,8 @@ def get_source_hosts():
 @app.route('/get_instances', methods=['GET'])
 def get_instances():
     host = request.args.get('host')
-    instances = data[data['Host'] == host][['Name', 'CPU']]
+    instances = data[data['Host'] == host][['Name', 'CPU', 'Host']]
+    print(instances)
     instances_json = instances.to_dict(orient='records')
     return jsonify({'instances': instances_json})
 

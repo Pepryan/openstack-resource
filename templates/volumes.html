@@ -30,7 +30,7 @@
     <h1 class="text-2xl font-bold mb-4">List All Volumes</h1>
     <p class="mb-4">Last Updated: {{ aio_last_updated }}</p>
     <div class="overflow-x-auto"> 
-    <table id="dataTable">
+    <table id="dataTable" data-order="[]">
         <thead>
             <tr>
                 <th class="border">ID Volumes</th>
@@ -83,7 +83,7 @@
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                buttons: ['colvis', 'pageLength', 'csv', 'excel', 'pdf', 'print'],
+                buttons: ['colvis', 'pageLength', 'excel', 'print'],
                 dom: 'Bfrtip',
                 initComplete: function () {
                     var table = this;

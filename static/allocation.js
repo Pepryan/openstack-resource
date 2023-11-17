@@ -8,9 +8,9 @@ $(document).ready( function () {
                 columns: ':not(.exclude-export)' // Hanya kolom yang tidak memiliki kelas 'exclude-export' yang akan di-ekspor
             },
             'pageLength',
-            'csv',
+            // 'csv',
             'excel',
-            'pdf',
+            // 'pdf',
             'print'
             ],
             dom: 'Bfrtip',
@@ -82,7 +82,7 @@ saveButtons.forEach((button) => {
         }
          // Validasi apakah cpuValue dan ramValue hanya berisi angka
         if (!isValidNumber(cpuValue)) {
-            alert("Masukkan angka saja pada vCPUs.");
+            alert("Masukkan hanya angka pada vCPUs.");
             // Lakukan refresh cache (Ctrl+F5)
             location.reload(true);
             return;
