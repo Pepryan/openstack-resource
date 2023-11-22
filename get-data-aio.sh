@@ -125,5 +125,6 @@ openstack volume list --all-projects -f json > volumes.json
 
 
 scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt volumes.json ubuntu@${instance_server}
+ssh ubuntu@${instance_server} sudo systemctl restart openstack-resource
 
 # rm -f temp_*
