@@ -29,7 +29,7 @@ def get_source_hosts():
 def get_instances():
     host = request.args.get('host')
     instances = data[data['Host'] == host][['Name', 'CPU', 'Host']]
-    print(instances)
+    # print(f"Host: {host}, Instances: {instances}")
     instances_json = instances.to_dict(orient='records')
     return jsonify({'instances': instances_json})
 
