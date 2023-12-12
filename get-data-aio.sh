@@ -125,6 +125,9 @@ openstack volume list --all-projects -f json > volumes.json
 
 
 scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt volumes.json ubuntu@${instance_server}
+
+ip_address=$(echo $instance_server | cut -d ':' -f 1)
+instance_server="$ip_address"
 ssh ubuntu@${instance_server} "sudo systemctl restart openstack-resource.service"
 
 # rm -f temp_*
