@@ -47,3 +47,5 @@ pip install matplotlib
 python app.py
 open browser localhost:[port]
 ```
+
+![Screenshot Openstack Resource](/screenshot-opre.png?raw=true "Openstack Resource")
