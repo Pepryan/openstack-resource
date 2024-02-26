@@ -98,7 +98,8 @@
                                     $(this).val()
                                 );
                                 column
-                                    .search(this.value)
+                                    // .search(val ? '^' + val + '$' : '', true, false) -> for exact match, use regex
+                                    .search(this.value) // -> smart search
                                     .draw();
                             });
                         // input.css('max-width', '100px');
