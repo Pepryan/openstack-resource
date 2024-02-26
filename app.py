@@ -204,9 +204,10 @@ def list_all_instances():
             volumes.sort(key=lambda vol: vol["device"])
 
             # Create a list of volume information strings
-            volume_info = [f"{vol['name']}, {vol['size']}, {vol['device']}" for vol in volumes]
+            # volume_info = [f"{vol['name']}, {vol['size']}, {vol['device']}" for vol in volumes]
+            volume_info = [f"{vol['name']} (Size: {vol['size']}, Device: {vol['device']})" for vol in volumes]
             # instance["Volumes"] = ", ".join(volume_info)
-            instance["Volumes"] = " | <br>".join(volume_info)
+            instance["Volumes"] = "<br>".join(volume_info)
         else:
             instance["Volumes"] = '-'
 
