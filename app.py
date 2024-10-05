@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
@@ -8,6 +9,8 @@ import json
 from helpers import *
 
 app = Flask(__name__)
+app.secret_key = 'REMOVED_SECRET'
+
 data = pd.read_csv('data/aio.csv', delimiter="|")
 # data = pd.read_csv('data/aio_odc.csv', delimiter="|")
 nan_rows = data[data['Host'].isna()]
@@ -15,18 +18,87 @@ nan_rows = data[data['Host'].isna()]
 
 # reserved_data_file = 'data/reserved_data.json'
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# User class
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+# Load users from JSON file
+def load_users():
+    with open('data/users.json', 'r') as f:
+        return json.load(f)
+
+@login_manager.user_loader
+def load_user(user_id):
+    users = load_users()
+    if user_id in users:
+        return User(user_id)
+    return None
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        if username in users and users[username] == password:
+            user = User(username)
+            login_user(user)
+            flash('Success.')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password')
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 @app.route('/')
+@login_required
 def index():
+    """
+    This function returns a list of all compute hosts in the system.
+
+    Returns:
+        A list of compute hosts in the system.
+
+    """
     hosts = get_sorted_computes()
     return render_template('index.html', source_hosts=hosts)
 
 @app.route('/get_source_hosts', methods=['GET'])
+@login_required
 def get_source_hosts():
+    """
+    This function returns a list of all compute hosts in the system.
+
+    Returns:
+        A list of compute hosts in the system.
+
+    """
     hosts = get_sorted_computes()
     return jsonify(hosts)
 
 @app.route('/get_instances', methods=['GET'])
+@login_required
 def get_instances():
+    """
+    This function returns a list of instances on a specific compute host.
+
+    Parameters:
+        host (str): The name of the compute host.
+
+    Returns:
+        A list of instances on the specified compute host.
+
+    """
     host = request.args.get('host')
     instances = data[data['Host'] == host][['Name', 'CPU', 'Host']]
     # print(f"Host: {host}, Instances: {instances}")
@@ -34,7 +106,18 @@ def get_instances():
     return jsonify({'instances': instances_json})
 
 @app.route('/get_destination_host_instances', methods=['GET'])
+@login_required
 def get_destination_host_instances():
+    """
+    This function returns a list of instances on a specific compute host.
+
+    Parameters:
+        host (str): The name of the compute host.
+
+    Returns:
+        A list of instances on the specified compute host.
+
+    """
     host = request.args.get('host')
     instances = data[data['Host'] == host][['Name', 'CPU']]
     instances_json = instances.to_dict(orient='records')
@@ -50,14 +133,36 @@ def get_destination_host_instances():
     })
 
 @app.route('/get_instance_vcpus_used', methods=['GET'])
+@login_required
 def get_instance_vcpus_used():
+    """
+    This function returns the vCPUs used by an instance.
+
+    Parameters:
+        instance_name (str): The name of the instance.
+
+    Returns:
+        The number of vCPUs used by the specified instance.
+
+    """
     instance_name = request.args.get('name')
     instance_host = data[data['Name'] == instance_name]['Host'].values[0]
     vcpus_used_instance = int(data[data['Name'] == instance_name]['CPU'].values[0])
     return jsonify(vcpus_used_instance)
 
 @app.route('/get_host_allocation', methods=['GET'])
+@login_required
 def get_host_allocation():
+    """
+    This function returns the vCPUs allocated to a specific compute host and the total vCPUs available on that host.
+
+    Parameters:
+        host (str): The name of the compute host.
+
+    Returns:
+        A dictionary containing the vCPUs allocated to the specified compute host and the total vCPUs available on that host.
+
+    """
     host = request.args.get('host')
     vcpus_used = 0
     vcpus_total = 0
@@ -77,7 +182,18 @@ def get_host_allocation():
     return jsonify(response_data)
 
 @app.route('/generate_vcpu_allocation_plot', methods=['GET'])
+@login_required
 def generate_vcpu_allocation_plot():
+    """
+    This function generates a vCPU allocation plot for a specific destination host.
+
+    Parameters:
+        destination_host (str): The name of the destination host.
+
+    Returns:
+        A dictionary containing the image path of the vCPU allocation plot for the specified destination host.
+
+    """
     destination_host = request.args.get('destination_host')
     file_path = 'data/aio.csv'
     longest_string = ""
@@ -170,6 +286,7 @@ def generate_vcpu_allocation_plot():
     return jsonify(response_data)
     
 @app.route('/list-all-instances', methods=['GET'])
+@login_required
 def list_all_instances():
     aio_csv_path = 'data/aio.csv'
     aio_last_updated = os.path.getmtime(aio_csv_path)
@@ -218,7 +335,15 @@ def list_all_instances():
     return render_template('list_all_instances.html', data_list=data_list, aio_last_updated=aio_last_updated_str)
 
 @app.route('/volumes', methods=['GET'])
+@login_required
 def list_all_volumes():
+    """
+    This function returns a list of all volumes in the system.
+
+    Returns:
+        A list of dictionaries containing information about each volume.
+
+    """
     volumes_json_path = 'data/volumes.json'
     
     # Get the last modified timestamp of the volumes.json file
@@ -245,7 +370,18 @@ def list_all_volumes():
 
 
 @app.route('/get_compute_with_free_vcpus', methods=['GET'])
+@login_required
 def get_compute_with_free_vcpus():
+    """
+    This function returns a list of compute hosts that have at least the specified number of free vCPUs.
+
+    Parameters:
+    vcpu_required (int): The minimum number of free vCPUs required.
+
+    Returns:
+    A list of compute hosts that have at least the specified number of free vCPUs.
+
+    """
     vcpu_required = int(request.args.get('vcpu'))
     
     compute_list = []
@@ -264,6 +400,7 @@ def get_compute_with_free_vcpus():
     return jsonify({'compute_list': list(unique_compute_set)})
 
 @app.route('/list-all-flavors', methods=['GET'])
+@login_required
 def list_all_flavors():
     flavor_data = pd.read_csv('data/flavors.csv', delimiter='|')
     flavor_last_updated = os.path.getmtime('data/flavors.csv')
@@ -279,6 +416,7 @@ def list_all_flavors():
     return render_template('list_all_flavors.html', flavor_data=flavor_data, flavor_last_updated=flavor_last_updated_str)
 
 @app.route('/allocation')
+@login_required
 def allocation():
     with open('data/allocation.txt', 'r') as allocation_file:
         allocation_data = allocation_file.readlines()
@@ -507,6 +645,7 @@ def allocation():
     )
 
 @app.route('/save_reserved', methods=['POST'])
+@login_required
 def save_reserved():
     try:
         data = request.get_json()
