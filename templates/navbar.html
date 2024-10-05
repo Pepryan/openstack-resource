@@ -13,7 +13,7 @@
             /* top: 0; */
             /* z-index: 100; */
         }
-        
+       
         .navbar a {
             float: left;
             font-size: 16px;
@@ -22,10 +22,20 @@
             padding: 14px 16px;
             text-decoration: none;
         }
-        
+       
         .navbar a:hover {
             background-color: #ddd;
             color: black;
+        }
+
+        /* Add this new style for the logout button */
+        .navbar .logout {
+            float: right;
+            background-color: #f44336;
+        }
+
+        .navbar .logout:hover {
+            background-color: #d32f2f;
         }
     </style>
 </head>
@@ -36,6 +46,8 @@
         <a href="/list-all-flavors">List All Flavors</a>
         <a href="/volumes">List All Volumes</a>
         <a href="/allocation">Allocation Data</a>
+        <!-- Add the logout button -->
+        <a href="/logout" class="logout">Logout</a>
     </div>
 </body>
 </html>
