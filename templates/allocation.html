@@ -7,53 +7,349 @@
     <link href="static/DataTables/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/tailwind.min.css">
     <style>
-    .dataTables_wrapper {
-        width: 99%;
-        margin: 0 auto;
-    }
-    #allocation-table tr:nth-child(odd) {
-        background-color: #f2f2f2;
-    }
+        /* Base styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
 
-    #allocation-table tr:nth-child(even) {
-        background-color: #ffffff;
-    }
+        .mx-4 {
+            margin: 2rem !important;
+        }
 
-    #allocation-table tr:hover {
-        background-color: #cce6ff;
-    }
+        /* Header styles */
+        h1.text-2xl {
+            color: #1a73e8;
+            margin-bottom: 1rem;
+            font-size: 1.875rem;
+        }
 
-    #allocation-table tr.selected {
-        background-color: #007bff;
-        color: #ffffff;
-    }
-    #allocation-table th.text-center {
-        text-align: center;
-    }
+        /* Notes section */
+        .mx-4 > p {
+            margin-bottom: 1rem;
+        }
 
-    #allocation-table td.text-center {
-        text-align: center;
-    }
-    #allocation-table th.border-right, #allocation-table td.border-right {
-        border-right: 1px solid #000;
-    }
-    #summary-table{
-        margin-bottom: 2%;
-    }
+        .mx-4 em {
+            background-color: #e8f0fe;
+            padding: 1rem;
+            border-radius: 8px;
+            display: block;
+            border: 1px solid #4285f4;
+            margin-bottom: 2rem;
+        }
 
-    #summary-table td {
-        text-align: center;
-        border-width: 2px;
-        /* border-color: black; */
-        padding: 5px;
-    }
-    #summary-table th {
-        text-align: center;
-        border-width: 2px;
-        /* border-color: black; */
-        padding: 5px;
-    }
+        .mx-4 ul {
+            margin-left: 1.5rem;
+        }
 
+        /* Summary table styles */
+        #summary-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            width: 65%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        #summary-table th,
+        #summary-table td {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        #summary-table thead th {
+            background-color: #f8fafc;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        #summary-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Main allocation table styles */
+        .dataTables_wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            width: 98% !important;
+        }
+
+        #allocation-table {
+            width: 100% !important;
+        }
+
+        #allocation-table th,
+        #allocation-table td {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        #allocation-table thead th {
+            background-color: #f8fafc;
+            color: #1f2937;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        #allocation-table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        #allocation-table tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        #allocation-table tbody tr:hover {
+            background-color: #e8f0fe !important;
+        }
+
+        /* Maintenance row highlighting */
+        #allocation-table tbody tr[style*="background-color: rgb(255, 217, 0)"] {
+            background-color: #fff3cd !important;
+            border-left: 4px solid #ffc107;
+        }
+
+          /* Styling khusus untuk mengatur width kolom tabel */
+        #allocation-table {
+            width: 100% !important;
+            table-layout: auto;
+        }
+
+        /* vCPUs Ratio - kolom kecil */
+        #allocation-table th:nth-child(1),
+        #allocation-table td:nth-child(1) {
+            width: 80px;
+            min-width: 80px;
+            white-space: nowrap;
+        }
+
+        /* Compute Name - sedikit lebih lebar */
+        #allocation-table th:nth-child(2),
+        #allocation-table td:nth-child(2) {
+            width: 180px;
+            min-width: 180px;
+            white-space: nowrap;
+        }
+
+        /* Kolom angka (Used, Capacity, Percentage, Available) */
+        #allocation-table th:nth-child(3),
+        #allocation-table td:nth-child(3),
+        #allocation-table th:nth-child(4),
+        #allocation-table td:nth-child(4),
+        #allocation-table th:nth-child(5),
+        #allocation-table td:nth-child(5),
+        #allocation-table th:nth-child(6),
+        #allocation-table td:nth-child(6),
+        #allocation-table th:nth-child(7),
+        #allocation-table td:nth-child(7),
+        #allocation-table th:nth-child(8),
+        #allocation-table td:nth-child(8),
+        #allocation-table th:nth-child(9),
+        #allocation-table td:nth-child(9),
+        #allocation-table th:nth-child(10),
+        #allocation-table td:nth-child(10),
+        #allocation-table th:nth-child(14),
+        #allocation-table td:nth-child(14),
+        #allocation-table th:nth-child(15),
+        #allocation-table td:nth-child(15) {
+            width: 100px;
+            min-width: 100px;
+            white-space: nowrap;
+        }
+
+        /* Kolom input (Reserved VCPUs, Reserved Memory, Kebutuhan) */
+        #allocation-table th:nth-child(11),
+        #allocation-table td:nth-child(11),
+        #allocation-table th:nth-child(12),
+        #allocation-table td:nth-child(12) {
+            width: 120px;
+            min-width: 120px;
+        }
+
+        /* Kolom Kebutuhan - lebih lebar karena biasanya berisi teks panjang */
+        #allocation-table th:nth-child(13),
+        #allocation-table td:nth-child(13) {
+            width: 200px;
+            min-width: 200px;
+        }
+
+        /* Styling untuk text di dalam sel */
+        #allocation-table td {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            padding: 8px;
+        }
+
+        /* Membuat textarea menyesuaikan dengan width kolom */
+        #allocation-table textarea {
+            width: 95%;
+            min-height: 30px;
+            padding: 4px;
+        }
+
+        /* Pastikan konten tetap bisa di-scroll horizontal jika terlalu panjang */
+        .dataTables_wrapper {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+
+        /* Tambahan untuk memastikan header tetap rata */
+        #allocation-table thead th {
+            padding: 8px;
+            vertical-align: middle;
+            text-align: center;
+            background-color: #f8fafc;
+        }
+
+        /* Styling untuk border yang lebih rapi */
+        #allocation-table th.border-right,
+        #allocation-table td.border-right {
+            border-right: 2px solid #e5e7eb;
+        }
+
+        /* Input styles */
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 2.5rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+
+        /* Save button styles */
+        .save-button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .save-button:hover {
+            background-color: #1557b0;
+        }
+
+        /* DataTables customization */
+        .dataTables_filter input {
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
+        .dataTables_length select {
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            margin: 0 0.5rem;
+        }
+
+        .dataTables_info {
+            padding-top: 1rem;
+            color: #6b7280;
+        }
+
+        .dataTables_paginate {
+            padding-top: 1rem;
+        }
+
+        .dataTables_paginate .paginate_button {
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background-color: #1a73e8 !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .dataTables_paginate .paginate_button:hover {
+            background-color: #e8f0fe !important;
+            border: 1px solid #1a73e8 !important;
+        }
+         /* Header Styles */
+        .header-section {
+            margin-bottom: 2rem;
+        }
+
+        .header-section h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .last-updated {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+         /* Notes Section */
+        .notes-section {
+            background-color: #e8f0fe;
+            border: 1px solid #4285f4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .notes-section h3 {
+            color: #1a73e8;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .notes-section ul {
+            margin-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            /* .dataTables_wrapper {
+                overflow-x: auto;
+            } */
+
+            #summary-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .mx-4 {
+                margin: 1rem !important;
+            }
+
+            .dataTables_wrapper {
+                margin: 0;
+                padding: 10px;
+                border-radius: 0;
+            }
+            
+            #allocation-table {
+                margin: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -61,14 +357,29 @@
         {% include 'navbar.html' %}
     </header>
     <div class="mx-4 mt-8">
-    <h1 class="text-2xl font-bold mb-4">Allocation Data</h1>
+    <!-- <h1 class="text-2xl font-bold mb-4">Allocation Data</h1>
     <p>Last Updated: {{ allocation_last_updated }}</p>
     <p><em>Note: <br>
         <ul> <li>Please write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource then click save to calculate.</li>
         <li>Please write the cpu and ram reserved needed in the Kebutuhan column to mark it as a reserved resource, and click save to calculate.</li>
         <li>Disk calculation used as 1 PiB = 1024 TB</li>
-        <!-- <li>Percentage total used summary disk column use "%RAW USED"</li> -->
-        </ul></em></p>
+        <-- <li>Percentage total used summary disk column use "%RAW USED"</li> --
+        </ul></em></p> -->
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1>Allocation Data</h1>
+            <p class="last-updated">Last Updated: {{ allocation_last_updated }}</p>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="notes-section">
+            <h3>Important Notes:</h3>
+            <ul>
+                <li>Write "Backup for maintenance" (case insensitive) in the Kebutuhan column to mark it as a backup resource</li>
+                <li>Write the CPU and RAM reserved needed in the Kebutuhan column to mark it as a reserved resource</li>
+                <li>Disk calculation used as 1 PiB = 1024 TB</li>
+            </ul>
+        </div>
     <center>
     <table class="border" id="summary-table">
     <thead>
