@@ -6,101 +6,148 @@
     <title>Instance Openstack Management Migration</title>
     <link rel="stylesheet" href="static/tailwind.min.css">
 </head>
-<body class="bg-blue-100">
-    <header>
-        <!-- Include navigation bar -->
-        {% include 'navbar.html' %}
-    </header>
-    <main class="container mx-auto p-4">
-        <h1 class="text-3xl font-semibold text-blue-800 mb-4">Instance Openstack Management Migration</h1>
-        <section class="grid grid-cols-2 gap-4">
+<body class="bg-gray-50 min-h-screen">
+    <!-- Include navigation bar -->
+    {% include 'navbar.html' %}
+
+    <main class="max-w-7xl mx-auto p-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Instance Migration Manager</h1>
+        
+        <div class="grid md:grid-cols-2 gap-6">
             <!-- Source Host Section -->
-            <article>
-                <h2 class="text-2xl font-semibold text-green-800">Source Host</h2>
-                <div class="mb-4">
-                    <select id="sourceHostsDropdown" onchange="loadInstances()" class="w-full px-4 py-2 border rounded">
-                        <!-- Hosts will be loaded here -->
-                    </select>
-                </div>
-                <h3 id="sourceHostInfo" class="text-xl font-semibold text-green-700">Info source_host</h3>
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                    <div>
-                        <p class="text-green-700">vCPUs Used:</p>
-                        <p class="text-green-700">Total vCPUs:</p>
-                        <p class="text-green-700">Free vCPUs:</p>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-blue-700 mb-4">Source Host</h2>
+                <select id="sourceHostsDropdown" onchange="loadInstances()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4">
+                    <option value="" disabled selected>Select Source Host</option>
+                </select>
+
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <h3 id="sourceHostInfo" class="text-lg font-medium text-gray-700 mb-2">Host Information</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="text-gray-600">
+                            <p>vCPUs Used:</p>
+                            <p>Total vCPUs:</p>
+                            <p>Free vCPUs:</p>
+                        </div>
+                        <div class="text-gray-900">
+                            <p><span id="vcpusUsedSourceHost">0</span></p>
+                            <p><span id="totalVCPUsSourceHost">0</span></p>
+                            <p><span id="freeVCPUsSourceHost">0</span></p>
+                        </div>
                     </div>
-                    <div>
-                        <p><span id="vcpusUsedSourceHost">0</span></p>
-                        <p><span id="totalVCPUsSourceHost">0</span></p>
-                        <p><span id="freeVCPUsSourceHost">0</span></p>
-                    </div>
                 </div>
-                <h3 id="sourceHostTitle" class="text-xl font-semibold text-green-700">Instances on source_hosts</h3>
-                <table id="sourceHost" class="w-full mt-2">
-                    <!-- Your table cells and buttons -->
-                </table>
-                <h2 class="text-2xl font-semibold text-green-800 mt-6">vCPU Allocation Plot (based on Dest Host)</h2>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="generateVcpuAllocationPlot()">Generate Plot</button>
-                <div id="vcpuAllocationPlot" class="mt-4">
-                    <!-- Plot will be displayed here -->
-                </div>
-                <h2 class="text-2xl font-semibold text-green-800 mt-6">List Compute Free</h2>
-                <div class="flex items-center mt-2">
-                    <label for="vcpuInput" class="text-green-700 mr-2">Enter number of VCPUs:</label>
-                    <input type="number" id="vcpuInput" name="vcpuInput" min="1" class="w-20 px-2 py-1 border rounded">
-                    <button onclick="getComputeWithFreeVCPUs()" class="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">Search Compute</button>
-                </div>
-                <div id="computeList" class="mt-4">
-                    <!-- Compute list will be displayed here -->
-                </div>
-            </article>
+
+                <h3 id="sourceHostTitle" class="text-lg font-medium text-gray-700 mb-2">Instances</h3>
+                <!-- <div class="overflow-x-auto"> -->
+                    <table id="sourceHost" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">vCPU</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                <!-- </div> -->
+            </div>
 
             <!-- Destination Host Section -->
-            <article>
-                <h2 class="text-2xl font-semibold text-green-800">Destination Host</h2>
-                <div class="mb-4">
-                    <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()" class="w-full px-4 py-2 border rounded">
-                        <!-- Hosts will be loaded here -->
-                    </select>
-                </div>
-                <h3 id="destinationHostInfo" class="text-xl font-semibold text-green-700">Info destination_host</h3>
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                    <div>
-                        <p class="text-green-700">vCPUs Used:</p>
-                        <p class="text-green-700">Total vCPUs:</p>
-                        <p class="text-green-700">Free vCPUs (Before):</p>
-                        <p class="text-green-700">Free vCPUs (After):</p>
-                        <p class="text-green-700">Total vCPUs to Move:</p>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-blue-700 mb-4">Destination Host</h2>
+                <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4">
+                    <option value="" disabled selected>Select Destination Host</option>
+                </select>
+
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <h3 id="destinationHostInfo" class="text-lg font-medium text-gray-700 mb-2">Host Information</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="text-gray-600">
+                            <p>vCPUs Used:</p>
+                            <p>Total vCPUs:</p>
+                            <p>Free vCPUs (Before):</p>
+                            <p>Free vCPUs (After):</p>
+                            <p>Total vCPUs to Move:</p>
+                        </div>
+                        <div class="text-gray-900">
+                            <p><span id="vcpusUsedHost">0</span></p>
+                            <p><span id="totalVCPUsHost">0</span></p>
+                            <p><span id="freeVCPUsHost">0</span></p>
+                            <p><span id="freeVCPUsAfter">0</span></p>
+                            <p><span id="totalVCPUsToMove">0</span></p>
+                        </div>
                     </div>
-                    <div>
-                        <p><span id="vcpusUsedHost">0</span></p>
-                        <p><span id="totalVCPUsHost">0</span></p>
-                        <p><span id="freeVCPUsHost">0</span></p>
-                        <p><span id="freeVCPUsAfter">0</span></p>
-                        <p><span id="totalVCPUsToMove">0</span></p>
+                </div>
+
+                <h3 id="destinationHostTitle" class="text-lg font-medium text-gray-700 mb-2">Current Instances</h3>
+                <!-- <div class="overflow-x-auto"> -->
+                    <table id="destinationHost" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">vCPU</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                <!-- </div> -->
+
+                <h3 class="text-lg font-medium text-gray-700 my-4">Instances to Move</h3>
+                <button onclick="clearInstancesToMove()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-150 mb-2">
+                    Clear Instances
+                </button>
+                <!-- <div class="overflow-x-auto"> -->
+                    <table id="instancesToMove" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">vCPU</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                <!-- </div> -->
+                <p id="errorText" class="text-red-500 mt-2"></p>
+            </div>
+        </div>
+
+        <!-- Compute Search Section -->
+        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4">Resource Management</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-700 mb-4">vCPU Allocation Plot</h3>
+                    <button onclick="generateVcpuAllocationPlot()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-150">
+                        Generate Plot
+                    </button>
+                    <div id="vcpuAllocationPlot" class="mt-4">
+                        <!-- Plot will be displayed here -->
                     </div>
                 </div>
-                <h3 id="destinationHostTitle" class="text-xl font-semibold text-green-700 mt-6">Instances on destination_host</h3>
-                <table id="destinationHost" class="w-full mt-2">
-                    <!-- Instances will be loaded here -->
-                </table>
-                <p id="errorText" class="text-red-500 mt-4"></p>
-                <h2 class="text-2xl font-semibold text-green-800 mt-6">Instances to Move</h2>
-                <button onclick="clearInstancesToMove()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Clear Instances</button>
-                <table id="instancesToMove" class="w-full mt-2">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2 bg-green-500 text-white">Name</th>
-                            <th class="px-4 py-2 bg-green-500 text-white">vCPU</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Instances to move will be loaded here -->
-                    </tbody>
-                </table>
-            </article>
-        </section>
+                
+                <div>
+                    <h3 class="text-lg font-medium text-gray-700 mb-4">Find Available Compute</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <label for="vcpuInput" class="block text-sm font-medium text-gray-700 mb-1">Required vCPUs</label>
+                            <input type="number" id="vcpuInput" name="vcpuInput" min="1" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <button onclick="getComputeWithFreeVCPUs()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-150 mt-6">
+                            Search
+                        </button>
+                    </div>
+                    <div id="computeList" class="mt-4 bg-gray-50 p-4 rounded-lg">
+                        <!-- Compute list will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+
     <script src="static/main.js"></script>
 </body>
 </html>
