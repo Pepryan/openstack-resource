@@ -351,6 +351,310 @@
             }
         }
     </style>
+    <style>
+        /* Dark mode variables */
+        [data-theme='dark'] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border-color: #404040;
+            --hover-color: #3b5998;
+            --accent-color: #3b82f6;
+            --header-bg: #2d2d2d;
+            --table-stripe-odd: #333333;
+            --table-stripe-even: #2d2d2d;
+            --table-hover: #3b5998;
+        }
+
+        /* Base styles with dark mode support */
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        [data-theme='dark'] body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Header styles */
+        .header-section h1 {
+            color: #1f2937;
+        }
+
+        [data-theme='dark'] .header-section h1 {
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] .last-updated {
+            color: var(--text-muted);
+        }
+
+        /* Notes section */
+        .notes-section {
+            background-color: #e8f0fe;
+            border: 1px solid #4285f4;
+        }
+
+        [data-theme='dark'] .notes-section {
+            background-color: var(--bg-secondary);
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] .notes-section h3 {
+            color: var(--accent-color);
+        }
+
+        /* Summary table styles */
+        #summary-table {
+            background: white;
+        }
+
+        [data-theme='dark'] #summary-table {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
+        [data-theme='dark'] #summary-table th,
+        [data-theme='dark'] #summary-table td {
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] #summary-table thead th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Main allocation table styles */
+        [data-theme='dark'] .dataTables_wrapper {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
+        [data-theme='dark'] #allocation-table th,
+        [data-theme='dark'] #allocation-table td {
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] #allocation-table thead th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] #allocation-table tbody tr:nth-child(odd) {
+            background-color: var(--table-stripe-odd);
+        }
+
+        [data-theme='dark'] #allocation-table tbody tr:nth-child(even) {
+            background-color: var(--table-stripe-even);
+        }
+
+        [data-theme='dark'] #allocation-table tbody tr:hover {
+            background-color: var(--table-hover) !important;
+        }
+
+        /* Dark mode for maintenance row highlighting */
+        [data-theme='dark'] #allocation-table tbody tr[style*="background-color: rgb(255, 217, 0)"] {
+            background-color: #665c00 !important;
+            border-left: 4px solid #998a00;
+        }
+
+        /* Input styles for dark mode */
+        [data-theme='dark'] textarea {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        [data-theme='dark'] textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Save button styles for dark mode */
+        [data-theme='dark'] .save-button {
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] .save-button:hover {
+            background-color: #2563eb;
+        }
+
+        /* DataTables customization for dark mode */
+        [data-theme='dark'] .dataTables_filter input,
+        [data-theme='dark'] .dataTables_length select {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        [data-theme='dark'] .dataTables_info {
+            color: var(--text-muted);
+        }
+
+        [data-theme='dark'] .dataTables_paginate .paginate_button {
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme='dark'] .dataTables_paginate .paginate_button.current {
+            background-color: var(--accent-color) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        [data-theme='dark'] .dataTables_paginate .paginate_button:hover {
+            background-color: var(--hover-color) !important;
+            border-color: var(--accent-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* Border styles for dark mode */
+        [data-theme='dark'] .border-right {
+            border-right-color: var(--border-color) !important;
+        }
+        /* Summary table hover styles */
+    #summary-table tbody tr:hover {
+        background-color: rgba(26, 115, 232, 0.1);
+        transition: background-color 0.2s;
+    }
+
+    [data-theme='dark'] #summary-table tbody tr:hover {
+        background-color: var(--table-hover);
+    }
+
+    /* DataTables search fields and menu styles */
+    .dataTables_filter input,
+    .dataTables_length select,
+    .dt-button-collection {
+        background-color: #ffffff;
+        color: #1f2937;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        padding: 0.5rem;
+    }
+
+    /* Dark mode for DataTables elements */
+    [data-theme='dark'] .dataTables_filter input,
+    [data-theme='dark'] .dataTables_length select,
+    [data-theme='dark'] .dt-button-collection {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    /* Column visibility button and dropdown */
+    .dt-button {
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 4px !important;
+        padding: 0.5rem 1rem !important;
+    }
+
+    .dt-button:hover {
+        background-color: #f3f4f6 !important;
+    }
+
+    [data-theme='dark'] .dt-button {
+        background-color: var(--bg-tertiary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    [data-theme='dark'] .dt-button:hover {
+        background-color: var(--hover-color) !important;
+    }
+
+    /* Dropdown menu items */
+    .dt-button-collection .dt-button {
+        width: 100%;
+        text-align: left;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0.5rem 1rem !important;
+    }
+
+    .dt-button-collection .dt-button.active {
+        background-color: #e8f0fe !important;
+        color: #1a73e8 !important;
+    }
+
+    [data-theme='dark'] .dt-button-collection .dt-button.active {
+        background-color: var(--hover-color) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Dropdown container */
+    .dt-button-collection {
+        padding: 0.5rem 0 !important;
+        border-radius: 4px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    [data-theme='dark'] .dt-button-collection {
+        background-color: var(--bg-secondary) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+    /* Header search field styles */
+    #allocation-table thead input[type="search"],
+    #allocation-table thead input[type="text"] {
+        width: 100%;
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.875rem;
+    }
+
+    /* Light mode styles */
+    #allocation-table thead input[type="search"],
+    #allocation-table thead input[type="text"] {
+        background-color: #f3f4f6;
+        color: #1f2937;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Dark mode styles */
+    [data-theme='dark'] #allocation-table thead input[type="search"],
+    [data-theme='dark'] #allocation-table thead input[type="text"] {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    /* Placeholder color */
+    #allocation-table thead input[type="search"]::placeholder,
+    #allocation-table thead input[type="text"]::placeholder {
+        color: #6b7280;
+    }
+
+    [data-theme='dark'] #allocation-table thead input[type="search"]::placeholder,
+    [data-theme='dark'] #allocation-table thead input[type="text"]::placeholder {
+        color: var(--text-muted);
+    }
+
+    /* Focus styles */
+    #allocation-table thead input[type="search"]:focus,
+    #allocation-table thead input[type="text"]:focus {
+        outline: none;
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+    }
+
+    [data-theme='dark'] #allocation-table thead input[type="search"]:focus,
+    [data-theme='dark'] #allocation-table thead input[type="text"]:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    </style>
 </head>
 <body>
     <header>

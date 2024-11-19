@@ -5,9 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instance Openstack Management Migration</title>
     <link rel="stylesheet" href="static/tailwind.min.css">
+    <style>
+        /* Custom CSS for dark mode */
+        [data-theme='dark'] {
+            /* Backgrounds */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            
+            /* Text colors */
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #a0a0a0;
+            
+            /* Border colors */
+            --border-color: #404040;
+        }
+
+        [data-theme='dark'] body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] .bg-white {
+            background-color: var(--bg-secondary) !important;
+        }
+
+        [data-theme='dark'] .text-card-title {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme='dark'] .bg-gray-50 {
+            background-color: var(--bg-tertiary) !important;
+        }
+
+        [data-theme='dark'] .text-gray-500,
+        [data-theme='dark'] .text-gray-600,
+        [data-theme='dark'] .text-gray-700,
+        [data-theme='dark'] .text-gray-800,
+        [data-theme='dark'] .text-gray-900 {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme='dark'] .border-gray-200,
+        [data-theme='dark'] .border-gray-300 {
+            border-color: var(--border-color) !important;
+        }
+
+        [data-theme='dark'] select,
+        [data-theme='dark'] input {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        [data-theme='dark'] table thead {
+            background-color: var(--bg-tertiary);
+        }
+
+        [data-theme='dark'] table tbody {
+            background-color: var(--bg-secondary);
+        }
+
+        /* Transition for smooth theme switching */
+        body, div, select, input, table {
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Include navigation bar -->
+    <!-- Content remains the same as your original HTML -->
     {% include 'navbar.html' %}
 
     <main class="max-w-7xl mx-auto p-4">
@@ -16,7 +84,7 @@
         <div class="grid md:grid-cols-2 gap-6">
             <!-- Source Host Section -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-blue-700 mb-4">Source Host</h2>
+                <h2 class="text-xl font-semibold text-blue-700 mb-4 text-card-title">Source Host</h2>
                 <select id="sourceHostsDropdown" onchange="loadInstances()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4">
                     <option value="" disabled selected>Select Source Host</option>
                 </select>
@@ -38,7 +106,7 @@
                 </div>
 
                 <h3 id="sourceHostTitle" class="text-lg font-medium text-gray-700 mb-2">Instances</h3>
-                <!-- <div class="overflow-x-auto"> -->
+                <div class="overflow-x-auto">
                     <table id="sourceHost" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -50,12 +118,12 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                         </tbody>
                     </table>
-                <!-- </div> -->
+                </div>
             </div>
 
             <!-- Destination Host Section -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-blue-700 mb-4">Destination Host</h2>
+                <h2 class="text-xl font-semibold text-blue-700 mb-4 text-card-title">Destination Host</h2>
                 <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4">
                     <option value="" disabled selected>Select Destination Host</option>
                 </select>
@@ -98,7 +166,7 @@
                 <button onclick="clearInstancesToMove()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-150 mb-2">
                     Clear Instances
                 </button>
-                <!-- <div class="overflow-x-auto"> -->
+                <div class="overflow-x-auto">
                     <table id="instancesToMove" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -109,14 +177,14 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                         </tbody>
                     </table>
-                <!-- </div> -->
+                </div>
                 <p id="errorText" class="text-red-500 mt-2"></p>
             </div>
         </div>
 
         <!-- Compute Search Section -->
         <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-blue-700 mb-4">Resource Management</h2>
+            <h2 class="text-xl font-semibold text-blue-700 mb-4 text-card-title">Resource Management</h2>
             
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
@@ -149,5 +217,20 @@
     </main>
 
     <script src="static/main.js"></script>
+    <script>
+        // Check for saved theme preference or use system preference
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemDarkMode)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // Initialize theme before DataTables
+        initTheme();
+
+    </script>
 </body>
 </html>
