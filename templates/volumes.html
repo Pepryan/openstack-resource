@@ -23,6 +23,127 @@
             color: #ffffff;
         }
     </style>
+    <style>
+        /* Dark mode variables and base styles */
+        [data-theme='dark'] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border-color: #404040;
+            --hover-color: #3b5998;
+            --stripe-odd: #333333;
+            --stripe-even: #2d2d2d;
+        }
+
+        /* Base styles */
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        [data-theme='dark'] body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Table styles */
+        #dataTable tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        #dataTable tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        [data-theme='dark'] #dataTable tr:nth-child(odd) {
+            background-color: var(--stripe-odd);
+        }
+
+        [data-theme='dark'] #dataTable tr:nth-child(even) {
+            background-color: var(--stripe-even);
+        }
+
+        #dataTable tr:hover {
+            background-color: #cce6ff;
+        }
+
+        [data-theme='dark'] #dataTable tr:hover {
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] #dataTable tr.selected {
+            background-color: #1a4b8c;
+            color: var(--text-primary);
+        }
+
+        /* DataTables specific dark mode styles */
+        [data-theme='dark'] .dataTables_wrapper .dataTables_length,
+        [data-theme='dark'] .dataTables_wrapper .dataTables_filter,
+        [data-theme='dark'] .dataTables_wrapper .dataTables_info,
+        [data-theme='dark'] .dataTables_wrapper .dataTables_processing,
+        [data-theme='dark'] .dataTables_wrapper .dataTables_paginate {
+            color: var(--text-primary);
+        }
+
+        [data-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+            color: var(--text-muted) !important;
+        }
+
+        [data-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: var(--bg-tertiary) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: var(--hover-color) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* Search inputs dark mode */
+        [data-theme='dark'] .header-container input {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+        }
+
+        [data-theme='dark'] .header-container input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* DataTables Buttons dark mode */
+        [data-theme='dark'] .dt-buttons button {
+            background-color: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        [data-theme='dark'] .dt-buttons button:hover {
+            background-color: var(--hover-color) !important;
+        }
+
+        /* Table borders dark mode */
+        [data-theme='dark'] #dataTable,
+        [data-theme='dark'] #dataTable th,
+        [data-theme='dark'] #dataTable td {
+            border-color: var(--border-color);
+        }
+
+        /* Header text dark mode */
+        [data-theme='dark'] h1,
+        [data-theme='dark'] p {
+            color: var(--text-primary);
+        }
+    </style>
 </head>
 <body>
     {% include 'navbar.html' %}
