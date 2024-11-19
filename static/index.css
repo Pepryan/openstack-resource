@@ -1,0 +1,65 @@
+/* Custom CSS for dark mode */
+[data-theme='dark'] {
+    /* Backgrounds */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #404040;
+    
+    /* Text colors */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-muted: #a0a0a0;
+    
+    /* Border colors */
+    --border-color: #404040;
+}
+
+[data-theme='dark'] body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .bg-white {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme='dark'] .text-card-title {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme='dark'] .bg-gray-50 {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[data-theme='dark'] .text-gray-500,
+[data-theme='dark'] .text-gray-600,
+[data-theme='dark'] .text-gray-700,
+[data-theme='dark'] .text-gray-800,
+[data-theme='dark'] .text-gray-900 {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme='dark'] .border-gray-200,
+[data-theme='dark'] .border-gray-300 {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme='dark'] select,
+[data-theme='dark'] input {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] table thead {
+    background-color: var(--bg-tertiary);
+}
+
+[data-theme='dark'] table tbody {
+    background-color: var(--bg-secondary);
+}
+
+/* Transition for smooth theme switching */
+body, div, select, input, table {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
