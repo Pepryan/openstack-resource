@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,6 +7,7 @@ import os
 import csv
 import json
 from helpers import *
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = 'REMOVED_SECRET'
@@ -18,14 +19,19 @@ nan_rows = data[data['Host'].isna()]
 
 # reserved_data_file = 'data/reserved_data.json'
 
+# Configure Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# User class
+# User class with remember me functionality
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
+        self.remember = False
+
+    def get_id(self):
+        return self.id
 
 # Load users from JSON file
 def load_users():
@@ -36,22 +42,36 @@ def load_users():
 def load_user(user_id):
     users = load_users()
     if user_id in users:
-        return User(user_id)
+        user = User(user_id)
+        return user
     return None
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+        
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        remember = 'remember' in request.form
+        
         users = load_users()
         if username in users and users[username] == password:
             user = User(username)
-            login_user(user)
-            flash('Success.')
+            login_user(user, remember=remember)
+            
+            # If remember me is checked, set a longer session
+            if remember:
+                # Set session to expire in 30 days
+                session.permanent = True
+                app.permanent_session_lifetime = timedelta(days=30)
+            
+            flash('Successful!')
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password')
+    
     return render_template('login.html')
 
 @app.route('/logout')
