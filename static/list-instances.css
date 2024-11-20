@@ -11,10 +11,163 @@
     --stripe-odd: #333333;
     --stripe-even: #2d2d2d;
 }
+/* Dark mode variables and base styles */
+:root {
+  --card-bg-light: #ffffff;
+  --card-bg-dark: #1f2937;
+  --text-primary-light: #111827;
+  --text-primary-dark: #f9fafb;
+  --text-secondary-light: #4b5563;
+  --text-secondary-dark: #9ca3af;
+  --border-light: #e5e7eb;
+  --border-dark: #374151;
+  --code-bg-light: #f3f4f6;
+  --code-bg-dark: #374151;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+}
+
+/* Info Card Styles */
+.bg-white.dark\:bg-gray-800 {
+  background-color: var(--card-bg-light);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .bg-white.dark\:bg-gray-800 {
+  background-color: var(--card-bg-dark);
+}
+
+/* Info Icon Styles */
+.text-blue-500 {
+  color: var(--blue-500);
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Heading Styles */
+/* .text-lg.font-semibold {
+  color: var(--text-primary-light);
+  margin-bottom: 0.5rem;
+  line-height: 1.75rem;
+} */
+
+[data-theme='dark'] .text-lg.font-semibold {
+  color: var(--text-primary-dark);
+}
+
+/* Content Text Styles */
+.text-gray-600.dark\:text-gray-300 {
+  color: var(--text-secondary-light);
+  line-height: 1.5rem;
+}
+
+[data-theme='dark'] .text-gray-600.dark\:text-gray-300 {
+  color: var(--text-secondary-dark);
+}
+
+/* Code/Example Box Styles */
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: var(--code-bg-light);
+  font-size: 0.875rem;
+}
+
+[data-theme='dark'] .font-mono {
+  background-color: var(--code-bg-dark);
+}
+
+/* Examples Container Styles */
+.bg-gray-50.dark\:bg-gray-700\/50 {
+  background-color: var(--code-bg-light);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 0.75rem;
+}
+
+[data-theme='dark'] .bg-gray-50.dark\:bg-gray-700\/50 {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+/* Examples List Styles */
+.space-y-1 {
+  margin-top: 0.5rem;
+}
+
+.space-y-1 li {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Hover Effects */
+.bg-white.dark\:bg-gray-800:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Animation for smooth transitions */
+.bg-white.dark\:bg-gray-800,
+.font-mono,
+.text-blue-500,
+.text-gray-600.dark\:text-gray-300 {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .bg-white.dark\:bg-gray-800 {
+    padding: 1rem;
+  }
+  
+  .space-y-1 li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Add these styles to your existing CSS */
+#searchTipsToggle {
+    cursor: pointer;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+#toggleIcon {
+    transition: transform 0.2s ease;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Optional: Add hover effect to the button */
+#searchTipsToggle:hover {
+    opacity: 0.8;
+}
+
+/* Make the container more compact */
+.max-w-2xl {
+    max-width: 42rem;
+}
 
 /* Base styles */
 body {
     transition: background-color 0.3s, color 0.3s;
+}
+
+.main-content {
+transform: scale(0.67);
+transform-origin: top left;
+width: 149.25%; 
+height: 149.25%;
+position: absolute;
 }
 
 [data-theme='dark'] body {
@@ -117,3 +270,4 @@ body {
 [data-theme='dark'] p {
     color: var(--text-primary);
 }
+

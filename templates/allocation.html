@@ -12,6 +12,7 @@
     <header>
         {% include 'navbar.html' %}
     </header>
+    <div class="main-content">
     <div class="mx-4 mt-8">
     <!-- <h1 class="text-2xl font-bold mb-4">Allocation Data</h1>
     <p>Last Updated: {{ allocation_last_updated }}</p>
@@ -136,72 +137,73 @@
 </center>
     </div>  
     <!-- <p>All Host/Compute have 48 core</p> -->
-        <div class="overflow-x-auto"> 
-        <table id="allocation-table">
-        <thead>
-            <tr>
-                <th rowspan="2">vCPUs Ratio</th>
-                <th rowspan="2" class="border-right">Compute Name</th>
-                <th colspan="4" class="text-center border-right">vCPUs</th>
-                <th colspan="4" class="text-center border-right">Memory (RAM)</th>
-                <th colspan="3">Reserved</th>
-                <th colspan="2">Availability After Reservation</th>
-                <!-- <th rowspan="2" class="exclude-export">Action</th> -->
+    <div class="overflow-x-auto"> 
+    <table id="allocation-table">
+    <thead>
+        <tr>
+            <th rowspan="2">vCPUs Ratio</th>
+            <th rowspan="2" class="border-right">Compute Name</th>
+            <th colspan="4" class="text-center border-right">vCPUs</th>
+            <th colspan="4" class="text-center border-right">Memory (RAM)</th>
+            <th colspan="3">Reserved</th>
+            <th colspan="2">Availability After Reservation</th>
+            <!-- <th rowspan="2" class="exclude-export">Action</th> -->
+        </tr>
+        <tr>
+            <th>Used</th>
+            <!-- <th>Core</th> -->
+            <th>VCPUs Capacity</th>
+            <th>Usage Percentage</th>
+            <th class="border-right">Available</th>
+            <th>Used</th>
+            <th>Memory Capacity</th>
+            <th>Usage Percentage</th>
+            <th class="border-right">Available (GB)</th>
+            <th>Reserved VCPUs</th>
+            <th>Reserved Memory (GB)</th>
+            <th>Kebutuhan</th>
+            <th>Final CPU</th>
+            <th>Final RAM (GB)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+            <tr
+            {% if "backup for maintenance" in item['Reserved']['Kebutuhan'].lower() %}
+                style="background-color: rgb(255, 217, 0);"
+            {% endif %}
+            >
+                <td>{{ item['vCPUs Ratio'] }}</td>
+                <td class="border-right computeName">{{ item['Compute Name'] }}</td>
+                <td>{{ item['VCPUs']['Used'] }}</td>
+                <!-- <td>{{ item['VCPUs']['Core'] }}</td> -->
+                <td>{{ item['VCPUs']['Capacity'] }}</td>
+                <td>{{ item['VCPUs']['Usage Percentage'] }}%</td>
+                <td class="border-right available-cpu">{{ item['VCPUs']['Available'] }}</td>
+                <td>{{ item['Memory']['Used'] }}</td>
+                <td>{{ item['Memory']['Capacity'] }}</td>
+                <td>{{ item['Memory']['Usage Percentage'] }}%</td>
+                <td class="border-right available-ram">{{ item['Memory']['Available (GB)'] }}</td>
+                <td>
+                    <textarea class="cpu-input" placeholder="VCPUs">{{ item['Reserved']['CPU'] }}</textarea>
+                </td>
+                <td>
+                    <textarea class="ram-input" placeholder="Memory">{{ item['Reserved']['RAM'] }}</textarea>
+                </td>
+                <td>
+                    <textarea class="keterangan-input" placeholder="Kebutuhan/Keterangan">{{ item['Reserved']['Kebutuhan'] }}</textarea>
+                    <button class="save-button">Save</button>
+                </td>
+                <td>{{ item['CPU Availability After Reservation'] }}</td>
+                <td>{{ item['RAM Availability After Reservation'] }}</td>
+                <!-- <td>
+                </td> -->
             </tr>
-            <tr>
-                <th>Used</th>
-                <!-- <th>Core</th> -->
-                <th>VCPUs Capacity</th>
-                <th>Usage Percentage</th>
-                <th class="border-right">Available</th>
-                <th>Used</th>
-                <th>Memory Capacity</th>
-                <th>Usage Percentage</th>
-                <th class="border-right">Available (GB)</th>
-                <th>Reserved VCPUs</th>
-                <th>Reserved Memory (GB)</th>
-                <th>Kebutuhan</th>
-                <th>Final CPU</th>
-                <th>Final RAM (GB)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in data %}
-                <tr
-                {% if "backup for maintenance" in item['Reserved']['Kebutuhan'].lower() %}
-                    style="background-color: rgb(255, 217, 0);"
-                {% endif %}
-                >
-                    <td>{{ item['vCPUs Ratio'] }}</td>
-                    <td class="border-right computeName">{{ item['Compute Name'] }}</td>
-                    <td>{{ item['VCPUs']['Used'] }}</td>
-                    <!-- <td>{{ item['VCPUs']['Core'] }}</td> -->
-                    <td>{{ item['VCPUs']['Capacity'] }}</td>
-                    <td>{{ item['VCPUs']['Usage Percentage'] }}%</td>
-                    <td class="border-right available-cpu">{{ item['VCPUs']['Available'] }}</td>
-                    <td>{{ item['Memory']['Used'] }}</td>
-                    <td>{{ item['Memory']['Capacity'] }}</td>
-                    <td>{{ item['Memory']['Usage Percentage'] }}%</td>
-                    <td class="border-right available-ram">{{ item['Memory']['Available (GB)'] }}</td>
-                    <td>
-                        <textarea class="cpu-input" placeholder="VCPUs">{{ item['Reserved']['CPU'] }}</textarea>
-                    </td>
-                    <td>
-                        <textarea class="ram-input" placeholder="Memory">{{ item['Reserved']['RAM'] }}</textarea>
-                    </td>
-                    <td>
-                        <textarea class="keterangan-input" placeholder="Kebutuhan/Keterangan">{{ item['Reserved']['Kebutuhan'] }}</textarea>
-                        <button class="save-button">Save</button>
-                    </td>
-                    <td>{{ item['CPU Availability After Reservation'] }}</td>
-                    <td>{{ item['RAM Availability After Reservation'] }}</td>
-                    <!-- <td>
-                    </td> -->
-                </tr>
-            {% endfor %}
-        </tbody>
+        {% endfor %}
+    </tbody>
     </table>
-</div>
+    </div>
+    </div>
 
     <script src="static/DataTables/datatables.min.js"></script>
     <script src="static/allocation.js"></script> 
