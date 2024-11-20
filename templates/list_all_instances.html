@@ -12,9 +12,42 @@
     <header>
         {% include 'navbar.html' %}
     </header>
+    <div class="main-content">
     <main class="mx-4 mt-8">
         <h1 class="text-2xl font-bold mb-4">List All Instances</h1>
         <p class="mb-4">Last Updated: {{ aio_last_updated }}</p>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6 border border-gray-200 dark:border-gray-700 max-w-2xl">
+        <button id="searchTipsToggle" class="w-full flex items-center justify-between text-left">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Search Tips</h3>
+            <svg id="toggleIcon" class="h-5 w-5 text-gray-500 transform transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+        
+        <div id="searchTipsContent" class="mt-3 space-y-2 hidden">
+            <p class="text-gray-600 dark:text-gray-300">
+                On each column, for multiple value search, you can use the <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded font-mono">|</span> (pipe) symbol as separator.
+            </p>
+            
+            <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3 mt-2">
+                <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Examples:</p>
+                <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-300">
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">k8s|ansible</span> 
+                        - Will show results containing either "k8s" or "ansible"
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">2|4|8</span> 
+                        - Will show results containing either "2", "4", or "8"
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">172.18.217.137|10.10.0.113</span> 
+                        - Will show results containing either "172.18.217.137" or "10.10.0.113"
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
         <div class="overflow-x-auto"> 
             <table id="dataTable" class="w-full border-collapse border" data-order="[]">
                 <thead>
@@ -54,6 +87,7 @@
             </table>
         </div>
     </main>
+    </div>
     <script src="static/DataTables/datatables.min.js"></script>
     <script>
         // Check for saved theme preference or use system preference
@@ -87,12 +121,16 @@
                         var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
                             .appendTo(headerContainer)
                             .on('keyup', function () {
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                    $(this).val()
-                                );
+                                var searchTerms = $(this).val().split('|').map(function(term) {
+                                    return $.fn.dataTable.util.escapeRegex(term.trim());
+                                });
+                                
+                                // Buat pattern regex dengan OR operator
+                                var pattern = searchTerms.length ? 
+                                    '(' + searchTerms.join('|') + ')' : '';
+                                
                                 column
-                                    // .search(val ? '^' + val + '$' : '', true, false) -> for exact match, use regex
-                                    .search(this.value) // -> smart search
+                                    .search(pattern, true, false)
                                     .draw();
                             });
                         // input.css('max-width', '100px');
@@ -101,6 +139,19 @@
                         }
                     });
                 }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('searchTipsToggle');
+            const content = document.getElementById('searchTipsContent');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            toggleButton.addEventListener('click', function() {
+                content.classList.toggle('hidden');
+                // Rotate icon 180 degrees when expanded
+                toggleIcon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
             });
         });
     </script>
