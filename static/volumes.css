@@ -142,3 +142,75 @@ position: absolute;
 [data-theme='dark'] p {
     color: var(--text-primary);
 }
+
+/* Card styles */
+.bg-white {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+[data-theme='dark'] .bg-white {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Card text colors for dark mode */
+[data-theme='dark'] .text-gray-600 {
+    color: var(--text-muted);
+}
+
+[data-theme='dark'] .text-lg,
+[data-theme='dark'] .text-xl,
+[data-theme='dark'] .text-2xl,
+[data-theme='dark'] .text-3xl,
+[data-theme='dark'] .font-bold,
+[data-theme='dark'] .font-semibold,
+[data-theme='dark'] .font-medium {
+    color: var(--text-primary);
+}
+
+/* Card borders and shadows for dark mode */
+[data-theme='dark'] .shadow-lg,
+[data-theme='dark'] .shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* Calculator specific dark mode styles */
+[data-theme='dark'] .bg-gray-50 {
+    background-color: var(--bg-tertiary);
+}
+
+[data-theme='dark'] input[type="number"] {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Status colors in dark mode */
+[data-theme='dark'] .text-green-600 {
+    color: #4ade80;
+}
+
+[data-theme='dark'] .text-yellow-600 {
+    color: #fbbf24;
+}
+
+[data-theme='dark'] .text-red-600 {
+    color: #ef4444;
+}
+
+/* Progress bar in dark mode */
+[data-theme='dark'] .bg-gray-200 {
+    background-color: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .bg-green-500 {
+    background-color: #22c55e;
+}
+
+[data-theme='dark'] .bg-yellow-500 {
+    background-color: #eab308;
+}
+
+[data-theme='dark'] .bg-red-600 {
+    background-color: #dc2626;
+}

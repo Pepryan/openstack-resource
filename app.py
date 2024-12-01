@@ -359,24 +359,72 @@ def list_all_instances():
 def list_all_volumes():
     """
     This function returns a list of all volumes in the system.
-
-    Returns:
-        A list of dictionaries containing information about each volume.
-
     """
     volumes_json_path = 'data/volumes.json'
     
-    # Get the last modified timestamp of the volumes.json file
+    # Get the last modified timestamp
     volumes_last_updated = os.path.getmtime(volumes_json_path)
-    
-    # Convert the timestamp to a human-readable date and time format
     volumes_last_updated_str = datetime.datetime.fromtimestamp(volumes_last_updated).strftime('%d-%m-%Y %H:%M:%S')
     
-    # Load volumes data from the JSON file
+    # Load volumes data
     with open(volumes_json_path, 'r') as json_file:
         volumes_data = json.load(json_file)
     
-    # Iterate through volumes and replace empty values with '-'
+    # Calculate detailed volume statistics
+    total_size = sum(vol["Size"] for vol in volumes_data)
+    bootable_volumes = [vol for vol in volumes_data if vol["Bootable"] == "true"]
+    
+    stats = {
+        # Volume Size Statistics
+        "current_volume_tb": round(total_size / 1024, 2),
+        "average_volume_size": round(total_size / len(volumes_data), 2),
+        
+        # Volume Count Statistics
+        "total_volumes": len(volumes_data),
+        
+        # Status Statistics
+        "volumes_in_use": len([vol for vol in volumes_data if vol["Status"] == "in-use"]),
+        "volumes_available": len([vol for vol in volumes_data if vol["Status"] == "available"]),
+        "volumes_creating": len([vol for vol in volumes_data if vol["Status"] == "creating"]),
+        "volumes_error": len([vol for vol in volumes_data if vol["Status"] == "error"]),
+        "volumes_reserved": len([vol for vol in volumes_data if vol["Status"] == "reserved"]),
+        "volumes_attaching": len([vol for vol in volumes_data if vol["Status"] == "attaching"]),
+        "volumes_detaching": len([vol for vol in volumes_data if vol["Status"] == "detaching"]),
+        "volumes_maintenance": len([vol for vol in volumes_data if vol["Status"] == "maintenance"]),
+        
+        # Bootable Statistics
+        "bootable_volumes": len(bootable_volumes),
+        "bootable_volumes_percentage": round((len(bootable_volumes) / len(volumes_data)) * 100, 2),
+        
+        # Attachment Statistics
+        "attached_volumes": len([vol for vol in volumes_data if vol["Attached to"]]),
+        "unattached_volumes": len([vol for vol in volumes_data if not vol["Attached to"]]),
+        
+        # Size Distribution
+        "volumes_under_100gb": len([vol for vol in volumes_data if vol["Size"] <= 100]),
+        "volumes_100gb_to_500gb": len([vol for vol in volumes_data if 100 < vol["Size"] <= 500]),
+        "volumes_500gb_to_1tb": len([vol for vol in volumes_data if 500 < vol["Size"] <= 1000]),
+        "volumes_over_1tb": len([vol for vol in volumes_data if vol["Size"] > 1000]),
+        
+        # Ceph Configuration
+        "ceph_erasure_code": 1.5,  # Sesuaikan dengan konfigurasi
+        "ceph_total_size_tb": 6246.4,  # Sesuaikan dengan kapasitas actual
+        "last_updated": volumes_last_updated_str
+    }
+    
+    # Calculate usage percentages
+    stats.update({
+        "current_usage_percentage": round(
+            ((stats["current_volume_tb"] * stats["ceph_erasure_code"]) / 
+             stats["ceph_total_size_tb"]) * 100,
+            2
+        ),
+        "in_use_percentage": round((stats["volumes_in_use"] / stats["total_volumes"]) * 100, 2),
+        "available_percentage": round((stats["volumes_available"] / stats["total_volumes"]) * 100, 2),
+        "attached_percentage": round((stats["attached_volumes"] / stats["total_volumes"]) * 100, 2)
+    })
+    
+    # Clean up volume data
     for volume in volumes_data:
         for key, value in volume.items():
             if isinstance(value, (list, dict)):
@@ -386,7 +434,10 @@ def list_all_volumes():
             elif pd.isna(value) or value == '':
                 volume[key] = '-'
     
-    return render_template('volumes.html', data_list=volumes_data, aio_last_updated=volumes_last_updated_str)
+    return render_template('volumes.html', 
+                         data_list=volumes_data, 
+                         stats=stats,
+                         aio_last_updated=volumes_last_updated_str)
 
 
 @app.route('/get_compute_with_free_vcpus', methods=['GET'])
