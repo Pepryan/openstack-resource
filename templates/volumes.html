@@ -5,64 +5,162 @@
     <link href="static/DataTables/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/tailwind.min.css">
     <link rel="stylesheet" href="static/volumes.css">
-
 </head>
 <body>
     {% include 'navbar.html' %}
     <div class="main-content">
-    <main class="mx-4 mt-8">
-    <h1 class="text-2xl font-bold mb-4">List All Volumes</h1>
-    <p class="mb-4">Last Updated: {{ aio_last_updated }}</p>
-    <div class="overflow-x-auto"> 
-    <table id="dataTable" data-order="[]">
-        <thead>
-            <tr>
-                <th class="border">ID Volumes</th>
-                <th class="border">Name</th>
-                <th class="border">Status</th>
-                <th class="border">Size</th>
-                <th class="border">Type</th>
-                <th class="border">Bootable</th>
-                <th class="border">Attached to</th>
-                <th class="border">Properties</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for volume in data_list %}
-            <tr>
-                <td class="border">{{ volume["ID"] }}</td>
-                <td class="border">{{ volume["Name"] }}</td>
-                <td class="border">{{ volume["Status"] }}</td>
-                <td class="border">{{ volume["Size"] }}</td>
-                <td class="border">{{ volume["Type"] }}</td>
-                <td class="border">
-                    {% if volume["Bootable"] == "true" %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                </td>
-                <td class="border">
-                    {% if volume["Attached to"] %}
-                        <!-- <ul> -->
-                            {% for attachment in volume["Attached to"] %}
-                                <!-- <li> -->
-                                    Instance ID: {{ attachment.server_id }}, Device: {{ attachment.device }}, Attached at: {{ attachment.attached_at }}
-                                <!-- </li> -->
-                            {% endfor %}
-                        <!-- </ul> -->
-                    {% else %}
-                        Empty Data
-                    {% endif %}
-                </td>
-                <td class="border">{{ volume["Properties"] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <main class="mx-4 mt-8">
+            <h1 class="text-2xl font-bold mb-4">List All Volumes</h1>
+            <p class="mb-4">Last Updated: {{ stats.last_updated }}</p>
+
+            <!-- Volume Statistics -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                <!-- Card 1: Total Volume & Usage -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">Total Volume Size</h3>
+                    <div class="space-y-2">
+                        <p class="text-3xl font-bold">{{ stats.current_volume_tb }} TB</p>
+                        <p class="text-lg">Current Usage: {{ stats.current_usage_percentage }}%</p>
+                        <p>Total Volumes: {{ stats.total_volumes }}</p>
+                        <p>Average Size: {{ stats.average_volume_size }} GB</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Status Distribution -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">Status Distribution</h3>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                        <div>
+                            <p>In Use: {{ stats.volumes_in_use }}</p>
+                            <p class="text-sm text-gray-600">({{ stats.in_use_percentage }}%)</p>
+                        </div>
+                        <div>
+                            <p>Available: {{ stats.volumes_available }}</p>
+                            <p class="text-sm text-gray-600">({{ stats.available_percentage }}%)</p>
+                        </div>
+                        <div>
+                            <p>Creating: {{ stats.volumes_creating }}</p>
+                        </div>
+                        <div>
+                            <p>Error: {{ stats.volumes_error }}</p>
+                        </div>
+                        <div>
+                            <p>Reserved: {{ stats.volumes_reserved }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Combined Properties & Size Distribution -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <div class="space-y-4">
+                        <!-- Volume Properties Section -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Volume Properties</h3>
+                            <div class="grid grid-cols-2 gap-x-4">
+                                <p>Bootable: {{ stats.bootable_volumes }}</p>
+                                <p>({{ stats.bootable_volumes_percentage }}%)</p>
+                                <p>Attached: {{ stats.attached_volumes }}</p>
+                                <p>({{ stats.attached_percentage }}%)</p>
+                                <p>Unattached: {{ stats.unattached_volumes }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Size Distribution Section -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Size Distribution</h3>
+                            <div class="grid grid-cols-2 gap-x-4">
+                                <p>≤ 100GB:</p>
+                                <p>{{ stats.volumes_under_100gb }}</p>
+                                <p>100GB-500GB:</p>
+                                <p>{{ stats.volumes_100gb_to_500gb }}</p>
+                                <p>500GB-1TB:</p>
+                                <p>{{ stats.volumes_500gb_to_1tb }}</p>
+                                <p>> 1TB:</p>
+                                <p>{{ stats.volumes_over_1tb }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Volume Calculator -->
+            <div class="bg-white p-6 rounded-lg shadow mb-6"
+                 data-current-volume="{{ stats.current_volume_tb|default(0)|float }}"
+                 data-erasure-code="{{ stats.ceph_erasure_code|default(1.5)|float }}"
+                 data-total-size="{{ stats.ceph_total_size_tb|default(5700)|float }}">
+                <h2 class="text-xl font-semibold mb-4">Volume Usage Calculator</h2>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-medium mb-2">Current Configuration</h3>
+                        <p>Current Total Volume: {{ stats.current_volume_tb }} TB</p>
+                        <p>Ceph Erasure Code: {{ stats.ceph_erasure_code }}x</p>
+                        <p>Ceph Total Size: {{ stats.ceph_total_size_tb }} TB</p>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-2">Usage Prediction</h3>
+                        <form id="volumeCalc" class="space-y-4">
+                            <div>
+                                <label class="block text-sm">New Volume Size (TB)</label>
+                                <input type="number" step="0.1" class="border rounded p-2 w-full" 
+                                       id="newVolume" value="0">
+                            </div>
+                            <div>
+                                <p class="text-lg">Predicted Usage: <span id="predictedUsage" 
+                                   class="font-bold">{{ stats.current_usage_percentage }}%</span></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Existing Volume Table -->
+            <div class="overflow-x-auto">
+                <table id="dataTable" data-order="[]">
+                    <thead>
+                        <tr>
+                            <th class="border">ID Volumes</th>
+                            <th class="border">Name</th>
+                            <th class="border">Status</th>
+                            <th class="border">Size</th>
+                            <th class="border">Type</th>
+                            <th class="border">Bootable</th>
+                            <th class="border">Attached to</th>
+                            <th class="border">Properties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for volume in data_list %}
+                        <tr>
+                            <td class="border">{{ volume["ID"] }}</td>
+                            <td class="border">{{ volume["Name"] }}</td>
+                            <td class="border">{{ volume["Status"] }}</td>
+                            <td class="border">{{ volume["Size"] }}</td>
+                            <td class="border">{{ volume["Type"] }}</td>
+                            <td class="border">
+                                {% if volume["Bootable"] == "true" %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                            <td class="border">
+                                {% if volume["Attached to"] %}
+                                    {% for attachment in volume["Attached to"] %}
+                                        Instance ID: {{ attachment.server_id }}, Device: {{ attachment.device }}, Attached at: {{ attachment.attached_at }}
+                                    {% endfor %}
+                                {% else %}
+                                    Empty Data
+                                {% endif %}
+                            </td>
+                            <td class="border">{{ volume["Properties"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
     </div>
-    </main>
-    </div>
+
     <script src="static/DataTables/datatables.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -89,6 +187,53 @@
                     });
                 }
             });
+
+            // Volume Calculator
+            const calculatorElement = document.querySelector('.bg-white.p-6.rounded-lg.shadow');
+            if (calculatorElement) {
+                const volumeCalc = {
+                    currentVolume: parseFloat(calculatorElement.dataset.currentVolume) || 0,
+                    erasureCode: parseFloat(calculatorElement.dataset.erasureCode),
+                    totalSize: parseFloat(calculatorElement.dataset.totalSize),
+                    
+                    calculate: function(newVolume) {
+                        const total = this.currentVolume + (newVolume || 0);
+                        return ((total * this.erasureCode) / this.totalSize) * 100;
+                    },
+                    
+                    updateDisplay: function(value) {
+                        const usageElement = document.getElementById('predictedUsage');
+                        if (!usageElement) return;
+
+                        const usage = this.calculate(value);
+                        usageElement.textContent = usage.toFixed(2) + '%';
+                        
+                        // Remove existing color classes
+                        usageElement.classList.remove('text-red-600', 'text-yellow-600', 'text-green-600');
+                        
+                        // Add appropriate color class
+                        if (usage > 90) {
+                            usageElement.classList.add('text-red-600');
+                        } else if (usage > 75) {
+                            usageElement.classList.add('text-yellow-600');
+                        } else {
+                            usageElement.classList.add('text-green-600');
+                        }
+                    }
+                };
+
+                // Add event listener to volume input
+                const volumeInput = document.getElementById('newVolume');
+                if (volumeInput) {
+                    volumeInput.addEventListener('input', function(e) {
+                        const value = parseFloat(this.value) || 0;
+                        volumeCalc.updateDisplay(value);
+                    });
+                    
+                    // Initialize with current values
+                    volumeCalc.updateDisplay(0);
+                }
+            }
         });
     </script>
 </body>
