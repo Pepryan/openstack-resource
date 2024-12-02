@@ -34,13 +34,13 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.main-content {
-transform: scale(0.67);
+/* .main-content {
+transform: scale(0.80);
 transform-origin: top left;
-width: 149.25%; /* 100/0.67 to compensate for the scale */
-height: 149.25%; /* 100/0.67 to compensate for the scale */
+width: 125%; /* 100/0.67 to compensate for the scale 
+height: 125%; /* 100/0.67 to compensate for the scale 
 position: absolute;
-}
+} */
 
 [data-theme='dark'] body {
     background-color: var(--bg-primary);
