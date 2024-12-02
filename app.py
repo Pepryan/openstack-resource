@@ -372,7 +372,7 @@ def list_all_volumes():
     
     # Calculate detailed volume statistics
     total_size = sum(vol["Size"] for vol in volumes_data)
-    bootable_volumes = [vol for vol in volumes_data if vol["Bootable"] == "true"]
+    # bootable_volumes = [vol for vol in volumes_data if vol["Bootable"] == "true"]
     
     stats = {
         # Volume Size Statistics
@@ -393,8 +393,8 @@ def list_all_volumes():
         "volumes_maintenance": len([vol for vol in volumes_data if vol["Status"] == "maintenance"]),
         
         # Bootable Statistics
-        "bootable_volumes": len(bootable_volumes),
-        "bootable_volumes_percentage": round((len(bootable_volumes) / len(volumes_data)) * 100, 2),
+        # "bootable_volumes": len(bootable_volumes),
+        # "bootable_volumes_percentage": round((len(bootable_volumes) / len(volumes_data)) * 100, 2),
         
         # Attachment Statistics
         "attached_volumes": len([vol for vol in volumes_data if vol["Attached to"]]),
