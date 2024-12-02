@@ -57,8 +57,6 @@
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Volume Properties</h3>
                             <div class="grid grid-cols-2 gap-x-4">
-                                <p>Bootable: {{ stats.bootable_volumes }}</p>
-                                <p>({{ stats.bootable_volumes_percentage }}%)</p>
                                 <p>Attached: {{ stats.attached_volumes }}</p>
                                 <p>({{ stats.attached_percentage }}%)</p>
                                 <p>Unattached: {{ stats.unattached_volumes }}</p>
@@ -122,10 +120,7 @@
                             <th class="border">Name</th>
                             <th class="border">Status</th>
                             <th class="border">Size</th>
-                            <th class="border">Type</th>
-                            <th class="border">Bootable</th>
                             <th class="border">Attached to</th>
-                            <th class="border">Properties</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,14 +130,6 @@
                             <td class="border">{{ volume["Name"] }}</td>
                             <td class="border">{{ volume["Status"] }}</td>
                             <td class="border">{{ volume["Size"] }}</td>
-                            <td class="border">{{ volume["Type"] }}</td>
-                            <td class="border">
-                                {% if volume["Bootable"] == "true" %}
-                                    Yes
-                                {% else %}
-                                    No
-                                {% endif %}
-                            </td>
                             <td class="border">
                                 {% if volume["Attached to"] %}
                                     {% for attachment in volume["Attached to"] %}
@@ -152,7 +139,6 @@
                                     Empty Data
                                 {% endif %}
                             </td>
-                            <td class="border">{{ volume["Properties"] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
