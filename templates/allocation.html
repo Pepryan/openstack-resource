@@ -135,8 +135,214 @@
     </tbody>
 </table>
 </center>
-    </div>  
-    <!-- <p>All Host/Compute have 48 core</p> -->
+
+<!-- Add after the summary table and before allocation table -->
+<div class="mx-4 mt-8 mb-8">
+    <!-- Collapsible Placement Section -->
+    <div class="placement-section theme-transition rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-700">
+        <button id="placementToggle" class="w-full flex items-center justify-between text-left mb-3">
+            <div class="flex items-center">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Placement Allocation Issues Status</h3>
+                <span class="text-sm text-gray-500 ml-4">Last checked: {{ instance_ids_last_check }}</span>
+            </div>
+            <svg id="placementIcon" class="h-5 w-5 text-gray-500 transform transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+        
+        <!-- Info text -->
+        <div id="placementContent" class="hidden">
+            <div class="mb-4 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                <p>* Positive difference indicates over-allocation in placement (needs deletion)</p>
+                <p>* Negative difference indicates under-allocation in placement (needs healing)</p>
+            </div>
+            
+            {% if placement_issues %}
+                <div class="space-y-4">
+                    {% for host in placement_issues %}
+                        {% if host.difference != 0 %}
+                            <div class="border-b pb-4 last:border-b-0">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-grow">
+                                        <h4 class="font-medium text-gray-900 dark:text-white">{{ host.hostname }}</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            Placement VCPU: {{ host.placement_vcpu }} | 
+                                            Actual VCPU: {{ host.actual_vcpu }} | 
+                                            <span class="{% if host.difference > 0 %}text-red-600 dark:text-red-400{% else %}text-yellow-600 dark:text-yellow-400{% endif %}">
+                                                Difference: {{ host.difference }}
+                                                {% if host.difference > 0 %}
+                                                    (over-allocated)
+                                                {% else %}
+                                                    (under-allocated)
+                                                {% endif %}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <button onclick="showInstanceDetails('{{ host.hostname }}')" 
+                                            class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors ml-4">
+                                        View Instance IDs
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p class="text-green-700 dark:text-green-400">
+                        No placement allocation issues found.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal with improved styling -->
+<div id="instanceModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50">
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="modal-content theme-transition rounded-xl max-w-2xl w-full p-6 shadow-xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modalTitle" class="modal-title text-xl font-semibold"></h3>
+                <button onclick="closeModal()" class="close-button hover:opacity-75">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Delete Section -->
+                <div id="deleteSection" class="hidden">
+                    <div class="flex items-center section-text mb-3">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <h4 class="font-medium">Instance IDs to Delete from Placement</h4>
+                    </div>
+                    <div class="section-content rounded-lg p-4">
+                        <p class="text-sm section-text mb-2">These instances exist in Placement but not in OpenStack</p>
+                        <ul id="deleteList" class="list-disc pl-5 section-text space-y-1"></ul>
+                    </div>
+                </div>
+                
+                <!-- Heal Section -->
+                <div id="healSection" class="hidden">
+                    <div class="flex items-center text-yellow-600 dark:text-yellow-400 mb-3">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <h4 class="font-medium">Instance IDs to Heal in Placement</h4>
+                    </div>
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
+                        <p class="text-sm text-yellow-600 dark:text-yellow-400 mb-2">These instances exist in OpenStack but not in Placement</p>
+                        <ul id="healList" class="list-disc pl-5 text-yellow-600 dark:text-yellow-400 space-y-1"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Placement section toggle with smooth animation
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.getElementById('placementToggle');
+    const content = document.getElementById('placementContent');
+    const icon = document.getElementById('placementIcon');
+    
+    // Check localStorage for saved state
+    const isExpanded = localStorage.getItem('placementExpanded') === 'true';
+    if (isExpanded) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+    }
+    
+    toggleButton.addEventListener('click', function() {
+        content.classList.toggle('hidden');
+        const isNowExpanded = !content.classList.contains('hidden');
+        icon.style.transform = isNowExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+        localStorage.setItem('placementExpanded', isNowExpanded);
+    });
+});
+// Enhanced modal functionality 
+const instanceData = JSON.parse('{{ instance_ids_data | tojson | safe }}');
+
+function showInstanceDetails(hostname) {
+    const modal = document.getElementById('instanceModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const deleteSection = document.getElementById('deleteSection');
+    const healSection = document.getElementById('healSection');
+    const deleteList = document.getElementById('deleteList');
+    const healList = document.getElementById('healList');
+    
+    const hostData = instanceData.find(h => h.hostname === hostname);
+    
+    if (hostData) {
+        modalTitle.textContent = `Instance IDs for ${hostname}`;
+        
+        // Handle Delete Section
+        if (hostData.missing_in_openstack && hostData.missing_in_openstack.length > 0 && hostData.missing_in_openstack[0] !== '') {
+            deleteSection.classList.remove('hidden');
+            deleteList.innerHTML = hostData.missing_in_openstack
+                .map(id => `<li class="text-sm">${id}</li>`)
+                .join('');
+        } else {
+            deleteSection.classList.add('hidden');
+        }
+        
+        // Handle Heal Section
+        if (hostData.missing_in_curl && hostData.missing_in_curl.length > 0 && hostData.missing_in_curl[0] !== '') {
+            healSection.classList.remove('hidden');
+            healList.innerHTML = hostData.missing_in_curl
+                .map(id => `<li class="text-sm">${id}</li>`)
+                .join('');
+        } else {
+            healSection.classList.add('hidden');
+        }
+        
+        modal.classList.remove('hidden');
+        // Add focus trap and escape key handler
+        modal.focus();
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('instanceModal');
+    modal.classList.add('hidden');
+}
+
+// Close modal when clicking outside or pressing escape
+document.getElementById('instanceModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// Add theme change listener
+document.addEventListener('DOMContentLoaded', function() {
+    // Watch for theme changes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'data-theme') {
+                // Update any dynamic theme-related changes here if needed
+            }
+        });
+    });
+
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+    });
+});
+</script>
+
     <div class="overflow-x-auto"> 
     <table id="allocation-table">
     <thead>

@@ -352,7 +352,10 @@ def list_all_instances():
             if pd.isna(value) or value == '':
                 instance[key] = '-'
 
-    return render_template('list_all_instances.html', data_list=data_list, aio_last_updated=aio_last_updated_str)
+
+    return render_template('list_all_instances.html',
+                         data_list=data_list,
+                         aio_last_updated=aio_last_updated_str)
 
 @app.route('/volumes', methods=['GET'])
 @login_required
@@ -497,6 +500,35 @@ def allocation():
 
     # Call the function to extract data
     cephdf_data = extract_cephdf_data()
+
+    # Load placement check data
+    placement_issues = []
+    placement_last_check = None
+    try:
+        placement_file = 'data/placement_diff.json'
+        with open(placement_file, 'r') as f:
+            placement_issues = json.load(f)
+            # Get file's last modification time
+            placement_last_check = datetime.datetime.fromtimestamp(
+                os.path.getmtime(placement_file)
+            ).strftime('%d-%m-%Y %H:%M:%S')
+    except (FileNotFoundError, json.JSONDecodeError):
+        placement_issues = []
+        placement_last_check = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+
+    # Load instance IDs check data
+    instance_ids_data = []
+    instance_ids_last_check = None
+    try:
+        instance_ids_file = 'data/instance_ids_check.json'
+        with open(instance_ids_file, 'r') as f:
+            instance_ids_data = json.load(f)
+            # Get file's last modification time
+            instance_ids_last_check = datetime.datetime.fromtimestamp(
+                os.path.getmtime(instance_ids_file)
+            ).strftime('%d-%m-%Y %H:%M:%S')
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
 
     # Access the extracted values
     total_capacity_disk = cephdf_data["Total"]
@@ -712,7 +744,12 @@ def allocation():
     raw_used_disk_tb=raw_used_disk_tb,
     raw_used_percentage_disk=raw_used_percentage_disk,
     avail_disk_tb=avail_disk_tb,
-    avail_percentage_disk=avail_percentage_disk
+    avail_percentage_disk=avail_percentage_disk,
+
+    placement_issues=placement_issues,
+    placement_last_check=placement_last_check,
+    instance_ids_data=instance_ids_data,
+    instance_ids_last_check=instance_ids_last_check
     )
 
 @app.route('/save_reserved', methods=['POST'])

@@ -128,6 +128,14 @@ scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt volumes.json ubuntu@
 
 ip_address=$(echo $instance_server | cut -d ':' -f 1)
 instance_server="$ip_address"
+
+# Get the directory where the script is located
+#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Run placement check using absolute path
+#echo "Running placement allocation check..."
+. /home/ubuntu/workdir/scripts/openstack-resource/check-placement.sh
+
 ssh ubuntu@${instance_server} "sudo systemctl restart openstack-resource.service"
 
 # rm -f temp_*
