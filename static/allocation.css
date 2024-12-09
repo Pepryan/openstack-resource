@@ -1,3 +1,121 @@
+/* Base theme styles */
+:root {
+    --modal-bg: #ffffff;
+    --modal-text: #111827;
+    --modal-border: #e5e7eb;
+    --section-bg: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --red-bg: #fef2f2;
+    --red-text: #dc2626;
+    --yellow-bg: #fefce8;
+    --yellow-text: #ca8a04;
+    --blue-hover: #2563eb;
+}
+
+[data-theme='dark'] {
+    --modal-bg: #1f2937;
+    --modal-text: #f3f4f6;
+    --modal-border: #374151;
+    --section-bg: #1f2937;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --red-bg: rgba(127, 29, 29, 0.2);
+    --red-text: #f87171;
+    --yellow-bg: rgba(120, 53, 15, 0.2);
+    --yellow-text: #fbbf24;
+    --blue-hover: #3b82f6;
+}
+
+/* Placement section styles */
+.placement-section {
+    background-color: var(--section-bg);
+    color: var(--text-primary);
+    border-color: var(--modal-border);
+}
+
+.placement-section .info-text {
+    color: var(--text-secondary);
+    background-color: var(--bg-tertiary);
+}
+
+/* Add these new styles */
+/* .placement-section button {
+    color: var(--text-primary);
+} */
+
+.placement-section .text-gray-500 {
+    color: var(--text-secondary);
+}
+
+.placement-section .text-gray-600 {
+    color: var(--text-secondary);
+}
+
+.placement-section .bg-gray-50 {
+    background-color: var(--bg-tertiary);
+}
+
+/* Button styles */
+/* .placement-section .bg-blue-500 {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+} */
+
+/* .placement-section .bg-blue-500:hover {
+    background-color: var(--blue-hover);
+} */
+
+/* Success message styles */
+.placement-section .bg-green-50 {
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+.placement-section .text-green-700 {
+    color: #22c55e;
+}
+
+[data-theme='dark'] .placement-section .text-green-700 {
+    color: #4ade80;
+}
+
+/* Modal styles */
+#instanceModal .modal-content {
+    background-color: var(--modal-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--modal-border);
+}
+
+#instanceModal .modal-title {
+    color: var(--text-primary);
+}
+
+#instanceModal .close-button {
+    color: var(--text-secondary);
+}
+
+/* Delete section */
+#deleteSection .section-content {
+    background-color: var(--red-bg);
+}
+
+#deleteSection .section-text {
+    color: var(--red-text);
+}
+
+/* Heal section */
+#healSection .section-content {
+    background-color: var(--yellow-bg);
+}
+
+#healSection .section-text {
+    color: var(--yellow-text) !important;
+}
+
+/* Transitions */
+/* .theme-transition {
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+} */
     /* Base styles */
     body {
         background-color: #f8f9fa;
@@ -649,4 +767,24 @@
 [data-theme='dark'] #allocation-table thead input[type="text"]:focus {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Update text colors for dark mode */
+[data-theme='dark'] .computeName,
+[data-theme='dark'] .placement-section h3,
+[data-theme='dark'] .placement-section h4 {
+    color: var(--text-primary) !important;
+}
+
+[data-theme='dark'] #healSection .text-yellow-600,
+[data-theme='dark'] #healSection ul li {
+    color: var(--yellow-text) !important;
+}
+
+[data-theme='dark'] #healSection p {
+    color: var(--yellow-text) !important;
+}
+
+[data-theme='dark'] #healSection .bg-yellow-50 {
+    background-color: var(--yellow-bg);
 }
