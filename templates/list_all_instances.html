@@ -26,23 +26,50 @@
         
         <div id="searchTipsContent" class="mt-3 space-y-2 hidden">
             <p class="text-gray-600 dark:text-gray-300">
-                On each column, for multiple value search, you can use the <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded font-mono">|</span> (pipe) symbol as separator.
+                On each column, for searching, you can use <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded font-mono">regex</span> for specific values. You can also use logical operators:
             </p>
-            
+            <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300">
+                <li><strong>OR:</strong> Use the pipe <span class="font-mono">|</span> to match any of the specified values.</li>
+                <li><strong>AND:</strong> Use the space between terms to match all specified values.</li>
+            </ul>
             <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3 mt-2">
                 <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Examples:</p>
                 <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-300">
                     <li>
-                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">k8s|ansible</span> 
-                        - Will show results containing either "k8s" or "ansible"
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">172\.18\.217\.137</span> or <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">172.18.217.137</span> 
+                        - Matches the specific IP address.
                     </li>
                     <li>
-                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">2|4|8</span> 
-                        - Will show results containing either "2", "4", or "8"
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">.*k8s.*</span> 
+                        - Matches any string containing "k8s".
                     </li>
                     <li>
-                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">172.18.217.137|10.10.0.113</span> 
-                        - Will show results containing either "172.18.217.137" or "10.10.0.113"
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">^ansible.*</span> 
+                        - Matches any string starting with "ansible".
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">.*\.jpg$</span> 
+                        - Matches any string ending with ".jpg".
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">^(1[0-9]|2[0-4]|[1-9])$</span> 
+                        - Matches any integer from 1 to 24.
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">\b(k8s|ansible|docker)\b</span> 
+                        - Matches any of the words "k8s", "ansible", or "docker".
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">^192\.168\.1\.(\d{1,3})$</span> 
+                        - Matches any IP address in the 192.168.1.x subnet.
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">172\.18\.217\.137|10\.10\.0\.113</span> 
+                        - Matches either of the specified IP addresses.
+                    </li>
+                    <li>
+                        <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">k8s ansible</span> 
+                        - Matches rows containing both "k8s" and "ansible".
                     </li>
                 </ul>
             </div>
@@ -109,28 +136,26 @@
                 buttons: ['colvis', 'pageLength', 'excel', 'print'],
                 dom: 'Bfrtip',
                 initComplete: function () {
-                    var table = this;
+                    const table = this;
                     this.api().columns().every(function () {
-                        var column = this;
-                        var header = $(column.header());
-                        var originalHeaderText = header.text();
+                        const column = this;
+                        const header = $(column.header());
+                        const originalHeaderText = header.text();
                         header.empty();
 
-                        var headerContainer = $('<div class="header-container"></div>').appendTo(header);
+                        const headerContainer = $('<div class="header-container"></div>').appendTo(header);
                         $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
-                        var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
+                        const input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
                             .appendTo(headerContainer)
                             .on('keyup', function () {
-                                var searchTerms = $(this).val().split('|').map(function(term) {
-                                    return $.fn.dataTable.util.escapeRegex(term.trim());
-                                });
+                                const searchTerms = $(this).val().trim(); // Get the input value directly
                                 
-                                // Buat pattern regex dengan OR operator
-                                var pattern = searchTerms.length ? 
-                                    '(' + searchTerms.join('|') + ')' : '';
+                                // Create regex pattern directly from the input
+                                const pattern = searchTerms.length ? 
+                                    searchTerms : ''; // Use the input as the regex pattern
                                 
                                 column
-                                    .search(pattern, true, false)
+                                    .search(pattern, true, false) // Use the pattern directly
                                     .draw();
                             });
                         // input.css('max-width', '100px');
@@ -140,6 +165,14 @@
                     });
                 }
             });
+
+            // Automatically search for the instance ID if present in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchId = urlParams.get('search');
+            if (searchId) {
+                // Trigger search in the DataTable
+                $('#dataTable').DataTable().search(searchId).draw();
+            }
         });
     </script>
     <script>
