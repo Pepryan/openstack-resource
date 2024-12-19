@@ -214,3 +214,25 @@ position: absolute;
 [data-theme='dark'] .bg-red-600 {
     background-color: #dc2626;
 }
+
+/* Style for clickable Instance IDs */
+.clickable-instance-id {
+    color: #007bff; /* Bootstrap primary color */
+    text-decoration: underline; /* Underline the text */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.clickable-instance-id:hover {
+    color: #0056b3; /* Darker shade on hover */
+    text-decoration: none; /* Remove underline on hover */
+}
+
+/* Dark mode styles for clickable Instance IDs */
+[data-theme='dark'] .clickable-instance-id {
+    color: #66b3ff; /* Lighter blue for better visibility in dark mode */
+}
+
+[data-theme='dark'] .clickable-instance-id:hover {
+    color: #4da3ff; /* Slightly darker shade on hover */
+    text-decoration: underline; /* Keep underline on hover */
+}

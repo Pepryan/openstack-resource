@@ -110,18 +110,26 @@ def get_source_hosts():
 @login_required
 def get_instances():
     """
-    This function returns a list of instances on a specific compute host.
+    This function returns a list of instances on a specific compute host or a specific instance.
 
     Parameters:
         host (str): The name of the compute host.
+        id (str): The ID of the instance (optional).
 
     Returns:
-        A list of instances on the specified compute host.
-
+        A list of instances on the specified compute host or the specific instance.
     """
     host = request.args.get('host')
+    instance_id = request.args.get('id')
+
+    if instance_id:
+        # Filter by instance ID
+        instance = data[data['ID'] == instance_id][['Name', 'CPU', 'Host']]
+        instance_json = instance.to_dict(orient='records')
+        return jsonify({'instances': instance_json})
+
+    # If no instance ID is provided, return all instances for the host
     instances = data[data['Host'] == host][['Name', 'CPU', 'Host']]
-    # print(f"Host: {host}, Instances: {instances}")
     instances_json = instances.to_dict(orient='records')
     return jsonify({'instances': instances_json})
 
@@ -315,6 +323,13 @@ def list_all_instances():
     data = pd.read_csv(aio_csv_path, delimiter="|")
     data_list = data.to_dict(orient='records')
 
+    # Get the instance ID from the query parameters
+    instance_id = request.args.get('id')
+
+    if instance_id:
+        # Filter the data for the specific instance ID
+        data_list = [instance for instance in data_list if instance["ID"] == instance_id]
+
     # Load the JSON data that contains volume information
     with open('data/volumes.json', 'r') as volumes_file:
         volumes_data = json.load(volumes_file)
@@ -322,12 +337,12 @@ def list_all_instances():
     # Create a dictionary to store volume information by server_id
     volume_info_by_server = {}
     for volume in volumes_data:
-        attachments = volume.get("Attached to", [])  # Get the "Attached to" list or an empty list
+        attachments = volume.get("Attached to", [])
         if attachments:
             server_id = attachments[0]["server_id"]
             device = attachments[0]["device"]
-            volume_name = volume["Name"] if volume["Name"] else volume["ID"]  # Use the volume ID if the volume name is empty
-            volume_size = volume.get("Size", "-")  # Use "-" if the volume size is empty
+            volume_name = volume["Name"] if volume["Name"] else volume["ID"]
+            volume_size = volume.get("Size", "-")
             if server_id not in volume_info_by_server:
                 volume_info_by_server[server_id] = []
             volume_info_by_server[server_id].append({"device": device, "name": volume_name, "size": volume_size})
@@ -337,13 +352,8 @@ def list_all_instances():
         server_id = instance["ID"]
         if server_id in volume_info_by_server:
             volumes = volume_info_by_server[server_id]
-            # Sort volumes by device name
             volumes.sort(key=lambda vol: vol["device"])
-
-            # Create a list of volume information strings
-            # volume_info = [f"{vol['name']}, {vol['size']}, {vol['device']}" for vol in volumes]
             volume_info = [f"{vol['name']} (Size: {vol['size']}, Device: {vol['device']})" for vol in volumes]
-            # instance["Volumes"] = ", ".join(volume_info)
             instance["Volumes"] = "<br>".join(volume_info)
         else:
             instance["Volumes"] = '-'
@@ -352,10 +362,9 @@ def list_all_instances():
             if pd.isna(value) or value == '':
                 instance[key] = '-'
 
-
     return render_template('list_all_instances.html',
-                         data_list=data_list,
-                         aio_last_updated=aio_last_updated_str)
+                           data_list=data_list,
+                           aio_last_updated=aio_last_updated_str)
 
 @app.route('/volumes', methods=['GET'])
 @login_required
