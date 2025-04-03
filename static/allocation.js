@@ -1,11 +1,11 @@
-$(document).ready( function () {
-            $('#allocation-table').DataTable({
-            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-            "pageLength": -1,
-            buttons: [
+$(document).ready(function () {
+    $('#allocation-table').DataTable({
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        "pageLength": -1,
+        buttons: [
             {
                 extend: 'colvis',
-                columns: ':not(.exclude-export)' // Hanya kolom yang tidak memiliki kelas 'exclude-export' yang akan di-ekspor
+                columns: ':not(.exclude-export)'
             },
             'pageLength',
             // 'csv',
@@ -29,20 +29,45 @@ $(document).ready( function () {
                 $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
                 var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
                     .appendTo(headerContainer)
-                    .on('keyup', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
+                    .on('mousedown', function(e) {
+                        // Prevent DataTables from capturing mousedown event
+                        e.stopPropagation();
+                    })
+                    .on('keydown', function(e) {
+                        // Handle Ctrl+A (or Cmd+A for Mac)
+                        if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {
+                            e.stopPropagation();
+                            const self = this;
+                            setTimeout(function() {
+                                self.select();
+                            }, 0);
+                            return true;
+                        }
+                    })
+                    .on('click', function(e) {
+                        // Prevent event bubbling
+                        e.stopPropagation();
+                    })
+                    .on('keyup', function (e) {
+                        // Prevent keyup event from bubbling if it's part of Ctrl+A
+                        if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {
+                            e.stopPropagation();
+                            return;
+                        }
+                        const searchTerms = $(this).val().trim();
+                        const pattern = searchTerms.length ? searchTerms : '';
                         column
-                            // .search(val ? '^' + val + '$' : '', true, false) -> for exact match, use regex
-                            .search(this.value) // -> smart search
+                            .search(pattern, true, false)
                             .draw();
                     });
             });
-            }  
-            });
-        } );
-    
+        }
+    });
+
+    // Prevent DataTables from capturing keyboard events globally
+    $(document).off('keydown.dtb');
+});
+
 // Fungsi untuk memeriksa apakah nilai adalah angka
 function isValidNumber(value) {
     return /^[0-9]*$/.test(value) || value === "";
