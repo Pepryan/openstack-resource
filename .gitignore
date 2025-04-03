@@ -4,3 +4,4 @@ static/results/*
 !static/results/.gitkeep 
 data/*
 !data/.gitkeep
+.env

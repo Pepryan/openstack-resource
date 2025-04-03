@@ -10,7 +10,7 @@ from helpers import *
 from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = 'REMOVED_SECRET'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 
 data = pd.read_csv('data/aio.csv', delimiter="|")
 # data = pd.read_csv('data/aio_odc.csv', delimiter="|")
