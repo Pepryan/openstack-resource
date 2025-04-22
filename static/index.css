@@ -4,12 +4,12 @@
     --bg-primary: #1a1a1a;
     --bg-secondary: #2d2d2d;
     --bg-tertiary: #404040;
-    
+
     /* Text colors */
     --text-primary: #ffffff;
     --text-secondary: #e0e0e0;
     --text-muted: #a0a0a0;
-    
+
     /* Border colors */
     --border-color: #404040;
 }
@@ -44,22 +44,294 @@
     border-color: var(--border-color) !important;
 }
 
+/* Form elements styling */
+select,
+input {
+    background-color: #f9fafb;
+    color: #111827;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+select:hover,
+input:hover {
+    border-color: #9ca3af;
+}
+
 [data-theme='dark'] select,
 [data-theme='dark'] input {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
     border-color: var(--border-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] select:focus,
+[data-theme='dark'] input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme='dark'] select:hover,
+[data-theme='dark'] input:hover {
+    border-color: #6b7280;
+}
+
+/* Table styling improvements */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+table thead {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+table thead th {
+    padding: 12px 16px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+table tbody tr {
+    transition: all 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+[data-theme='dark'] table {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme='dark'] table thead {
     background-color: var(--bg-tertiary);
 }
 
+[data-theme='dark'] table thead th {
+    border-bottom: 1px solid var(--border-color);
+}
+
 [data-theme='dark'] table tbody {
     background-color: var(--bg-secondary);
 }
 
-/* Transition for smooth theme switching */
-body, div, select, input, table {
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+[data-theme='dark'] table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] table tbody td {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Transitions now managed in modern-theme.css */
+
+/* Hover effects for tables and info sections */
+.hover-effect {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.hover-effect:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: var(--border-color);
+    transform: translateY(-2px);
+}
+
+[data-theme='dark'] .hover-effect:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Chart container styling */
+.chart-container {
+    position: relative;
+    margin: auto;
+}
+
+/* Info table styling */
+.info-table {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .info-table {
+    background-color: var(--bg-tertiary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Resource info table styling */
+.resource-info-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.resource-info-table td {
+    padding: 6px 4px;
+    line-height: 1.4;
+    vertical-align: middle;
+}
+
+.resource-info-table td:first-child {
+    width: 50%;
+    text-align: right;
+    padding-right: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.resource-info-table td:last-child {
+    width: 50%;
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Chart improvements */
+.chart-wrapper {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+}
+
+/* Improved hover effects */
+.info-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    overflow: hidden;
+}
+
+.info-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--border-color);
+    transform: translateY(-3px);
+}
+
+[data-theme='dark'] .info-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styling improvements */
+.btn {
+    transition: all 0.2s ease;
+    font-weight: 600;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+[data-theme='dark'] .btn:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Info message styling */
+[data-theme='dark'] #infoMessage {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+    color: #93c5fd;
+}
+
+/* Host info header styling */
+.host-info-header {
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+/* Table container with vertical scroll */
+.table-container {
+    max-height: 800px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+/* For dark theme */
+[data-theme='dark'] .table-container {
+    border-color: rgba(75, 85, 99, 0.5);
+}
+
+/* Make table header sticky */
+.table-container thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Ensure header has proper background in light/dark mode */
+.table-container thead tr {
+    background-color: #f9fafb;
+}
+
+[data-theme='dark'] .table-container thead tr {
+    background-color: #374151;
 }

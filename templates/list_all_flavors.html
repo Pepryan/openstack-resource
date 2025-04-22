@@ -2,11 +2,12 @@
 <html>
 <head>
     <title>List All Flavors</title>
-        <link href="static/DataTables/datatables.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="static/tailwind.min.css">
-        <link rel="stylesheet" href="static/flavors.css">
-
-</head>
+    <!-- Early theme initialization to prevent flash of wrong theme -->
+    <script src="static/theme-init.js"></script>
+    <link href="static/DataTables/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/tailwind.min.css">
+    <link rel="stylesheet" href="static/modern-theme.css">
+    <link rel="stylesheet" href="static/flavors.css">
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -16,7 +17,7 @@
     <p  class="mb-4">Last Updated: {{ flavor_last_updated }}</p>
     <!-- Di bawah tabel -->
     <!-- <p>Last Updated: {{ aio_last_updated }}</p> -->
-    <div class="overflow-x-auto"> 
+    <div class="overflow-x-auto">
     <table id="dataTable">
         <thead>
             <tr>
@@ -53,9 +54,15 @@
     </main>
     </div>
 
- 
+
     <script src="static/DataTables/datatables.min.js"></script>
+    <script src="static/datatable-extensions.js"></script>
     <script>
+        // Remove the theme-init class after a short delay to re-enable transitions
+        setTimeout(() => {
+            document.documentElement.classList.remove('theme-init');
+        }, 100);
+
         $(document).ready(function () {
         $('#dataTable').DataTable({
             "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
@@ -111,7 +118,7 @@
                             .draw();
                     });
                 });
-            }  
+            }
             });
         });
     </script>

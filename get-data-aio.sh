@@ -10,9 +10,9 @@ for project_name in "${project_names[@]}"; do
     openstack server list --project "$project_name" --limit -1 --long -c ID -c Name -c Status -c "Power State" -c Networks -c "Flavor ID" -c "Flavor Name" -c "Image ID" -c "Image Name" -c Host -f csv | grep -v "ERROR" | sed 's/^"\(.*\)"$/\1/' > temp_aio_project.csv
 
     sed -i 's/","/|/g' temp_aio_project.csv
-    
+
     sed -i '1d' temp_aio_project.csv
-    
+
     awk -v project="$project_name" -F "|" 'BEGIN {OFS="|"} {print project, $0}' temp_aio_project.csv >> "$output_file"
 done
 
@@ -73,7 +73,7 @@ file_hosts='temp_hosts.txt'
 
 for host in $(cat "$file_hosts"); do
     ssh_result=$(ssh "$host" "sudo cat /etc/nova/nova.conf")
-  
+
     cpu_ratio=$(echo "$ssh_result" | grep -oP "cpu_allocation_ratio = \K\d+(\.\d+)?")
     ram_ratio=$(echo "$ssh_result" | grep -oP "ram_allocation_ratio = \K\d+(\.\d+)?")
 
@@ -85,43 +85,130 @@ done > ratio.txt
 ceph df > cephdf.txt
 
 ### GTI
-openstack volume list --all-projects -f json > volumes.json
+# Membuat file JSON kosong untuk semua volume
+echo "[]" > volumes_all_project.json
+
+# Mendapatkan daftar project
+project_list=$(openstack project list -f value -c ID -c Name)
+
+# Melakukan loop melalui setiap project
+while read -r project_id project_name; do
+    echo "Processing project: $project_name ($project_id)"
+
+    # Mendapatkan daftar volume untuk project saat ini
+    openstack volume list --project $project_id -f json > volumes-$project_id.json
+
+    # Periksa apakah ada volume dalam project ini
+    if [ -s volumes-$project_id.json ] && [ "$(cat volumes-$project_id.json)" != "[]" ]; then
+        echo "Found volumes for project $project_name"
+
+        # Tambahkan nama project ke setiap volume
+        python3 - <<EOF
+import json
+
+# Load volumes for this project
+with open('volumes-$project_id.json', 'r') as f:
+    volumes = json.load(f)
+
+# Add project name to each volume
+for volume in volumes:
+    volume['Project'] = "$project_name"
+
+# Save updated volumes
+with open('volumes-$project_id.json', 'w') as f:
+    json.dump(volumes, f)
+EOF
+
+        # Gabungkan dengan file semua project
+        python3 - <<EOF
+import json
+
+# Load existing volumes
+with open('volumes_all_project.json', 'r') as f:
+    all_volumes = json.load(f)
+
+# Load volumes for this project
+with open('volumes-$project_id.json', 'r') as f:
+    project_volumes = json.load(f)
+
+# Append project volumes to all volumes
+all_volumes.extend(project_volumes)
+
+# Save updated all volumes
+with open('volumes_all_project.json', 'w') as f:
+    json.dump(all_volumes, f, indent=2)
+EOF
+    else
+        echo "No volumes found for project $project_name"
+    fi
+done <<< "$(echo "$project_list")"
+
+# Pindahkan file final ke volumes.json
+mv volumes_all_project.json volumes.json
+rm -f volumes-*.json
 
 ### ODC (because error when volume list --all-projects)
-# # Membuat file JSON kosong
-# echo "" > volumes.json
-
+# # Membuat file JSON kosong untuk semua volume
+# echo "[]" > volumes_all_project.json
+#
 # # Mendapatkan daftar project
-# project_list=$(openstack project list -f value -c ID)
-
+# project_list=$(openstack project list -f value -c ID -c Name)
+#
 # # Melakukan loop melalui setiap project
-# for project_id in $project_list; do
-#     # Mendapatkan daftar volume untuk project saat ini dan menambahkannya ke file JSON
-#     if openstack volume list --project $project_id -f json | jq -e '. | length > 0' > /dev/null; then
-#         openstack volume list --project $project_id -f json > volumes-$project_id.json
-#         sed -i '1d' volumes-$project_id.json
-#         sed -i '$d' volumes-$project_id.json  # Menghapus baris terakhir
-#         sed -i '$d' volumes-$project_id.json  # Menghapus baris terakhir lagi
-#         echo "}," >> volumes-$project_id.json
-#         cat volumes-$project_id.json >> volumes-all-project.json
-#     # else
-#         # echo ""
-#         # echo "Skipping project $project_id as it has no volumes."
-#         # no volumes
-#         # volumes-095f7c918dd94ce39ef5374e90eb2419.json
-#         # volumes-21078c1bf3b148bbbeda74ba5a2ef77f.json
-#         # volumes-b4c0f99260ae41d3ab7cb3b88811b697.json
-#         # volumes-cb0d55d804d24bd9aa47c5560f942fc4.json
+# while read -r project_id project_name; do
+#     echo "Processing project: $project_name ($project_id)"
+#
+#     # Mendapatkan daftar volume untuk project saat ini
+#     openstack volume list --project $project_id -f json > volumes-$project_id.json
+#
+#     # Periksa apakah ada volume dalam project ini
+#     if [ -s volumes-$project_id.json ] && [ "$(cat volumes-$project_id.json)" != "[]" ]; then
+#         echo "Found volumes for project $project_name"
+#
+#         # Tambahkan nama project ke setiap volume
+#         python3 - <<EOF
+# import json
+#
+# # Load volumes for this project
+# with open('volumes-$project_id.json', 'r') as f:
+#     volumes = json.load(f)
+#
+# # Add project name to each volume
+# for volume in volumes:
+#     volume['Project'] = "$project_name"
+#
+# # Save updated volumes
+# with open('volumes-$project_id.json', 'w') as f:
+#     json.dump(volumes, f)
+# EOF
+#
+#         # Gabungkan dengan file semua project
+#         python3 - <<EOF
+# import json
+#
+# # Load existing volumes
+# with open('volumes_all_project.json', 'r') as f:
+#     all_volumes = json.load(f)
+#
+# # Load volumes for this project
+# with open('volumes-$project_id.json', 'r') as f:
+#     project_volumes = json.load(f)
+#
+# # Append project volumes to all volumes
+# all_volumes.extend(project_volumes)
+#
+# # Save updated all volumes
+# with open('volumes_all_project.json', 'w') as f:
+#     json.dump(all_volumes, f, indent=2)
+# EOF
+#     else
+#         echo "No volumes found for project $project_name"
 #     fi
-# done
-
-# mv volumes-all-project.json volumes.json
+# done <<< "$(echo "$project_list")"
+#
+# # Pindahkan file final ke volumes.json
+# mv volumes_all_project.json volumes.json
 # rm -f volumes-*.json
-# sed -i '1s/^/\[/;1!b' volumes.json
-# sed -i '$d' volumes.json  # Menghapus baris terakhir
-# # sed -i '$d' volumes.json  # Menghapus baris terakhir lagi
-# echo "}" >> volumes.json
-# echo "]" >> volumes.json
 
 
 scp aio.csv allocation.txt flavors.csv ratio.txt cephdf.txt volumes.json ubuntu@${instance_server}

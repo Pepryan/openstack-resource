@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - OpenStack Resource</title>
+    <!-- Early theme initialization to prevent flash of wrong theme -->
+    <script src="static/theme-init.js"></script>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -160,7 +162,7 @@
             <h1>OpenStack Resource Manager</h1>
             <p>Please sign in to continue</p>
         </div>
-        
+
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -204,11 +206,16 @@
     </div>
 
     <script>
+        // Remove the theme-init class after a short delay to re-enable transitions
+        setTimeout(() => {
+            document.documentElement.classList.remove('theme-init');
+        }, 100);
+
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.querySelector('.eye-icon');
             const eyeSlashIcon = document.querySelector('.eye-slash-icon');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 eyeIcon.style.display = 'none';

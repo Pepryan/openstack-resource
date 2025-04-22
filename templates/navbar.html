@@ -4,16 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navbar</title>
+    <!-- Early theme initialization to prevent flash of wrong theme -->
+    <script src="static/theme-init.js"></script>
     <link rel="stylesheet" href="static/tailwind.min.css">
+    <link rel="stylesheet" href="static/modern-theme.css">
     <style>
+        /* Navbar theme styles */
+        nav {
+            transition: all 0.3s ease;
+            background-color: var(--primary-light);
+            box-shadow: var(--shadow-md-light);
+        }
+
+        [data-theme='dark'] nav {
+            background-color: #121212;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border-radius: 0.375rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .mobile-menu-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme='dark'] .mobile-menu-button {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme='dark'] .mobile-menu-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-light);
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+
+        [data-theme='dark'] .mobile-menu {
+            background-color: #121212;
+            border: 1px solid #2a2a2a;
+            border-top: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-menu.show {
+            display: block;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+            width: 100%;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        [data-theme='dark'] .mobile-nav-link {
+            color: var(--text-secondary-light);
+        }
+
+        [data-theme='dark'] .mobile-nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary-light);
+        }
+
+        /* Brand name styling */
+        .brand-name {
+            font-weight: 600;
+            font-size: 1.25rem;
+            background: linear-gradient(90deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        [data-theme='dark'] .brand-name {
+            background: linear-gradient(90deg, #ffffff, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+        }
+
+        /* Navigation links */
+        .nav-link {
+            position: relative;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 1.25rem 1rem;
+            margin: 0 0.25rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0.75rem;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .nav-link:hover::after {
+            width: 60%;
+            opacity: 1;
+        }
+
+        [data-theme='dark'] .nav-link {
+            color: var(--text-secondary-light);
+        }
+
+        [data-theme='dark'] .nav-link:hover {
+            color: var(--text-primary-light);
+        }
+
+        [data-theme='dark'] .nav-link::after {
+            background-color: var(--primary-light);
+        }
+
+        /* Theme toggle button */
         .theme-toggle {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem;
+            padding: 0.5rem 0.75rem;
             cursor: pointer;
-            border-radius: 0.375rem;
-            transition: background-color 0.2s;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .theme-toggle svg {
@@ -22,10 +183,20 @@
         }
 
         /* Dark theme icon */
+        [data-theme='dark'] .theme-toggle {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: #2a2a2a;
+        }
+
+        [data-theme='dark'] .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
         [data-theme='dark'] .theme-toggle .moon-icon {
             display: none;
         }
-        
+
         [data-theme='dark'] .theme-toggle .sun-icon {
             display: block;
         }
@@ -34,58 +205,75 @@
         .theme-toggle .moon-icon {
             display: block;
         }
-        
+
         .theme-toggle .sun-icon {
             display: none;
         }
 
-        /* Navbar theme styles */
-        nav {
-            transition: background-color 0.2s;
+        /* Logout button */
+        .logout-btn {
+            background-color: rgba(239, 68, 68, 0.9);
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            white-space: nowrap;
         }
 
-        [data-theme='dark'] nav {
-            background-color: #1a1a1a;
+        .logout-btn:hover {
+            background-color: rgb(239, 68, 68);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        [data-theme='light'] nav {
-            background-color: #2563eb;
+        [data-theme='dark'] .logout-btn {
+            background-color: rgba(239, 68, 68, 0.8);
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
-        /* Theme-specific hover states */
-        [data-theme='dark'] .theme-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        [data-theme='dark'] .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 1);
         }
 
-        [data-theme='light'] .theme-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+        /* Mobile-specific styles */
+        @media (max-width: 767px) {
+            .theme-toggle {
+                padding: 0.4rem 0.6rem;
+            }
 
-        [data-theme='dark'] .nav-link:hover {
-            color: #93c5fd;
-        }
+            .logout-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
 
-        [data-theme='light'] .nav-link:hover {
-            color: #bfdbfe;
+            .brand-name {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="shadow-lg">
+    <nav class="relative">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between">
-                <div class="flex space-x-4">
-                    <div class="flex items-center py-5 px-2">
-                        <span class="text-white text-lg font-semibold">OpenStack Manager</span>
-                    </div>
-                    <div class="hidden md:flex items-center space-x-1">
-                        <a href="/" class="nav-link py-5 px-3 text-white">Home</a>
-                        <a href="/list-all-instances" class="nav-link py-5 px-3 text-white">Instances</a>
-                        <a href="/list-all-flavors" class="nav-link py-5 px-3 text-white">Flavors</a>
-                        <a href="/volumes" class="nav-link py-5 px-3 text-white">Volumes</a>
-                        <a href="/allocation" class="nav-link py-5 px-3 text-white">Allocation</a>
-                    </div>
+            <!-- Desktop Layout -->
+            <div class="hidden md:flex justify-between items-center">
+                <!-- Brand on left -->
+                <div class="flex items-center py-4 px-2">
+                    <span class="brand-name">OpenStack Manager</span>
                 </div>
+
+                <!-- Navigation links in center -->
+                <div class="flex-1 flex justify-center items-center">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/list-all-instances" class="nav-link">Instances</a>
+                    <a href="/list-all-flavors" class="nav-link">Flavors</a>
+                    <a href="/volumes" class="nav-link">Volumes</a>
+                    <a href="/allocation" class="nav-link">Allocation</a>
+                </div>
+
+                <!-- Theme toggle and logout on right -->
                 <div class="flex items-center space-x-4">
                     <button onclick="toggleTheme()" class="theme-toggle text-white">
                         <!-- Moon icon for light mode -->
@@ -106,36 +294,149 @@
                         </svg>
                         <span class="text-sm">Theme</span>
                     </button>
-                    <a href="/logout" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-150">Logout</a>
+                    <a href="/logout" class="logout-btn">Logout</a>
                 </div>
+            </div>
+
+            <!-- Mobile Layout -->
+            <div class="flex md:hidden justify-between items-center">
+                <div class="flex items-center">
+                    <!-- Mobile menu button - only visible on mobile -->
+                    <button id="mobile-menu-button" class="mobile-menu-button" aria-label="Menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
+                    <div class="flex items-center py-4 px-2">
+                        <span class="brand-name">OpenStack Manager</span>
+                    </div>
+                </div>
+
+                <!-- Theme toggle and logout on right for mobile -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleTheme()" class="theme-toggle text-white">
+                        <!-- Moon icon for light mode -->
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                        <!-- Sun icon for dark mode -->
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </button>
+                    <a href="/logout" class="logout-btn">Logout</a>
+                </div>
+            </div>
+
+            <!-- Mobile menu - hidden by default -->
+            <div id="mobile-menu" class="mobile-menu">
+                <a href="/" class="mobile-nav-link">Home</a>
+                <a href="/list-all-instances" class="mobile-nav-link">Instances</a>
+                <a href="/list-all-flavors" class="mobile-nav-link">Flavors</a>
+                <a href="/volumes" class="mobile-nav-link">Volumes</a>
+                <a href="/allocation" class="mobile-nav-link">Allocation</a>
             </div>
         </div>
     </nav>
     <script>
-        // Theme toggle functionality
+        // Theme toggle functionality with enhanced performance optimization
         function toggleTheme() {
+            // Disable all transitions and animations temporarily for better performance
+            document.documentElement.classList.add('theme-init');
+
+            // Toggle theme
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
+
+            // Apply theme change
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+
+            // Force a reflow to ensure the theme-init class takes effect
+            void document.documentElement.offsetWidth;
+
+            // Trigger custom event for theme change immediately
+            document.dispatchEvent(new CustomEvent('themeChanged', {
+                detail: { theme: newTheme }
+            }));
+
+            // Re-enable transitions after a short delay
+            setTimeout(() => {
+                document.documentElement.classList.remove('theme-init');
+            }, 100);
         }
 
         // Initialize theme on page load
         function initTheme() {
             const savedTheme = localStorage.getItem('theme');
             const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
+
             if (savedTheme === 'dark' || (!savedTheme && systemDarkMode)) {
                 document.documentElement.setAttribute('data-theme', 'dark');
             } else {
                 document.documentElement.setAttribute('data-theme', 'light');
             }
+
+            // Remove the theme-init class after a short delay to re-enable transitions
+            setTimeout(() => {
+                document.documentElement.classList.remove('theme-init');
+            }, 100);
         }
 
-        // Run theme initialization
-        initTheme();
+        // Mobile menu functionality
+        function initMobileMenu() {
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (menuButton && mobileMenu) {
+                // Toggle mobile menu when button is clicked
+                menuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('show');
+
+                    // Add aria-expanded attribute for accessibility
+                    const isExpanded = mobileMenu.classList.contains('show');
+                    menuButton.setAttribute('aria-expanded', isExpanded);
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    const isClickInside = menuButton.contains(event.target) || mobileMenu.contains(event.target);
+
+                    if (!isClickInside && mobileMenu.classList.contains('show')) {
+                        mobileMenu.classList.remove('show');
+                        menuButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Close mobile menu when window is resized to desktop size
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth >= 768 && mobileMenu.classList.contains('show')) {
+                        mobileMenu.classList.remove('show');
+                        menuButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Set initial aria-expanded state
+                menuButton.setAttribute('aria-expanded', 'false');
+                menuButton.setAttribute('aria-controls', 'mobile-menu');
+            }
+        }
+
+        // Run initializations
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+            initMobileMenu();
+        });
     </script>
 </body>
 </html>

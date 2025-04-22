@@ -2,8 +2,11 @@
 <html>
 <head>
     <title>List All Volumes</title>
+    <!-- Early theme initialization to prevent flash of wrong theme -->
+    <script src="static/theme-init.js"></script>
     <link href="static/DataTables/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/tailwind.min.css">
+    <link rel="stylesheet" href="static/modern-theme.css">
     <link rel="stylesheet" href="static/volumes.css">
 </head>
 <body>
@@ -14,9 +17,9 @@
             <p class="mb-4">Last Updated: {{ stats.last_updated }}</p>
 
             <!-- Volume Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <!-- Card 1: Total Volume & Usage -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <div class="card p-6 rounded-xl">
                     <h3 class="text-lg font-semibold mb-3">Total Volume Size</h3>
                     <div class="space-y-2">
                         <p class="text-3xl font-bold">{{ stats.current_volume_tb }} TB</p>
@@ -27,7 +30,7 @@
                 </div>
 
                 <!-- Card 2: Status Distribution -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <div class="card p-6 rounded-xl">
                     <h3 class="text-lg font-semibold mb-3">Status Distribution</h3>
                     <div class="grid grid-cols-2 gap-x-4 gap-y-2">
                         <div>
@@ -51,7 +54,7 @@
                 </div>
 
                 <!-- Card 3: Combined Properties & Size Distribution -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <div class="card p-6 rounded-xl">
                     <div class="space-y-4">
                         <!-- Volume Properties Section -->
                         <div>
@@ -62,7 +65,7 @@
                                 <p>Unattached: {{ stats.unattached_volumes }}</p>
                             </div>
                         </div>
-                        
+
                         <!-- Size Distribution Section -->
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Size Distribution</h3>
@@ -79,10 +82,23 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Card 4: Project Distribution -->
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-3">Project Distribution</h3>
+                    <div class="space-y-2">
+                        {% for project, count in stats.projects.items() %}
+                        <div class="flex justify-between">
+                            <span>{{ project }}:</span>
+                            <span>{{ count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <!-- Volume Calculator -->
-            <div class="bg-white p-6 rounded-lg shadow mb-6"
+            <div class="card p-6 rounded-lg mb-6"
                  data-current-volume="{{ stats.current_volume_tb|default(0)|float }}"
                  data-erasure-code="{{ stats.ceph_erasure_code|default(1.5)|float }}"
                  data-total-size="{{ stats.ceph_total_size_tb|default(5700)|float }}">
@@ -99,11 +115,11 @@
                         <form id="volumeCalc" class="space-y-4">
                             <div>
                                 <label class="block text-sm">New Volume Size (TB)</label>
-                                <input type="number" step="0.1" class="border rounded p-2 w-full" 
+                                <input type="number" step="0.1" class="w-full p-2"
                                        id="newVolume" value="0">
                             </div>
                             <div>
-                                <p class="text-lg">Predicted Usage: <span id="predictedUsage" 
+                                <p class="text-lg">Predicted Usage: <span id="predictedUsage"
                                    class="font-bold">{{ stats.current_usage_percentage }}%</span></p>
                             </div>
                         </form>
@@ -120,6 +136,7 @@
                             <th class="border">Name</th>
                             <th class="border">Status</th>
                             <th class="border">Size</th>
+                            <th class="border">Project</th>
                             <th class="border">Attached to</th>
                         </tr>
                     </thead>
@@ -130,10 +147,11 @@
                             <td class="border">{{ volume["Name"] }}</td>
                             <td class="border">{{ volume["Status"] }}</td>
                             <td class="border">{{ volume["Size"] }}</td>
+                            <td class="border">{{ volume["Project"] }}</td>
                             <td class="border">
                                 {% if volume["Attached to"] %}
                                     {% for attachment in volume["Attached to"] %}
-                                        <a href="{{ url_for('list_all_instances', search=attachment.server_id) }}" class="clickable-instance-id">
+                                        <a href="{{ url_for('instance.list_all_instances', id=attachment.server_id) }}" class="clickable-instance-id">
                                             Instance ID: {{ attachment.server_id }}
                                         </a>, Device: {{ attachment.device }}, Attached at: {{ attachment.attached_at }}
                                     {% endfor %}
@@ -150,7 +168,13 @@
     </div>
 
     <script src="static/DataTables/datatables.min.js"></script>
+    <script src="static/datatable-extensions.js"></script>
     <script>
+        // Remove the theme-init class after a short delay to re-enable transitions
+        setTimeout(() => {
+            document.documentElement.classList.remove('theme-init');
+        }, 100);
+
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
@@ -204,28 +228,28 @@
             });
 
             // Volume Calculator
-            const calculatorElement = document.querySelector('.bg-white.p-6.rounded-lg.shadow');
+            const calculatorElement = document.querySelector('.card.p-6.rounded-lg');
             if (calculatorElement) {
                 const volumeCalc = {
                     currentVolume: parseFloat(calculatorElement.dataset.currentVolume) || 0,
                     erasureCode: parseFloat(calculatorElement.dataset.erasureCode),
                     totalSize: parseFloat(calculatorElement.dataset.totalSize),
-                    
+
                     calculate: function(newVolume) {
                         const total = this.currentVolume + (newVolume || 0);
                         return ((total * this.erasureCode) / this.totalSize) * 100;
                     },
-                    
+
                     updateDisplay: function(value) {
                         const usageElement = document.getElementById('predictedUsage');
                         if (!usageElement) return;
 
                         const usage = this.calculate(value);
                         usageElement.textContent = usage.toFixed(2) + '%';
-                        
+
                         // Remove existing color classes
                         usageElement.classList.remove('text-red-600', 'text-yellow-600', 'text-green-600');
-                        
+
                         // Add appropriate color class
                         if (usage > 90) {
                             usageElement.classList.add('text-red-600');
@@ -244,7 +268,7 @@
                         const value = parseFloat(this.value) || 0;
                         volumeCalc.updateDisplay(value);
                     });
-                    
+
                     // Initialize with current values
                     volumeCalc.updateDisplay(0);
                 }

@@ -1,31 +1,4 @@
-/* Dark mode variables and base styles */
-[data-theme='dark'] {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --bg-tertiary: #404040;
-    --text-primary: #ffffff;
-    --text-secondary: #e0e0e0;
-    --text-muted: #a0a0a0;
-    --border-color: #404040;
-    --hover-color: #3b5998;
-    --stripe-odd: #333333;
-    --stripe-even: #2d2d2d;
-}
-/* Dark mode variables and base styles */
-:root {
-  --card-bg-light: #ffffff;
-  --card-bg-dark: #1f2937;
-  --text-primary-light: #111827;
-  --text-primary-dark: #f9fafb;
-  --text-secondary-light: #4b5563;
-  --text-secondary-dark: #9ca3af;
-  --border-light: #e5e7eb;
-  --border-dark: #374151;
-  --code-bg-light: #f3f4f6;
-  --code-bg-dark: #374151;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-}
+/* Dark mode variables are now in modern-theme.css */
 
 /* Info Card Styles */
 .bg-white.dark\:bg-gray-800 {
@@ -122,7 +95,7 @@
   .bg-white.dark\:bg-gray-800 {
     padding: 1rem;
   }
-  
+
   .space-y-1 li {
     flex-direction: column;
     align-items: flex-start;
@@ -157,17 +130,15 @@
     max-width: 42rem;
 }
 
-/* Base styles */
-body {
-    transition: background-color 0.3s, color 0.3s;
-}
+/* Base styles - transitions now managed in modern-theme.css */
 
+/* Scaling for instances page */
 .main-content {
-transform: scale(0.67);
-transform-origin: top left;
-width: 149.25%; 
-height: 149.25%;
-position: absolute;
+    transform: scale(0.80);
+    transform-origin: top left;
+    width: 125%; /* 100/0.67 to compensate for the scale */
+    height: 125%; /* 100/0.67 to compensate for the scale */
+    position: absolute;
 }
 
 [data-theme='dark'] body {
@@ -175,29 +146,15 @@ position: absolute;
     color: var(--text-primary);
 }
 
-/* Table styles */
-#dataTable tr:nth-child(odd) {
-    background-color: #f2f2f2;
-}
-
-#dataTable tr:nth-child(even) {
-    background-color: #ffffff;
-}
-
-[data-theme='dark'] #dataTable tr:nth-child(odd) {
-    background-color: var(--stripe-odd);
-}
-
-[data-theme='dark'] #dataTable tr:nth-child(even) {
-    background-color: var(--stripe-even);
-}
+/* Custom styles for instances page */
 
 #dataTable tr:hover {
-    background-color: #cce6ff;
+    background-color: var(--table-hover) !important;
+    color: var(--text-primary);
 }
 
 [data-theme='dark'] #dataTable tr:hover {
-    background-color: var(--hover-color);
+    background-color: var(--table-hover) !important;
     color: var(--text-primary);
 }
 

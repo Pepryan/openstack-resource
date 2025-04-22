@@ -4,47 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instance Openstack Management Migration</title>
+    <!-- Early theme initialization to prevent flash of wrong theme -->
+    <script src="static/theme-init.js"></script>
     <link rel="stylesheet" href="static/tailwind.min.css">
+    <link rel="stylesheet" href="static/modern-theme.css">
     <link rel="stylesheet" href="static/index.css">
+    <script src="static/chartjs/chart-2.9.4.min.js"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen">
     <!-- Content remains the same as your original HTML -->
     {% include 'navbar.html' %}
 
     <main class="max-w-7xl mx-auto p-4">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">Instance Migration Manager</h1>
-        
+        <h1 class="text-3xl font-bold mb-4">Instance Migration Manager</h1>
+
+        <div class="flex justify-between items-center mb-6">
+            <div id="infoMessage" class="hidden bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 flex-grow mr-4" role="alert">
+                <p class="font-bold">Information</p>
+                <p>If you've selected instances to move, please click "Clear Instances" before changing hosts.</p>
+            </div>
+            <button id="resetSelectionBtn" onclick="resetSelection()" class="btn btn-secondary px-4 py-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Reset Selection
+            </button>
+        </div>
+
         <div class="grid md:grid-cols-2 gap-6">
             <!-- Source Host Section -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-blue-700 mb-4 text-card-title">Source Host</h2>
-                <select id="sourceHostsDropdown" onchange="loadInstances()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4">
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold mb-4 text-card-title">Source Host</h2>
+                <select id="sourceHostsDropdown" onchange="loadInstances()" class="w-full p-2 mb-4">
                     <option value="" disabled selected>Select Source Host</option>
                 </select>
 
-                <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                    <h3 id="sourceHostInfo" class="text-lg font-medium text-gray-700 mb-2">Host Information</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="text-gray-600">
-                            <p>vCPUs Used:</p>
-                            <p>Total vCPUs:</p>
-                            <p>Free vCPUs:</p>
+                <div class="bg-tertiary rounded-lg p-5 mb-4">
+                    <h3 id="sourceHostInfo" class="host-info-header">Host Information</h3>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="info-table info-card">
+                            <table class="resource-info-table">
+                                <tbody>
+                                    <tr>
+                                        <td>vCPUs Used:</td>
+                                        <td><span id="vcpusUsedSourceHost">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total vCPUs:</td>
+                                        <td><span id="totalVCPUsSourceHost">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Free vCPUs:</td>
+                                        <td><span id="freeVCPUsSourceHost">0</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="chart-wrapper">
+                                <canvas id="sourceVcpuChart" width="160" height="160"></canvas>
+                            </div>
                         </div>
-                        <div class="text-gray-900">
-                            <p><span id="vcpusUsedSourceHost">0</span></p>
-                            <p><span id="totalVCPUsSourceHost">0</span></p>
-                            <p><span id="freeVCPUsSourceHost">0</span></p>
+                        <div class="info-table info-card">
+                            <table class="resource-info-table">
+                                <tbody>
+                                    <tr>
+                                        <td>RAM Used:</td>
+                                        <td><span id="ramUsedSourceHost">0</span> MB (<span id="ramUsedGbSourceHost">0</span> GB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total RAM:</td>
+                                        <td><span id="ramTotalSourceHost">0</span> MB (<span id="ramTotalGbSourceHost">0</span> GB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Free RAM:</td>
+                                        <td><span id="ramFreeSourceHost">0</span> MB (<span id="ramFreeGbSourceHost">0</span> GB)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="chart-wrapper">
+                                <canvas id="sourceRamChart" width="160" height="160"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 id="sourceHostTitle" class="text-lg font-medium text-gray-700 mb-2">Instances</h3>
-                <div class="overflow-x-auto">
+                <h3 id="sourceHostTitle" class="host-info-header mb-3">Instances</h3>
+                <div class="overflow-x-auto table-container">
                     <table id="sourceHost" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">vCPU</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RAM (GB)</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -55,56 +105,102 @@
             </div>
 
             <!-- Destination Host Section -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-blue-700 mb-4 text-card-title">Destination Host</h2>
-                <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4">
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold mb-4 text-card-title">Destination Host</h2>
+                <select id="destinationHostsDropdown" onchange="loadDestinationHostInstances()" class="w-full p-2 mb-4">
                     <option value="" disabled selected>Select Destination Host</option>
                 </select>
 
-                <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                    <h3 id="destinationHostInfo" class="text-lg font-medium text-gray-700 mb-2">Host Information</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="text-gray-600">
-                            <p>vCPUs Used:</p>
-                            <p>Total vCPUs:</p>
-                            <p>Free vCPUs (Before):</p>
-                            <p>Free vCPUs (After):</p>
-                            <p>Total vCPUs to Move:</p>
+                <div class="bg-tertiary rounded-lg p-5 mb-4">
+                    <h3 id="destinationHostInfo" class="host-info-header">Host Information</h3>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="info-table info-card">
+                            <table class="resource-info-table">
+                                <tbody>
+                                    <tr>
+                                        <td>vCPUs Used:</td>
+                                        <td><span id="vcpusUsedHost">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total vCPUs:</td>
+                                        <td><span id="totalVCPUsHost">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Free vCPUs (Before):</td>
+                                        <td><span id="freeVCPUsHost">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Free vCPUs (After):</td>
+                                        <td><span id="freeVCPUsAfter">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total vCPUs to Move:</td>
+                                        <td><span id="totalVCPUsToMove">0</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="chart-wrapper">
+                                <canvas id="destVcpuChart" width="160" height="160"></canvas>
+                            </div>
                         </div>
-                        <div class="text-gray-900">
-                            <p><span id="vcpusUsedHost">0</span></p>
-                            <p><span id="totalVCPUsHost">0</span></p>
-                            <p><span id="freeVCPUsHost">0</span></p>
-                            <p><span id="freeVCPUsAfter">0</span></p>
-                            <p><span id="totalVCPUsToMove">0</span></p>
+                        <div class="info-table info-card">
+                            <table class="resource-info-table">
+                                <tbody>
+                                    <tr>
+                                        <td>RAM Used:</td>
+                                        <td><span id="ramUsedHost">0</span> MB (<span id="ramUsedGbHost">0</span> GB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total RAM:</td>
+                                        <td><span id="ramTotalHost">0</span> MB (<span id="ramTotalGbHost">0</span> GB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Free RAM (Before):</td>
+                                        <td><span id="ramFreeHost">0</span> MB (<span id="ramFreeGbHost">0</span> GB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Free RAM (After):</td>
+                                        <td><span id="ramFreeAfter">0</span> MB (<span id="ramFreeGbAfter">0</span> GB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total RAM to Move:</td>
+                                        <td><span id="totalRamToMove">0</span> MB (<span id="totalRamToMoveGb">0</span> GB)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="chart-wrapper">
+                                <canvas id="destRamChart" width="160" height="160"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 id="destinationHostTitle" class="text-lg font-medium text-gray-700 mb-2">Current Instances</h3>
-                <!-- <div class="overflow-x-auto"> -->
+                <h3 id="destinationHostTitle" class="host-info-header mb-3">Current Instances</h3>
+                <div class="overflow-x-auto table-container">
                     <table id="destinationHost" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">vCPU</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RAM (GB)</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                         </tbody>
                     </table>
-                <!-- </div> -->
+                </div>
 
-                <h3 class="text-lg font-medium text-gray-700 my-4">Instances to Move</h3>
-                <button onclick="clearInstancesToMove()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-150 mb-2">
+                <h3 class="host-info-header my-4">Instances to Move</h3>
+                <button onclick="clearInstancesToMove()" class="btn btn-danger px-4 py-2 mb-2">
                     Clear Instances
                 </button>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto table-container">
                     <table id="instancesToMove" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">vCPU</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RAM (GB)</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -116,33 +212,56 @@
         </div>
 
         <!-- Compute Search Section -->
-        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-blue-700 mb-4 text-card-title">Resource Management</h2>
-            
+        <div class="mt-8 card p-6">
+            <h2 class="text-xl font-semibold mb-4 text-card-title">Resource Management</h2>
+
             <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-lg font-medium text-gray-700 mb-4">vCPU Allocation Plot</h3>
-                    <button onclick="generateVcpuAllocationPlot()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-150">
-                        Generate Plot
-                    </button>
+                <div class="info-card p-5 rounded-lg bg-tertiary">
+                    <h3 class="host-info-header">Find Available Compute</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <label for="vcpuInput" class="block text-sm font-medium mb-2">Required vCPUs</label>
+                            <input type="number" id="vcpuInput" name="vcpuInput" min="1" class="w-full p-2 rounded">
+                        </div>
+                        <button onclick="getComputeWithFreeVCPUs()" class="btn btn-primary px-4 py-2 mt-6">
+                            Search
+                        </button>
+                    </div>
+                    <div id="computeList" class="mt-5 bg-tertiary p-4 rounded-lg">
+                        <!-- Compute list will be displayed here -->
+                    </div>
+                </div>
+
+                <div class="info-card p-5 rounded-lg bg-tertiary">
+                    <h3 class="host-info-header">vCPU Allocation Plot</h3>
+                    <div class="mb-4">
+                        <button onclick="generateVcpuAllocationPlot()" class="btn btn-primary px-4 py-2">
+                            Generate Plot
+                        </button>
+                    </div>
                     <div id="vcpuAllocationPlot" class="mt-4">
                         <!-- Plot will be displayed here -->
                     </div>
                 </div>
-                
-                <div>
-                    <h3 class="text-lg font-medium text-gray-700 mb-4">Find Available Compute</h3>
-                    <div class="flex items-center gap-4">
-                        <div class="flex-1">
-                            <label for="vcpuInput" class="block text-sm font-medium text-gray-700 mb-1">Required vCPUs</label>
-                            <input type="number" id="vcpuInput" name="vcpuInput" min="1" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <button onclick="getComputeWithFreeVCPUs()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-150 mt-6">
-                            Search
-                        </button>
+            </div>
+        </div>
+
+        <!-- Comparison Charts Section -->
+        <div class="mt-8 card p-6">
+            <h2 class="text-xl font-semibold mb-4 text-card-title">Resource Comparison</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="info-card p-5 rounded-lg bg-tertiary">
+                    <h3 class="host-info-header">vCPU Comparison</h3>
+                    <div class="chart-container" style="height: 320px;">
+                        <canvas id="vcpuComparisonChart"></canvas>
                     </div>
-                    <div id="computeList" class="mt-4 bg-gray-50 p-4 rounded-lg">
-                        <!-- Compute list will be displayed here -->
+                </div>
+
+                <div class="info-card p-5 rounded-lg bg-tertiary">
+                    <h3 class="host-info-header">RAM Comparison</h3>
+                    <div class="chart-container" style="height: 320px;">
+                        <canvas id="ramComparisonChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -155,10 +274,15 @@
         function initTheme() {
             const savedTheme = localStorage.getItem('theme');
             const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
+
             if (savedTheme === 'dark' || (!savedTheme && systemDarkMode)) {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
+
+            // Remove the theme-init class after a short delay to re-enable transitions
+            setTimeout(() => {
+                document.documentElement.classList.remove('theme-init');
+            }, 100);
         }
 
         // Initialize theme before DataTables

@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Allocation Data</title>
+    <!-- Early theme initialization to prevent flash of wrong theme -->
+    <script src="static/theme-init.js"></script>
     <link href="static/DataTables/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/tailwind.min.css">
+    <link rel="stylesheet" href="static/modern-theme.css">
     <link rel="stylesheet" href="static/allocation.css">
 </head>
 <body>
@@ -139,24 +142,24 @@
 <!-- Add after the summary table and before allocation table -->
 <div class="mx-4 mt-8 mb-8">
     <!-- Collapsible Placement Section -->
-    <div class="placement-section theme-transition rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-700">
+    <div class="placement-section card p-4">
         <button id="placementToggle" class="w-full flex items-center justify-between text-left mb-3">
             <div class="flex items-center">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Placement Allocation Issues Status</h3>
-                <span class="text-sm text-gray-500 ml-4">Last checked: {{ instance_ids_last_check }}</span>
+                <h3 class="text-lg font-semibold">Placement Allocation Issues Status</h3>
+                <span class="text-sm text-secondary ml-4">Last checked: {{ instance_ids_last_check }}</span>
             </div>
-            <svg id="placementIcon" class="h-5 w-5 text-gray-500 transform transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg id="placementIcon" class="h-5 w-5 text-secondary transform transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 9l-7 7-7-7" />
             </svg>
         </button>
-        
+
         <!-- Info text -->
         <div id="placementContent" class="hidden">
-            <div class="mb-4 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+            <div class="mb-4 text-sm text-secondary bg-tertiary p-3 rounded-lg">
                 <p>* Positive difference indicates over-allocation in placement (needs deletion)</p>
                 <p>* Negative difference indicates under-allocation in placement (needs healing)</p>
             </div>
-            
+
             {% if placement_issues %}
                 <div class="space-y-4">
                     {% for host in placement_issues %}
@@ -164,11 +167,11 @@
                             <div class="border-b pb-4 last:border-b-0">
                                 <div class="flex items-center justify-between">
                                     <div class="flex-grow">
-                                        <h4 class="font-medium text-gray-900 dark:text-white">{{ host.hostname }}</h4>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                                            Placement VCPU: {{ host.placement_vcpu }} | 
-                                            Actual VCPU: {{ host.actual_vcpu }} | 
-                                            <span class="{% if host.difference > 0 %}text-red-600 dark:text-red-400{% else %}text-yellow-600 dark:text-yellow-400{% endif %}">
+                                        <h4 class="font-medium">{{ host.hostname }}</h4>
+                                        <p class="text-sm text-secondary">
+                                            Placement VCPU: {{ host.placement_vcpu }} |
+                                            Actual VCPU: {{ host.actual_vcpu }} |
+                                            <span class="{% if host.difference > 0 %}text-danger{% else %}text-warning{% endif %}">
                                                 Difference: {{ host.difference }}
                                                 {% if host.difference > 0 %}
                                                     (over-allocated)
@@ -178,8 +181,8 @@
                                             </span>
                                         </p>
                                     </div>
-                                    <button onclick="showInstanceDetails('{{ host.hostname }}')" 
-                                            class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors ml-4">
+                                    <button onclick="showInstanceDetails('{{ host.hostname }}')"
+                                            class="btn btn-primary px-4 py-2 text-sm ml-4">
                                         View Instance IDs
                                     </button>
                                 </div>
@@ -188,8 +191,8 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                    <p class="text-green-700 dark:text-green-400">
+                <div class="p-4 bg-tertiary rounded-lg">
+                    <p class="text-success">
                         No placement allocation issues found.
                     </p>
                 </div>
@@ -201,7 +204,7 @@
 <!-- Modal with improved styling -->
 <div id="instanceModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50">
     <div class="fixed inset-0 flex items-center justify-center p-4">
-        <div class="modal-content theme-transition rounded-xl max-w-2xl w-full p-6 shadow-xl">
+        <div class="modal-content card rounded-xl max-w-2xl w-full p-6">
             <div class="flex justify-between items-center mb-6">
                 <h3 id="modalTitle" class="modal-title text-xl font-semibold"></h3>
                 <button onclick="closeModal()" class="close-button hover:opacity-75">
@@ -210,7 +213,7 @@
                     </svg>
                 </button>
             </div>
-            
+
             <div class="space-y-6">
                 <!-- Delete Section -->
                 <div id="deleteSection" class="hidden">
@@ -225,18 +228,18 @@
                         <ul id="deleteList" class="list-disc pl-5 section-text space-y-1"></ul>
                     </div>
                 </div>
-                
+
                 <!-- Heal Section -->
                 <div id="healSection" class="hidden">
-                    <div class="flex items-center text-yellow-600 dark:text-yellow-400 mb-3">
+                    <div class="flex items-center text-warning mb-3">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
                         <h4 class="font-medium">Instance IDs to Heal in Placement</h4>
                     </div>
-                    <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
-                        <p class="text-sm text-yellow-600 dark:text-yellow-400 mb-2">These instances exist in OpenStack but not in Placement</p>
-                        <ul id="healList" class="list-disc pl-5 text-yellow-600 dark:text-yellow-400 space-y-1"></ul>
+                    <div class="bg-tertiary rounded-lg p-4">
+                        <p class="text-sm text-warning mb-2">These instances exist in OpenStack but not in Placement</p>
+                        <ul id="healList" class="list-disc pl-5 text-warning space-y-1"></ul>
                     </div>
                 </div>
             </div>
@@ -250,14 +253,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleButton = document.getElementById('placementToggle');
     const content = document.getElementById('placementContent');
     const icon = document.getElementById('placementIcon');
-    
+
     // Check localStorage for saved state
     const isExpanded = localStorage.getItem('placementExpanded') === 'true';
     if (isExpanded) {
         content.classList.remove('hidden');
         icon.style.transform = 'rotate(180deg)';
     }
-    
+
     toggleButton.addEventListener('click', function() {
         content.classList.toggle('hidden');
         const isNowExpanded = !content.classList.contains('hidden');
@@ -265,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('placementExpanded', isNowExpanded);
     });
 });
-// Enhanced modal functionality 
+// Enhanced modal functionality
 const instanceData = JSON.parse('{{ instance_ids_data | tojson | safe }}');
 
 function showInstanceDetails(hostname) {
@@ -275,12 +278,12 @@ function showInstanceDetails(hostname) {
     const healSection = document.getElementById('healSection');
     const deleteList = document.getElementById('deleteList');
     const healList = document.getElementById('healList');
-    
+
     const hostData = instanceData.find(h => h.hostname === hostname);
-    
+
     if (hostData) {
         modalTitle.textContent = `Instance IDs for ${hostname}`;
-        
+
         // Handle Delete Section
         if (hostData.missing_in_openstack && hostData.missing_in_openstack.length > 0 && hostData.missing_in_openstack[0] !== '') {
             deleteSection.classList.remove('hidden');
@@ -290,7 +293,7 @@ function showInstanceDetails(hostname) {
         } else {
             deleteSection.classList.add('hidden');
         }
-        
+
         // Handle Heal Section
         if (hostData.missing_in_curl && hostData.missing_in_curl.length > 0 && hostData.missing_in_curl[0] !== '') {
             healSection.classList.remove('hidden');
@@ -300,7 +303,7 @@ function showInstanceDetails(hostname) {
         } else {
             healSection.classList.add('hidden');
         }
-        
+
         modal.classList.remove('hidden');
         // Add focus trap and escape key handler
         modal.focus();
@@ -327,6 +330,11 @@ document.addEventListener('keydown', function(e) {
 
 // Add theme change listener
 document.addEventListener('DOMContentLoaded', function() {
+    // Remove the theme-init class after a short delay to re-enable transitions
+    setTimeout(() => {
+        document.documentElement.classList.remove('theme-init');
+    }, 100);
+
     // Watch for theme changes
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
@@ -343,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-    <div class="overflow-x-auto"> 
+    <div class="overflow-x-auto">
     <table id="allocation-table">
     <thead>
         <tr>
@@ -412,6 +420,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <script src="static/DataTables/datatables.min.js"></script>
-    <script src="static/allocation.js"></script> 
+    <script src="static/datatable-extensions.js"></script>
+    <script src="static/allocation.js"></script>
 </body>
 </html>
