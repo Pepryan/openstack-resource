@@ -211,6 +211,194 @@
             </div>
         </div>
 
+        <!-- Resource Allocation Visualization Section -->
+        <div id="allocation-charts-section" class="mt-8 card p-6">
+            <h2 class="text-xl font-semibold mb-4 text-card-title">Resource Allocation Visualization</h2>
+
+            <!-- Allocation Summary -->
+            <div class="bg-tertiary rounded-lg p-5 mb-6">
+                <h3 class="text-lg font-semibold mb-3">Allocation Summary</h3>
+                <p class="text-sm text-secondary mb-4">Last updated: <span id="allocation-last-updated">-</span></p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div class="stat-card">
+                        <div class="stat-title">Projects</div>
+                        <div class="stat-value" id="total-projects">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Hosts</div>
+                        <div class="stat-value" id="total-hosts">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Instances</div>
+                        <div class="stat-value" id="total-instances">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">vCPU Usage</div>
+                        <div class="stat-value" id="total-vcpus-percent">-</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="col-span-2">
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-1">
+                            <div id="vcpu-usage-progress" class="h-4 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span>0</span>
+                            <span>vCPU Usage: <span id="total-vcpus-used">-</span>/<span id="total-vcpus-capacity">-</span></span>
+                            <span>Free: <span id="total-vcpus-free">-</span></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-end items-center">
+                        <div class="tabs">
+                            <button id="tab-charts" class="tab tab-active" onclick="switchAllocationTab('charts')">Charts</button>
+                            <button id="tab-plot" class="tab" onclick="switchAllocationTab('plot')">Plot</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Host Selection - Moved outside tabs -->
+            <div class="bg-tertiary rounded-lg p-5 mb-6 border-2 border-accent-color">
+                <h3 class="host-info-header mb-3">Host Selection</h3>
+                <div class="mb-4">
+                    <label for="allocation-host-select" class="block text-sm font-medium mb-2">
+                        Select a host to view detailed allocation information:
+                    </label>
+                    <select id="allocation-host-select" class="w-full p-2 rounded">
+                        <option value="">-- Select a host --</option>
+                    </select>
+                </div>
+                <div class="text-sm text-secondary mt-2">
+                    <p>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1 text-accent-color" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Selecting a host will update both the Charts and Plot tabs with host-specific information.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="allocation-charts-loading" class="flex justify-center items-center py-12">
+                <div class="spinner"></div>
+                <span class="ml-3">Loading allocation data...</span>
+            </div>
+
+            <!-- Error State -->
+            <div id="allocation-charts-error" class="hidden text-red-500 text-center py-8">
+                Error loading allocation data. Please try again.
+            </div>
+
+            <!-- Charts Container -->
+            <div id="allocation-charts-container" class="hidden">
+                <!-- Tabs Content -->
+                <div id="tab-content-charts" class="tab-content">
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <!-- Projects Chart -->
+                        <div class="info-card p-5 rounded-lg bg-tertiary">
+                            <h3 class="host-info-header mb-3">Projects by vCPU Usage</h3>
+                            <div class="chart-container" style="height: 320px;">
+                                <canvas id="projects-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Hosts Chart -->
+                        <div class="info-card p-5 rounded-lg bg-tertiary">
+                            <h3 class="host-info-header mb-3">Hosts by vCPU Usage</h3>
+                            <div class="chart-container" style="height: 320px;">
+                                <canvas id="hosts-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instances Chart -->
+                    <div class="bg-tertiary rounded-lg p-5 mb-6">
+                        <h3 class="host-info-header mb-3">Instances by vCPU Usage</h3>
+                        <div id="instances-chart-container" class="hidden">
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="instances-chart"></canvas>
+                            </div>
+                        </div>
+                        <div id="no-instances-message" class="text-center py-8 rounded-lg">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent-color mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="font-semibold">Host Selection Required</span>
+                            </div>
+                            <p>Select a host from the <strong>Host Details</strong> dropdown above to view instances.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plot Tab Content -->
+                <div id="tab-content-plot" class="tab-content hidden">
+                    <!-- Improved Plot -->
+                    <div class="bg-tertiary rounded-lg p-5">
+                        <h3 class="host-info-header mb-3">vCPU Allocation Plot</h3>
+
+                        <!-- No Host Selected Message -->
+                        <div id="no-host-selected-message" class="text-center py-8 rounded-lg mb-4">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent-color mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="font-semibold">Host Selection Required</span>
+                            </div>
+                            <p>Please select a host from the <strong>Host Details</strong> dropdown above to view the allocation plot.</p>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div id="improved-plot-loading" class="hidden flex justify-center items-center py-12">
+                            <div class="spinner"></div>
+                            <span class="ml-3">Generating plot...</span>
+                        </div>
+
+                        <!-- Error State -->
+                        <div id="improved-plot-error" class="hidden text-red-500 text-center py-8">
+                            Error generating plot. Please try again.
+                        </div>
+
+                        <!-- Plot Container -->
+                        <div id="improved-plot-container" class="hidden">
+                            <div class="grid md:grid-cols-4 gap-4 mb-4">
+                                <div class="stat-card">
+                                    <div class="stat-title">Host</div>
+                                    <div class="stat-value text-sm" id="improved-plot-host">-</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-title">Capacity</div>
+                                    <div class="stat-value" id="improved-plot-capacity">-</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-title">Used</div>
+                                    <div class="stat-value" id="improved-plot-used">-</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-title">Available</div>
+                                    <div class="stat-value" id="improved-plot-available">-</div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center mt-4">
+                                <div class="plot-image-container">
+                                    <img id="improved-plot-image" src="" alt="vCPU Allocation Plot" class="max-w-full">
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <p class="text-sm text-secondary">
+                                    Usage: <span id="improved-plot-percent">-</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Compute Search Section -->
         <div class="mt-8 card p-6">
             <h2 class="text-xl font-semibold mb-4 text-card-title">Resource Management</h2>
@@ -269,6 +457,7 @@
     </main>
 
     <script src="static/main.js"></script>
+    <script src="static/allocation-charts.js"></script>
     <script>
         // Check for saved theme preference or use system preference
         function initTheme() {
@@ -283,6 +472,19 @@
             setTimeout(() => {
                 document.documentElement.classList.remove('theme-init');
             }, 100);
+        }
+
+        // Switch between allocation tabs
+        function switchAllocationTab(tabName) {
+            // Update tab buttons
+            document.getElementById('tab-charts').classList.remove('tab-active');
+            document.getElementById('tab-plot').classList.remove('tab-active');
+            document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+
+            // Update tab content
+            document.getElementById('tab-content-charts').classList.add('hidden');
+            document.getElementById('tab-content-plot').classList.add('hidden');
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
         }
 
         // Initialize theme before DataTables

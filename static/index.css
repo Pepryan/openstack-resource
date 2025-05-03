@@ -1,3 +1,21 @@
+/* Base variables for light theme */
+:root {
+    /* Backgrounds */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f4f6;
+    --bg-tertiary: #e5e7eb;
+
+    /* Text colors */
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+
+    /* Border colors */
+    --border-color: #d1d5db;
+
+    /* Accent colors */
+    --accent-color: #3b82f6;
+}
+
 /* Custom CSS for dark mode */
 [data-theme='dark'] {
     /* Backgrounds */
@@ -12,6 +30,9 @@
 
     /* Border colors */
     --border-color: #404040;
+
+    /* Accent colors */
+    --accent-color: #3b82f6;
 }
 
 [data-theme='dark'] body {
@@ -334,4 +355,144 @@ table tbody td {
 
 [data-theme='dark'] .table-container thead tr {
     background-color: #374151;
+}
+
+/* Allocation visualization styles */
+.stat-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .stat-card {
+    background-color: var(--bg-tertiary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] .stat-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Tabs styling */
+.tabs {
+    display: flex;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.tab {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+}
+
+.tab:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+.tab-active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.tab-active:hover {
+    background-color: #2563eb;
+    color: white;
+}
+
+[data-theme='dark'] .tabs {
+    background-color: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .tab:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Loading spinner */
+.spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid rgba(59, 130, 246, 0.3);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Plot image container */
+.plot-image-container {
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.plot-image-container:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='dark'] .plot-image-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .plot-image-container:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Text colors */
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+/* Message styling */
+#no-host-selected-message,
+#no-instances-message {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] #no-host-selected-message,
+[data-theme='dark'] #no-instances-message {
+    background-color: var(--bg-tertiary);
+    border-color: #4a4a5e;
+}
+
+/* Utility classes */
+.hidden:not(nav):not(nav *) {
+    display: none !important;
 }
