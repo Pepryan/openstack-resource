@@ -91,9 +91,11 @@
                         <th class="border">Image Name</th>
                         <th class="border">Flavor Name</th>
                         <th class="border">Host</th>
+                        <th class="border">Tier</th>
                         <th class="border">vCPU</th>
                         <th class="border">RAM</th>
                         <th class="border">Attached Volumes</th>
+                        <th class="border">Total Disk</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -108,9 +110,11 @@
                         <td class="border">{{ instance["Image Name"] }}</td>
                         <td class="border">{{ instance["Flavor Name"] }}</td>
                         <td class="border">{{ instance["Host"] }}</td>
+                        <td class="border">{{ instance["Tier"] }}</td>
                         <td class="border">{{ instance["CPU"] }}</td>
                         <td class="border">{{ instance["RAM"] }}</td>
                         <td class="border">{{ instance["Volumes"] | safe }}</td>
+                        <td class="border">{{ instance["Total Disk"] }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -188,7 +192,7 @@
                                     .draw();
                             });
                         // input.css('max-width', '100px');
-                        if (originalHeaderText === 'Project' || originalHeaderText === 'vCPU' || originalHeaderText === 'RAM') {
+                        if (originalHeaderText === 'Project' || originalHeaderText === 'vCPU' || originalHeaderText === 'RAM' || originalHeaderText === 'Total Disk' || originalHeaderText === 'Tier') {
                             input.css('max-width', '60px');
                         }
                     });

@@ -15,13 +15,13 @@ from routes import instance_bp
 def get_instances():
     """
     Get instances on a specific compute host or a specific instance
-    
+
     Returns:
         Response: JSON response with instances
     """
     # Load data
     data = pd.read_csv(config.AIO_CSV_PATH, delimiter=config.CSV_DELIMITER)
-    
+
     host = request.args.get('host')
     instance_id = request.args.get('id')
 
@@ -41,22 +41,22 @@ def get_instances():
 def get_destination_host_instances():
     """
     Get instances on a specific destination compute host
-    
+
     Returns:
         Response: JSON response with instances and vCPU information
     """
     # Load data
     data = pd.read_csv(config.AIO_CSV_PATH, delimiter=config.CSV_DELIMITER)
-    
+
     host = request.args.get('host')
     instances = data[data['Host'] == host][['Name', 'CPU']]
     instances_json = instances.to_dict(orient='records')
-    
+
     vcpus_used = DataHost.get_vcpus_used(host)
-    vcpus_ratio = DataHost.get_vcpus_ratio(host)    
+    vcpus_ratio = DataHost.get_vcpus_ratio(host)
     vcpus_total = vcpus_ratio * config.CORE_COMPUTE
     vcpus_free = vcpus_total - vcpus_used
-    
+
     return jsonify({
         'instances': instances_json,
         'vcpus_total': vcpus_total,
@@ -69,17 +69,17 @@ def get_destination_host_instances():
 def get_instance_vcpus_used():
     """
     Get vCPUs used by a specific instance
-    
+
     Returns:
         Response: JSON response with vCPUs used
     """
     # Load data
     data = pd.read_csv(config.AIO_CSV_PATH, delimiter=config.CSV_DELIMITER)
-    
+
     instance_name = request.args.get('name')
     instance_host = data[data['Name'] == instance_name]['Host'].values[0]
     vcpus_used_instance = int(data[data['Name'] == instance_name]['CPU'].values[0])
-    
+
     return jsonify(vcpus_used_instance)
 
 @instance_bp.route('/generate_vcpu_allocation_plot', methods=['GET'])
@@ -87,7 +87,7 @@ def get_instance_vcpus_used():
 def generate_vcpu_allocation_plot():
     """
     Generate a vCPU allocation plot for a specific destination host
-    
+
     Returns:
         Response: JSON response with image path
     """
@@ -96,18 +96,18 @@ def generate_vcpu_allocation_plot():
     longest_string = ""
     vcpu_claimed = []
     vcpu_labels = []
-    
+
     with open(file_path, 'r', newline='') as csvfile:
-        csvreader = csv.reader(csvfile, delimiter='|')  
-        next(csvreader)  
+        csvreader = csv.reader(csvfile, delimiter='|')
+        next(csvreader)
         for row in csvreader:
-            if destination_host == row[10]:  
-                if row[3] == 'ACTIVE' or row[3] == 'SHUTOFF':  
-                    vcpu_labels.append(f"{row[3][0]}_{row[0]}__{row[2]}")  
-                    vcpu_claimed.append(int(row[11]))  
+            if destination_host == row[10]:
+                if row[3] == 'ACTIVE' or row[3] == 'SHUTOFF':
+                    vcpu_labels.append(f"{row[3][0]}_{row[0]}__{row[2]}")
+                    vcpu_claimed.append(int(row[11]))
                     if len(f"{row[0]}__{row[2]}") > len(longest_string):
                         longest_string = f"{row[0]}__{row[2]}"
-    
+
     with open(config.RATIO_FILE_PATH, 'r') as ratio_file:
         for line in ratio_file:
             parts = line.strip().split(',')
@@ -115,27 +115,27 @@ def generate_vcpu_allocation_plot():
                 ratio_value = float(parts[1])
                 host_size = config.CORE_COMPUTE
                 host_size = host_size * ratio_value
-                break  
-    
+                break
+
     total_vcpus = sum(vcpu_claimed)
     num_cols = 16
     small_square_size = host_size / num_cols
     num_rows = (total_vcpus + num_cols - 1) // num_cols
-    
+
     colors = plt.cm.get_cmap('tab20', len(vcpu_claimed))
-    
+
     fig, ax = plt.subplots()
-    
+
     x_pos = 0
     y_pos = 0
     legend_handles = []
     unique_labels = set(vcpu_labels)
-    
+
     for i, (vcpu, label) in enumerate(zip(vcpu_claimed, vcpu_labels)):
         color = colors(i)
         for _ in range(vcpu):
             rect = plt.Rectangle((x_pos, y_pos), small_square_size, small_square_size, color=color, alpha=0.7)
-            ax.add_patch(rect)   
+            ax.add_patch(rect)
             ax.text(x_pos + small_square_size / 2, y_pos + small_square_size / 2, str(vcpu),
                     color='white', ha='center', va='center')
             x_pos += small_square_size
@@ -145,8 +145,8 @@ def generate_vcpu_allocation_plot():
         if label in unique_labels:
             legend_handles.append(rect)
             unique_labels.remove(label)
-    
-    remaining_squares = int(host_size - total_vcpus)  
+
+    remaining_squares = int(host_size - total_vcpus)
     for _ in range(remaining_squares):
         rect = plt.Rectangle((x_pos, y_pos), small_square_size, small_square_size, color='gray', alpha=0.7)
         ax.add_patch(rect)
@@ -172,7 +172,7 @@ def generate_vcpu_allocation_plot():
     image_path = f'static/results/{destination_host}.png'
     plt.title(destination_host)
     plt.savefig(image_path, bbox_inches='tight')
-    
+
     response_data = {
         'image_path': f"static/results/{destination_host}.png",
     }
@@ -183,12 +183,12 @@ def generate_vcpu_allocation_plot():
 def list_all_instances():
     """
     List all instances
-    
+
     Returns:
         Response: Rendered template with instances
     """
     aio_last_updated = get_file_last_updated(config.AIO_CSV_PATH)
-    
+
     data = pd.read_csv(config.AIO_CSV_PATH, delimiter=config.CSV_DELIMITER)
     data_list = data.to_dict(orient='records')
 
@@ -219,13 +219,45 @@ def list_all_instances():
     # Update the instance data with volume information
     for instance in data_list:
         server_id = instance["ID"]
+        total_disk_size = 0
+
+        # Get compute tier information based on host
+        host = instance["Host"]
+        tier = "Unknown"
+        with open(config.RATIO_FILE_PATH, 'r') as ratio_file:
+            for line in ratio_file:
+                parts = line.strip().split(',')
+                if len(parts) == 3 and parts[0].strip() == host:
+                    ratio_value = float(parts[1])
+                    if ratio_value == 1:
+                        tier = "1:1"
+                    elif ratio_value == 4:
+                        tier = "1:4"
+                    elif ratio_value == 8:
+                        tier = "1:8"
+                    break
+
+        instance["Tier"] = tier
+
         if server_id in volume_info_by_server:
             volumes = volume_info_by_server[server_id]
             volumes.sort(key=lambda vol: vol["device"])
             volume_info = [f"{vol['name']} (Size: {vol['size']}, Device: {vol['device']})" for vol in volumes]
             instance["Volumes"] = "<br>".join(volume_info)
+
+            # Calculate total disk size
+            for vol in volumes:
+                size = vol.get("size", 0)
+                if isinstance(size, (int, float)):
+                    total_disk_size += size
         else:
             instance["Volumes"] = '-'
+
+        # Convert total disk size to GB with 2 decimal places
+        if total_disk_size > 0:
+            instance["Total Disk"] = f"{total_disk_size} GB"
+        else:
+            instance["Total Disk"] = "-"
 
     # Clean up instance data
     data_list = clean_instance_data(data_list)

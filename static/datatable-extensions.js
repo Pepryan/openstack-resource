@@ -264,9 +264,11 @@ function applyDefaultColumnWidths(table) {
         defaultWidths[6] = 150; // Image Name
         defaultWidths[7] = 150; // Flavor Name
         defaultWidths[8] = 80;  // Host
-        defaultWidths[9] = 60;  // vCPU
-        defaultWidths[10] = 60; // RAM
-        defaultWidths[11] = 300; // Attached Volumes
+        defaultWidths[9] = 60;  // Tier
+        defaultWidths[10] = 60; // vCPU
+        defaultWidths[11] = 60; // RAM
+        defaultWidths[12] = 300; // Attached Volumes
+        defaultWidths[13] = 100; // Total Disk
     } else if (window.location.pathname.includes('volumes') || window.location.pathname === '/volumes') {
         // Volumes page default column widths
         defaultWidths[0] = 200; // ID
