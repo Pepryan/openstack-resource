@@ -151,9 +151,7 @@
                             <td class="border">
                                 {% if volume["Attached to"] %}
                                     {% for attachment in volume["Attached to"] %}
-                                        <a href="{{ url_for('instance.list_all_instances', id=attachment.server_id) }}" class="clickable-instance-id">
-                                            Instance ID: {{ attachment.server_id }}
-                                        </a>, Device: {{ attachment.device }}, Attached at: {{ attachment.attached_at }}
+                                        <a href="{{ url_for('instance.list_all_instances', id=attachment.server_id) }}" class="clickable-instance-id">Instance ID: {{ attachment.server_id }}</a>, Device: {{ attachment.device }}{% if attachment.attached_at %}, Attached at: {{ attachment.attached_at }}{% endif %}
                                     {% endfor %}
                                 {% else %}
                                     Empty Data

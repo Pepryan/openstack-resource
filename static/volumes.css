@@ -178,6 +178,7 @@
     text-decoration: underline;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .clickable-instance-id:hover {
@@ -193,4 +194,9 @@
 [data-theme='dark'] .clickable-instance-id:hover {
     color: var(--primary-dark);
     text-decoration: underline;
+}
+
+/* Ensure proper formatting of attachment information */
+#dataTable td:last-child {
+    white-space: nowrap;
 }
