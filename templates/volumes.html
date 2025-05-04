@@ -4,118 +4,202 @@
     <title>List All Volumes</title>
     <!-- Early theme initialization to prevent flash of wrong theme -->
     <script src="static/theme-init.js"></script>
-    <link href="static/DataTables/datatables.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="static/tailwind.min.css">
+    <!-- Critical CSS first for faster rendering -->
     <link rel="stylesheet" href="static/modern-theme.css">
     <link rel="stylesheet" href="static/volumes.css">
+    <!-- Defer non-critical CSS -->
+    <link href="static/DataTables/datatables.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="static/tailwind.min.css" media="print" onload="this.media='all'">
+    <!-- Preload critical JavaScript -->
+    <link rel="preload" href="static/chartjs/chart-2.9.4.min.js" as="script">
+    <script src="static/chartjs/chart-2.9.4.min.js" defer></script>
 </head>
 <body>
     {% include 'navbar.html' %}
     <div class="main-content">
         <main class="mx-4 mt-8">
-            <h1 class="text-2xl font-bold mb-4">List All Volumes</h1>
+            <h1 class="text-2xl font-bold mb-4">Volume Storage Dashboard</h1>
             <p class="mb-4">Last Updated: {{ stats.last_updated }}</p>
 
-            <!-- Volume Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <!-- Card 1: Total Volume & Usage -->
-                <div class="card p-6 rounded-xl">
-                    <h3 class="text-lg font-semibold mb-3">Total Volume Size</h3>
-                    <div class="space-y-2">
-                        <p class="text-3xl font-bold">{{ stats.current_volume_tb }} TB</p>
-                        <p class="text-lg">Current Usage: {{ stats.current_usage_percentage }}%</p>
-                        <p>Total Volumes: {{ stats.total_volumes }}</p>
-                        <p>Average Size: {{ stats.average_volume_size }} GB</p>
-                    </div>
-                </div>
+            <!-- Volume Overview Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Overview Card -->
+                <div class="card p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Storage Overview</h3>
 
-                <!-- Card 2: Status Distribution -->
-                <div class="card p-6 rounded-xl">
-                    <h3 class="text-lg font-semibold mb-3">Status Distribution</h3>
-                    <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                        <div>
-                            <p>In Use: {{ stats.volumes_in_use }}</p>
-                            <p class="text-sm text-gray-600">({{ stats.in_use_percentage }}%)</p>
+                    <!-- Usage Progress Bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Storage Usage</span>
+                            <span class="text-sm font-medium">{{ stats.current_usage_percentage }}%</span>
                         </div>
-                        <div>
-                            <p>Available: {{ stats.volumes_available }}</p>
-                            <p class="text-sm text-gray-600">({{ stats.available_percentage }}%)</p>
+                        <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
+                            <div class="h-4 rounded-full usage-progress-bar"
+                                 style="width: {{ stats.current_usage_percentage }}%"
+                                 data-usage="{{ stats.current_usage_percentage }}"></div>
                         </div>
-                        <div>
-                            <p>Creating: {{ stats.volumes_creating }}</p>
-                        </div>
-                        <div>
-                            <p>Error: {{ stats.volumes_error }}</p>
-                        </div>
-                        <div>
-                            <p>Reserved: {{ stats.volumes_reserved }}</p>
+                        <div class="flex justify-between mt-2 text-xs text-gray-500">
+                            <span>{{ stats.current_volume_tb }} TB used</span>
+                            <span>{{ stats.ceph_total_size_tb }} TB total</span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Card 3: Combined Properties & Size Distribution -->
-                <div class="card p-6 rounded-xl">
-                    <div class="space-y-4">
-                        <!-- Volume Properties Section -->
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Volume Properties</h3>
-                            <div class="grid grid-cols-2 gap-x-4">
-                                <p>Attached: {{ stats.attached_volumes }}</p>
-                                <p>({{ stats.attached_percentage }}%)</p>
-                                <p>Unattached: {{ stats.unattached_volumes }}</p>
-                            </div>
+                    <!-- Key Stats -->
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div class="text-center p-3 bg-opacity-10 rounded-lg">
+                            <p class="text-sm">Total Volume</p>
+                            <p class="text-xl font-bold">{{ stats.current_volume_tb }} TB</p>
                         </div>
-
-                        <!-- Size Distribution Section -->
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Size Distribution</h3>
-                            <div class="grid grid-cols-2 gap-x-4">
-                                <p>≤ 100GB:</p>
-                                <p>{{ stats.volumes_under_100gb }}</p>
-                                <p>100GB-500GB:</p>
-                                <p>{{ stats.volumes_100gb_to_500gb }}</p>
-                                <p>500GB-1TB:</p>
-                                <p>{{ stats.volumes_500gb_to_1tb }}</p>
-                                <p>> 1TB:</p>
-                                <p>{{ stats.volumes_over_1tb }}</p>
-                            </div>
+                        <div class="text-center p-3 bg-opacity-10 rounded-lg">
+                            <p class="text-sm">Total Volumes</p>
+                            <p class="text-xl font-bold">{{ stats.total_volumes }}</p>
+                        </div>
+                        <div class="text-center p-3 bg-opacity-10 rounded-lg">
+                            <p class="text-sm">Attached</p>
+                            <p class="text-xl font-bold">{{ stats.attached_volumes }}</p>
+                            <p class="text-xs">({{ stats.attached_percentage }}%)</p>
+                        </div>
+                        <div class="text-center p-3 bg-opacity-10 rounded-lg">
+                            <p class="text-sm">Avg. Size</p>
+                            <p class="text-xl font-bold">{{ stats.average_volume_size }} GB</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 4: Project Distribution -->
-                <div class="card p-6 rounded-xl">
-                    <h3 class="text-lg font-semibold mb-3">Project Distribution</h3>
-                    <div class="space-y-2">
-                        {% for project, count in stats.projects.items() %}
+                <!-- Status Distribution Chart -->
+                <div class="card p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Status Distribution</h3>
+                    <div class="chart-container" style="position: relative; height: 220px;">
+                        <!-- Loading indicator -->
+                        <div class="chart-loading-indicator" id="status-chart-loading">
+                            <div class="spinner"></div>
+                            <p>Loading chart...</p>
+                        </div>
+                        <canvas id="status-chart"
+                               data-in-use="{{ stats.volumes_in_use }}"
+                               data-available="{{ stats.volumes_available }}"
+                               data-creating="{{ stats.volumes_creating }}"
+                               data-error="{{ stats.volumes_error }}"
+                               data-reserved="{{ stats.volumes_reserved }}"></canvas>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
                         <div class="flex justify-between">
-                            <span>{{ project }}:</span>
-                            <span>{{ count }}</span>
+                            <span>In Use:</span>
+                            <span>{{ stats.volumes_in_use }} ({{ stats.in_use_percentage }}%)</span>
                         </div>
-                        {% endfor %}
+                        <div class="flex justify-between">
+                            <span>Available:</span>
+                            <span>{{ stats.volumes_available }} ({{ stats.available_percentage }}%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Size Distribution Chart -->
+                <div class="card p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Size Distribution</h3>
+                    <div class="chart-container" style="position: relative; height: 220px;">
+                        <!-- Loading indicator -->
+                        <div class="chart-loading-indicator" id="size-chart-loading">
+                            <div class="spinner"></div>
+                            <p>Loading chart...</p>
+                        </div>
+                        <canvas id="size-distribution-chart"
+                               data-under100gb="{{ stats.volumes_under_100gb }}"
+                               data-from100gb-to500gb="{{ stats.volumes_100gb_to_500gb }}"
+                               data-from500gb-to1tb="{{ stats.volumes_500gb_to_1tb }}"
+                               data-over1tb="{{ stats.volumes_over_1tb }}"></canvas>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+                        <div class="flex justify-between">
+                            <span>≤ 100GB:</span>
+                            <span>{{ stats.volumes_under_100gb }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>101-500GB:</span>
+                            <span>{{ stats.volumes_100gb_to_500gb }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>501-1000GB:</span>
+                            <span>{{ stats.volumes_500gb_to_1tb }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>> 1000GB:</span>
+                            <span>{{ stats.volumes_over_1tb }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Distribution Chart -->
+                <div class="card p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Project Distribution</h3>
+                    <div class="chart-container" style="position: relative; height: 220px;">
+                        <!-- Loading indicator -->
+                        <div class="chart-loading-indicator" id="project-chart-loading">
+                            <div class="spinner"></div>
+                            <p>Loading chart...</p>
+                        </div>
+                        <canvas id="project-distribution-chart"></canvas>
+                    </div>
+
+                    <!-- View All Projects Toggle -->
+                    <div class="text-center mt-4">
+                        {% if stats.projects and stats.projects.items()|list|length > 0 %}
+                            <button id="toggle-all-projects" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                                View All Projects
+                            </button>
+
+                            <!-- All Projects List (Hidden by Default) -->
+                            <div id="all-projects-list" class="mt-4 text-sm max-h-60 overflow-y-auto" style="display: none;">
+                                <div class="grid grid-cols-2 gap-2">
+                                    {% set all_projects = stats.projects.items()|list|sort(reverse=true, attribute='1') %}
+                                    {% for project, count in all_projects %}
+                                    <div class="flex justify-between">
+                                        <span class="project-name">{{ project }}</span>
+                                        <span>{{ count }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
             <!-- Volume Calculator -->
-            <div class="card p-6 rounded-lg mb-6"
+            <div class="card p-6 rounded-xl shadow-md mb-6 volume-calculator"
                  data-current-volume="{{ stats.current_volume_tb|default(0)|float }}"
                  data-erasure-code="{{ stats.ceph_erasure_code|default(1.5)|float }}"
                  data-total-size="{{ stats.ceph_total_size_tb|default(5700)|float }}">
                 <h2 class="text-xl font-semibold mb-4">Volume Usage Calculator</h2>
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <h3 class="font-medium mb-2">Current Configuration</h3>
-                        <p>Current Total Volume: {{ stats.current_volume_tb }} TB</p>
-                        <p>Ceph Erasure Code: {{ stats.ceph_erasure_code }}x</p>
-                        <p>Ceph Total Size: {{ stats.ceph_total_size_tb }} TB</p>
+                        <h3 class="font-medium mb-3">Current Configuration</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>Current Total Volume:</span>
+                                <span class="font-medium">{{ stats.current_volume_tb }} TB</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Ceph Erasure Code:</span>
+                                <span class="font-medium">{{ stats.ceph_erasure_code }}x</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Ceph Total Size:</span>
+                                <span class="font-medium">{{ stats.ceph_total_size_tb }} TB</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Current Usage:</span>
+                                <span class="font-medium">{{ stats.current_usage_percentage }}%</span>
+                            </div>
+                        </div>
                     </div>
+
                     <div>
-                        <h3 class="font-medium mb-2">Usage Prediction</h3>
+                        <h3 class="font-medium mb-3">Usage Prediction</h3>
                         <form id="volumeCalc" class="space-y-4">
                             <div>
-                                <label class="block text-sm">New Volume Size (TB)</label>
-                                <input type="number" step="0.1" class="w-full p-2"
+                                <label class="block text-sm mb-1">New Volume Size (TB)</label>
+                                <input type="number" step="0.1" min="0" class="w-full p-2 rounded"
                                        id="newVolume" value="0">
                             </div>
                             <div>
@@ -123,6 +207,40 @@
                                    class="font-bold">{{ stats.current_usage_percentage }}%</span></p>
                             </div>
                         </form>
+                    </div>
+
+                    <div>
+                        <h3 class="font-medium mb-3">Predicted Usage</h3>
+                        <div class="mb-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium">Current Usage</span>
+                                <span class="text-sm font-medium">{{ stats.current_usage_percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
+                                <div class="h-4 rounded-full usage-progress-bar"
+                                     style="width: {{ stats.current_usage_percentage }}%"
+                                     data-usage="{{ stats.current_usage_percentage }}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium">Predicted Usage</span>
+                                <span class="text-sm font-medium" id="calculator-percentage">{{ stats.current_usage_percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
+                                <div class="h-4 rounded-full calculator-progress-bar"
+                                     id="calculator-progress-bar"
+                                     style="width: {{ stats.current_usage_percentage }}%"
+                                     data-usage="{{ stats.current_usage_percentage }}"></div>
+                            </div>
+                        </div>
+
+                        <p class="text-sm mt-4">
+                            <span class="inline-block w-3 h-3 rounded-full bg-blue-500 mr-1"></span> &lt; 75%: Safe
+                            <span class="inline-block w-3 h-3 rounded-full bg-yellow-500 mx-1"></span> 75-90%: Warning
+                            <span class="inline-block w-3 h-3 rounded-full bg-red-500 ml-1"></span> &gt; 90%: Critical
+                        </p>
                     </div>
                 </div>
             </div>
@@ -165,111 +283,122 @@
         </main>
     </div>
 
-    <script src="static/DataTables/datatables.min.js"></script>
-    <script src="static/datatable-extensions.js"></script>
+    <!-- Load scripts with performance optimizations -->
+    <script src="static/DataTables/datatables.min.js" defer></script>
+    <script src="static/datatable-extensions.js" defer></script>
+    <script src="static/volumes-charts.js" defer></script>
+    <!-- Add loading indicator styles -->
+    <style>
+        .chart-loading-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+
+        [data-theme='dark'] .chart-loading-indicator {
+            background-color: rgba(18, 18, 18, 0.7);
+        }
+
+        .chart-loading-indicator p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-light);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .chart-loading-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+
     <script>
         // Remove the theme-init class after a short delay to re-enable transitions
-        setTimeout(() => {
-            document.documentElement.classList.remove('theme-init');
-        }, 100);
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.documentElement.classList.remove('theme-init');
+            }, 100);
+        });
 
-        $(document).ready(function () {
-            $('#dataTable').DataTable({
-                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                buttons: ['colvis', 'pageLength', 'excel', 'print'],
-                dom: 'Bfrtip',
-                initComplete: function () {
-                    var table = this;
-                    this.api().columns().every(function () {
-                        var column = this;
-                        var header = $(column.header());
-                        var originalHeaderText = header.text();
-                        header.empty();
+        // Initialize DataTable after DOM is fully loaded
+        window.addEventListener('load', function() {
+            if (typeof $ !== 'undefined') {
+                // Initialize DataTable with performance optimizations
+                $('#dataTable').DataTable({
+                    "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                    "deferRender": true,      // Defer rendering for better performance
+                    "processing": true,       // Show processing indicator
+                    "autoWidth": false,       // Disable auto width calculation for better performance
+                    buttons: ['colvis', 'pageLength', 'excel', 'print'],
+                    dom: 'Bfrtip',
+                    initComplete: function () {
+                        var table = this;
+                        this.api().columns().every(function () {
+                            var column = this;
+                            var header = $(column.header());
+                            var originalHeaderText = header.text();
+                            header.empty();
 
-                        var headerContainer = $('<div class="header-container"></div>').appendTo(header);
-                        $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
-                        var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
-                            .appendTo(headerContainer)
-                            .on('mousedown', function(e) {
-                                // Prevent DataTables from capturing mousedown event
-                                e.stopPropagation();
-                            })
-                            .on('keydown', function(e) {
-                                // Handle Ctrl+A (or Cmd+A for Mac)
-                                if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {
+                            var headerContainer = $('<div class="header-container"></div>').appendTo(header);
+                            $('<div class="header-text">' + originalHeaderText + '</div>').appendTo(headerContainer);
+                            var input = $('<input type="text" placeholder="Search ' + originalHeaderText + '">')
+                                .appendTo(headerContainer)
+                                .on('mousedown', function(e) {
+                                    // Prevent DataTables from capturing mousedown event
                                     e.stopPropagation();
-                                    const self = this;
-                                    setTimeout(function() {
-                                        self.select();
-                                    }, 0);
-                                    return true;
-                                }
-                            })
-                            .on('click', function(e) {
-                                // Prevent event bubbling
-                                e.stopPropagation();
-                            })
-                            .on('keyup', function (e) {
-                                // Prevent keyup event from bubbling if it's part of Ctrl+A
-                                if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {
+                                })
+                                .on('keydown', function(e) {
+                                    // Handle Ctrl+A (or Cmd+A for Mac)
+                                    if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {
+                                        e.stopPropagation();
+                                        const self = this;
+                                        setTimeout(function() {
+                                            self.select();
+                                        }, 0);
+                                        return true;
+                                    }
+                                })
+                                .on('click', function(e) {
+                                    // Prevent event bubbling
                                     e.stopPropagation();
-                                    return;
-                                }
-                                const searchTerms = $(this).val().trim();
-                                const pattern = searchTerms.length ? searchTerms : '';
-                                column
-                                    .search(pattern, true, false)
-                                    .draw();
-                            });
-                    });
-                }
-            });
-
-            // Volume Calculator
-            const calculatorElement = document.querySelector('.card.p-6.rounded-lg');
-            if (calculatorElement) {
-                const volumeCalc = {
-                    currentVolume: parseFloat(calculatorElement.dataset.currentVolume) || 0,
-                    erasureCode: parseFloat(calculatorElement.dataset.erasureCode),
-                    totalSize: parseFloat(calculatorElement.dataset.totalSize),
-
-                    calculate: function(newVolume) {
-                        const total = this.currentVolume + (newVolume || 0);
-                        return ((total * this.erasureCode) / this.totalSize) * 100;
-                    },
-
-                    updateDisplay: function(value) {
-                        const usageElement = document.getElementById('predictedUsage');
-                        if (!usageElement) return;
-
-                        const usage = this.calculate(value);
-                        usageElement.textContent = usage.toFixed(2) + '%';
-
-                        // Remove existing color classes
-                        usageElement.classList.remove('text-red-600', 'text-yellow-600', 'text-green-600');
-
-                        // Add appropriate color class
-                        if (usage > 90) {
-                            usageElement.classList.add('text-red-600');
-                        } else if (usage > 75) {
-                            usageElement.classList.add('text-yellow-600');
-                        } else {
-                            usageElement.classList.add('text-green-600');
-                        }
+                                })
+                                .on('keyup', function (e) {
+                                    // Prevent keyup event from bubbling if it's part of Ctrl+A
+                                    if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {
+                                        e.stopPropagation();
+                                        return;
+                                    }
+                                    const searchTerms = $(this).val().trim();
+                                    const pattern = searchTerms.length ? searchTerms : '';
+                                    column
+                                        .search(pattern, true, false)
+                                        .draw();
+                                });
+                        });
                     }
-                };
-
-                // Add event listener to volume input
-                const volumeInput = document.getElementById('newVolume');
-                if (volumeInput) {
-                    volumeInput.addEventListener('input', function(e) {
-                        const value = parseFloat(this.value) || 0;
-                        volumeCalc.updateDisplay(value);
-                    });
-
-                    // Initialize with current values
-                    volumeCalc.updateDisplay(0);
-                }
+                });
             }
         });
     </script>

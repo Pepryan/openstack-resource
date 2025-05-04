@@ -9,10 +9,10 @@
 
 /* Scaling for volumes page */
 .main-content {
-    transform: scale(0.80);
+    transform: scale(0.85);
     transform-origin: top left;
-    width: 125%; /* 100/0.80 to compensate for the scale */
-    height: 125%; /* 100/0.80 to compensate for the scale */
+    width: 118%; /* 100/0.85 to compensate for the scale */
+    height: 118%; /* 100/0.85 to compensate for the scale */
     position: absolute;
 }
 
@@ -199,4 +199,149 @@
 /* Ensure proper formatting of attachment information */
 #dataTable td:last-child {
     white-space: nowrap;
+}
+
+/* Chart container styles */
+.chart-container {
+    position: relative;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+/* Progress bar styles */
+.usage-progress-bar, .calculator-progress-bar, .project-bar {
+    transition: width 0.5s ease-in-out, background-color 0.3s ease;
+    background-color: #3b82f6; /* Default blue */
+}
+
+/* Progress bar colors based on usage */
+.usage-progress-bar[data-usage^="9"],
+.usage-progress-bar[data-usage="100"],
+.calculator-progress-bar[data-usage^="9"],
+.calculator-progress-bar[data-usage="100"] {
+    background-color: #ef4444; /* Red for >90% */
+}
+
+.usage-progress-bar[data-usage^="8"],
+.usage-progress-bar[data-usage^="7"],
+.calculator-progress-bar[data-usage^="8"],
+.calculator-progress-bar[data-usage^="7"] {
+    background-color: #f59e0b; /* Yellow for 70-90% */
+}
+
+/* Project bar colors */
+.project-bar[data-index="0"] { background-color: #3b82f6; } /* Blue */
+.project-bar[data-index="1"] { background-color: #10b981; } /* Green */
+.project-bar[data-index="2"] { background-color: #f59e0b; } /* Yellow */
+.project-bar[data-index="3"] { background-color: #ef4444; } /* Red */
+.project-bar[data-index="4"] { background-color: #8b5cf6; } /* Purple */
+.project-bar[data-index="5"] { background-color: #ec4899; } /* Pink */
+.project-bar[data-index="6"] { background-color: #06b6d4; } /* Cyan */
+.project-bar[data-index="7"] { background-color: #f97316; } /* Orange */
+.project-bar[data-index="8"] { background-color: #14b8a6; } /* Teal */
+.project-bar[data-index="9"] { background-color: #a855f7; } /* Violet */
+
+/* Project name truncation */
+.project-name {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+/* Card styles for chart containers */
+.card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .card {
+    background-color: var(--bg-secondary);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Gauge chart text styles */
+#usage-gauge-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* Stat box styles */
+.bg-opacity-10 {
+    background-color: rgba(59, 130, 246, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .bg-opacity-10 {
+    background-color: rgba(59, 130, 246, 0.15);
+}
+
+/* Volume calculator styles */
+.volume-calculator input[type="number"] {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .volume-calculator input[type="number"] {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+/* Chart legend styles */
+[data-theme='dark'] .chart-container canvas {
+    filter: brightness(0.95);
+}
+
+/* Dark mode progress bar styles */
+[data-theme='dark'] .bg-gray-200 {
+    background-color: #374151; /* dark gray for dark mode */
+}
+
+[data-theme='dark'] .text-gray-500 {
+    color: #9ca3af; /* lighter gray for text in dark mode */
+}
+
+/* Improve text visibility in dark mode */
+[data-theme='dark'] .text-sm,
+[data-theme='dark'] .font-medium,
+[data-theme='dark'] .project-name,
+[data-theme='dark'] .chart-container canvas + div ul li span {
+    color: #e5e7eb; /* Light gray for better visibility */
+}
+
+[data-theme='dark'] #toggle-all-projects {
+    color: #93c5fd; /* Lighter blue for better visibility */
+}
+
+[data-theme='dark'] #toggle-all-projects:hover {
+    color: #bfdbfe; /* Even lighter blue on hover */
+}
+
+/* Fix chart legend text in dark mode */
+[data-theme='dark'] .chartjs-render-monitor + div ul li {
+    color: #e5e7eb !important;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px !important;
+    }
+
+    .grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .main-content {
+        transform: scale(1);
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
 }
