@@ -598,8 +598,38 @@ def list_all_instances():
         if server_id in volume_info_by_server:
             volumes = volume_info_by_server[server_id]
             volumes.sort(key=lambda vol: vol["device"])
-            volume_info = [f"{vol['name']} (Size: {vol['size']}, Device: {vol['device']})" for vol in volumes]
-            instance["Volumes"] = "<br>".join(volume_info)
+
+            # Create a clean format for CSV/Excel export
+            csv_volume_info = []
+            for vol in volumes:
+                device = vol["device"].replace("/dev/", "")  # Remove /dev/ prefix for cleaner display
+                # Format for better Excel readability - use semicolons for volume separation and commas for properties
+                csv_volume_info.append(f"{device}, {vol['name']}, {vol['size']}GB")
+
+            # Store the CSV-friendly format in a separate field for export
+            # Use semicolons to separate volumes, which works better in Excel
+            instance["Volumes_CSV"] = "; ".join(csv_volume_info)
+
+            # Create HTML format for display with better structure
+            html_volume_info = []
+            for vol in volumes:
+                device = vol["device"].replace("/dev/", "")  # Remove /dev/ prefix for cleaner display
+
+                # Format the volume name to handle long names better
+                vol_name = vol['name']
+                vol_size = vol['size']
+
+                # Create a structured HTML layout for each volume
+                html_volume_info.append(
+                    f"<div class='volume-item'>"
+                    f"<span class='volume-device'>{device}</span>"
+                    f"<span class='volume-name'>{vol_name}</span>"
+                    f"<span class='volume-size'>{vol_size} GB</span>"
+                    f"</div>"
+                )
+
+            # Join with no breaks for a more compact display
+            instance["Volumes"] = "".join(html_volume_info)
 
             # Calculate total disk size
             for vol in volumes:
@@ -608,6 +638,7 @@ def list_all_instances():
                     total_disk_size += size
         else:
             instance["Volumes"] = '-'
+            instance["Volumes_CSV"] = '-'
 
         # Convert total disk size to GB with 2 decimal places
         if total_disk_size > 0:

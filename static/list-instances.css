@@ -228,3 +228,119 @@
     color: var(--text-primary);
 }
 
+/* ===== VOLUME DISPLAY STYLING ===== */
+/* Volume display styling */
+.volume-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 3px 5px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+    line-height: 1.3;
+}
+
+.volume-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.volume-item:hover {
+    background-color: rgba(128, 128, 128, 0.1);
+    border-radius: 3px;
+}
+
+.volume-device {
+    font-weight: bold;
+    margin-right: 6px;
+    color: var(--color-primary);
+    min-width: 40px;
+    display: inline-block;
+}
+
+.volume-name {
+    flex: 1;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    padding-right: 5px;
+}
+
+.volume-size {
+    font-weight: bold;
+    color: var(--color-secondary);
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+/* Make sure the volume column has a reasonable width */
+table.dataTable th:nth-child(13),
+table.dataTable td:nth-child(13) {
+    min-width: 250px;
+    max-width: 350px;
+    width: 300px !important;
+}
+
+/* Add scrolling for very long volume lists */
+table.dataTable td.volumes-cell {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Improve CSV export display */
+.csv-export-data {
+    display: none;
+}
+
+/* DataTables specific styling for better volume display */
+.dataTables_wrapper .dataTables_scroll {
+    clear: both;
+}
+
+/* Add a subtle highlight to the volumes column */
+table.dataTable td.volumes-cell {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Dark theme support */
+html[data-theme="dark"] table.dataTable td.volumes-cell {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Improve the display of volume items in the table */
+.volumes-cell .volume-item {
+    transition: background-color 0.2s ease;
+}
+
+/* Add a tooltip-like effect on hover */
+.volumes-cell .volume-item:hover {
+    background-color: rgba(var(--color-primary-rgb, 0, 123, 255), 0.1);
+}
+
+/* Volume responsive adjustments */
+@media (max-width: 768px) {
+    .volume-name {
+        max-width: 100px;
+    }
+
+    table.dataTable th:nth-child(13),
+    table.dataTable td:nth-child(13) {
+        min-width: 150px;
+    }
+
+    /* Stack the volume elements on small screens */
+    .volume-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 5px;
+    }
+
+    .volume-device {
+        margin-bottom: 2px;
+    }
+}

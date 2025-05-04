@@ -78,6 +78,16 @@
             </div>
         </div>
     </div>
+        <!-- Hidden container for CSV export data -->
+        <div id="csv-export-data" style="display: none;">
+            {% for instance in data_list %}
+            <div class="instance-csv-data"
+                 data-instance-id="{{ instance['ID'] }}"
+                 data-volumes-csv="{{ instance['Volumes_CSV']|default('-') }}">
+            </div>
+            {% endfor %}
+        </div>
+
         <div class="overflow-x-auto">
             <table id="dataTable" class="w-full border-collapse border" data-order="[]">
                 <thead>
@@ -113,7 +123,7 @@
                         <td class="border">{{ instance["Tier"] }}</td>
                         <td class="border">{{ instance["CPU"] }}</td>
                         <td class="border">{{ instance["RAM"] }}</td>
-                        <td class="border">{{ instance["Volumes"] | safe }}</td>
+                        <td class="border volumes-cell">{{ instance["Volumes"] | safe }}</td>
                         <td class="border">{{ instance["Total Disk"] }}</td>
                     </tr>
                     {% endfor %}
@@ -146,7 +156,65 @@
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                buttons: ['colvis', 'pageLength', 'excel', 'print'],
+                buttons: [
+                    'colvis',
+                    'pageLength',
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        title: 'OpenStack Instances Export',
+                        filename: 'openstack-instances-export',
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function (data, row, column, node) {
+                                    // For the Attached Volumes column (index 12), use the CSV-friendly format
+                                    if (column === 12) {
+                                        // Get the instance ID from the row
+                                        const tr = $(node).closest('tr');
+                                        const instanceId = tr.find('td:eq(1)').text().trim();
+
+                                        // Find the corresponding CSV data
+                                        const csvData = $('#csv-export-data').find(`.instance-csv-data[data-instance-id="${instanceId}"]`);
+                                        if (csvData.length) {
+                                            return csvData.attr('data-volumes-csv');
+                                        }
+                                    }
+                                    // For other columns, strip HTML tags
+                                    return data.replace(/<[^>]*>/g, '');
+                                }
+                            }
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV',
+                        title: 'OpenStack Instances Export',
+                        filename: 'openstack-instances-export',
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function (data, row, column, node) {
+                                    // For the Attached Volumes column (index 12), use the CSV-friendly format
+                                    if (column === 12) {
+                                        // Get the instance ID from the row
+                                        const tr = $(node).closest('tr');
+                                        const instanceId = tr.find('td:eq(1)').text().trim();
+
+                                        // Find the corresponding CSV data
+                                        const csvData = $('#csv-export-data').find(`.instance-csv-data[data-instance-id="${instanceId}"]`);
+                                        if (csvData.length) {
+                                            return csvData.attr('data-volumes-csv');
+                                        }
+                                    }
+                                    // For other columns, strip HTML tags
+                                    return data.replace(/<[^>]*>/g, '');
+                                }
+                            }
+                        }
+                    },
+                    'print'
+                ],
                 dom: 'Bfrtip',
                 initComplete: function () {
                     const table = this;
