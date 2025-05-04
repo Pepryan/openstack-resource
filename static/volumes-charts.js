@@ -408,30 +408,52 @@ function setupVolumeCalculator() {
                 return ((total * this.erasureCode) / this.totalSize) * 100;
             },
 
+            // Calculate maximum allowed new volume size to stay at or below 100% usage
+            getMaxAllowedVolume: function() {
+                // Formula: (totalSize / erasureCode) - currentVolume
+                return (this.totalSize / this.erasureCode) - this.currentVolume;
+            },
+
             updateDisplay: function(value) {
                 const usageElement = document.getElementById('predictedUsage');
                 if (!usageElement) return;
 
-                const newVolume = parseFloat(value) || 0;
-                const total = this.currentVolume + newVolume;
+                // Get the maximum allowed volume size
+                const maxAllowedVolume = this.getMaxAllowedVolume();
+
+                // Limit input value to prevent exceeding 100% usage
+                let newVolume = parseFloat(value) || 0;
+                if (newVolume > maxAllowedVolume) {
+                    newVolume = maxAllowedVolume;
+
+                    // Update input field with the limited value
+                    const newVolumeInput = document.getElementById('newVolume');
+                    if (newVolumeInput && newVolumeInput.value !== newVolume.toFixed(1)) {
+                        newVolumeInput.value = newVolume.toFixed(1);
+                    }
+                }
+
                 const usage = this.calculate(newVolume);
 
+                // Ensure usage doesn't exceed 100%
+                const displayUsage = Math.min(usage, 100);
+
                 // Update text display
-                usageElement.textContent = usage.toFixed(2) + '%';
-                usageElement.className = `font-bold ${getUsageTextColorClass(usage)}`;
+                usageElement.textContent = displayUsage.toFixed(2) + '%';
+                usageElement.className = `font-bold ${getUsageTextColorClass(displayUsage)}`;
 
                 // Update calculator progress bar
                 const progressBar = document.getElementById('calculator-progress-bar');
                 const percentageText = document.getElementById('calculator-percentage');
 
                 if (progressBar) {
-                    progressBar.style.width = usage.toFixed(2) + '%';
-                    progressBar.dataset.usage = usage.toFixed(2);
+                    progressBar.style.width = displayUsage.toFixed(2) + '%';
+                    progressBar.dataset.usage = displayUsage.toFixed(2);
 
                     // Update color based on usage
-                    if (usage > 90) {
+                    if (displayUsage > 90) {
                         progressBar.style.backgroundColor = '#ef4444'; // Red
-                    } else if (usage > 75) {
+                    } else if (displayUsage > 75) {
                         progressBar.style.backgroundColor = '#f59e0b'; // Yellow
                     } else {
                         progressBar.style.backgroundColor = '#3b82f6'; // Blue
@@ -439,7 +461,7 @@ function setupVolumeCalculator() {
                 }
 
                 if (percentageText) {
-                    percentageText.textContent = usage.toFixed(2) + '%';
+                    percentageText.textContent = displayUsage.toFixed(2) + '%';
                 }
             }
         };
@@ -447,9 +469,43 @@ function setupVolumeCalculator() {
         // Add event listener to input
         const newVolumeInput = document.getElementById('newVolume');
         if (newVolumeInput) {
+            // Set the max attribute to prevent exceeding 100% usage
+            const maxAllowedVolume = volumeCalc.getMaxAllowedVolume();
+            newVolumeInput.setAttribute('max', maxAllowedVolume.toFixed(1));
+
+            // Add a title attribute to show the max value on hover
+            newVolumeInput.setAttribute('title', `Maximum allowed value: ${maxAllowedVolume.toFixed(1)} TB (to stay at or below 100% usage)`);
+
+            // Set max attribute only
+
             newVolumeInput.addEventListener('input', function() {
                 const value = parseFloat(this.value) || 0;
+                const maxAllowed = volumeCalc.getMaxAllowedVolume();
+
+                // Provide visual feedback if value exceeds maximum
+                if (value > maxAllowed) {
+                    // Add a warning class to the input
+                    this.classList.add('border-red-500');
+                } else {
+                    // Remove warning class if value is valid
+                    this.classList.remove('border-red-500');
+                }
+
                 volumeCalc.updateDisplay(value);
+            });
+
+            // Add validation on blur to ensure the value doesn't exceed max
+            newVolumeInput.addEventListener('blur', function() {
+                const value = parseFloat(this.value) || 0;
+                const maxAllowed = volumeCalc.getMaxAllowedVolume();
+
+                if (value > maxAllowed) {
+                    this.value = maxAllowed.toFixed(1);
+                    volumeCalc.updateDisplay(maxAllowed);
+
+                    // Remove warning class since we've corrected the value
+                    this.classList.remove('border-red-500');
+                }
             });
 
             // Initialize with current value
