@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: openstack-resource
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./data:/app/data
+      - ./static/results:/app/static/results
+    environment:
+      - SECRET_KEY=febryan-mazfeb-fixed-secret-key-for-sessions-do-not-change
+      - DEBUG=False
+      - HOST=0.0.0.0
+      - PORT=5005
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
+    command: ["python", "-B", "app.py"]

@@ -1,4 +1,4 @@
-# OpenStack Resource Allocation Web 🚀
+# Aether - OpenStack Resource Manager 🚀
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.x-green?logo=flask)](https://flask.palletsprojects.com/)
@@ -6,7 +6,7 @@
 [![DataTables](https://img.shields.io/badge/DataTables-1.x-orange?logo=jquery)](https://datatables.net/)
 [![OpenStack](https://img.shields.io/badge/OpenStack-Cloud-red?logo=openstack)](https://www.openstack.org/)
 
-Welcome to OpenStack Resource Allocation Web - a lightweight, Python-powered solution for efficient OpenStack resource management and monitoring. This web application simplifies complex resource allocation tasks with an intuitive interface, powerful automation features, and real-time data visualization.
+Welcome to Aether - a lightweight, Python-powered solution for efficient OpenStack resource management and monitoring. Named after the fifth element in ancient philosophy that fills the "space" above us, Aether brings clarity to your cloud environment. This web application simplifies complex resource allocation tasks with an intuitive interface, powerful automation features, and real-time data visualization.
 
 ## 📑 Table of Contents
 
@@ -27,6 +27,7 @@ Welcome to OpenStack Resource Allocation Web - a lightweight, Python-powered sol
   - [Testing](#testing)
 - [Deployment](#-deployment)
   - [Production Setup](#production-setup)
+  - [Docker Deployment](#docker-deployment)
   - [Systemd Service](#systemd-service)
   - [Cron Jobs](#cron-jobs)
 - [Data Collection](#-data-collection)
@@ -79,6 +80,7 @@ Welcome to OpenStack Resource Allocation Web - a lightweight, Python-powered sol
   - No database required for simplicity and portability
 
 - **Deployment**:
+  - Docker containerization for consistent environments and easy deployment
   - Systemd service for application management and auto-restart
   - Cron jobs for automated data collection and synchronization
   - SSH for secure data transfer between collection and web servers
@@ -119,20 +121,20 @@ The application follows a modular, layered architecture designed for efficiency 
 
 ```bash
 # Cron job configuration example
-11 2-23/2 * * * /bin/bash /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.sh >> /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.log 2>&1
+11 2-23/2 * * * /bin/bash /home/ubuntu/workdir/scripts/aether/get-data-aio.sh >> /home/ubuntu/workdir/scripts/aether/get-data-aio.log 2>&1
 ```
 
 ## 📂 Project Structure
 
 ```
-openstack-resource/
+aether/
 ├── app.py                  # Main application entry point
 ├── config.py               # Application configuration
 ├── requirements.txt        # Python dependencies
 ├── get-data-aio.sh         # Main data collection script
 ├── check-placement.sh      # Placement verification script
 ├── check-instance-ids.sh   # Instance ID verification script
-├── openstack-resource.service  # Systemd service file
+├── aether.service          # Systemd service file
 ├── data/                   # Data directory (created at runtime)
 │   ├── aio.csv             # Instance data with project, flavor, and host info
 │   ├── allocation.txt      # Resource allocation data from hypervisors
@@ -195,8 +197,8 @@ openstack-resource/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/openstack-resource.git
-cd openstack-resource
+git clone https://github.com/Pepryan/openstack-resource.git aether
+cd aether
 ```
 
 2. Create and activate virtual environment:
@@ -287,15 +289,15 @@ Access the application at `http://localhost:5005`
 #### Production Mode
 ```bash
 # Copy the systemd service file
-sudo cp openstack-resource.service /etc/systemd/system/
+sudo cp aether.service /etc/systemd/system/
 
 # Edit the service file to match your installation path
-sudo vim /etc/systemd/system/openstack-resource.service
+sudo vim /etc/systemd/system/aether.service
 
 # Reload systemd, enable and start the service
 sudo systemctl daemon-reload
-sudo systemctl enable openstack-resource
-sudo systemctl start openstack-resource
+sudo systemctl enable aether
+sudo systemctl start aether
 ```
 
 Access the application at `http://your-server-ip:5005`
@@ -517,8 +519,8 @@ Manual testing should be performed for all components:
 
 1. Clone the repository on your production server:
    ```bash
-   git clone https://github.com/yourusername/openstack-resource.git /home/ubuntu/openstack-resource
-   cd /home/ubuntu/openstack-resource
+   git clone https://github.com/Pepryan/openstack-resource.git /home/ubuntu/aether
+   cd /home/ubuntu/aether
    ```
 
 2. Set up a virtual environment and install dependencies:
@@ -561,32 +563,227 @@ Manual testing should be performed for all components:
    chmod 640 data/users.json
    ```
 
+### Docker Deployment
+
+For easier deployment and environment consistency, you can use Docker:
+
+#### Docker and Docker Compose Version Requirements
+
+The application has been tested with the following versions:
+- Docker: v27.4.1 or newer
+- Docker Compose: v2.35.1 or newer (Docker Compose V2)
+
+> **Note**: Docker Compose V1 (using `docker-compose` command) may have compatibility issues with newer Docker versions. We recommend using Docker Compose V2 (using `docker compose` command without hyphen).
+
+#### Installing Docker Compose V2
+
+If you encounter compatibility issues with Docker Compose V1, install Docker Compose V2:
+
+```bash
+# For Ubuntu/Debian
+sudo apt-get update && sudo apt-get install -y docker-compose-plugin
+
+# Verify installation
+docker compose version
+```
+
+#### Docker Deployment Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Pepryan/openstack-resource.git aether
+   cd aether
+   ```
+
+2. Build and start the Docker container:
+   ```bash
+   # Using Docker Compose V2 (recommended)
+   docker compose up -d
+
+   # Or using Docker Compose V1 (legacy)
+   docker-compose up -d
+   ```
+
+3. Access the application at `http://your-server-ip:5005`
+
+#### Docker Configuration
+
+The Docker setup includes:
+
+- **Dockerfile**: Defines the container image with all dependencies
+- **docker-compose.yml**: Configures the application service with volumes and networking
+- **docker-entrypoint.sh**: Initializes the container environment
+- **docker-data-collector.sh**: Collects data from OpenStack and transfers it to the container
+
+#### Data Management in Docker
+
+The application uses two volume bindings to manage data:
+
+1. **Data Volume**: `./data:/app/data`
+   - Maps the local `data` directory to `/app/data` in the container
+   - Contains all OpenStack resource data (instances, volumes, flavors, etc.)
+   - This is where the application reads data from
+
+2. **Results Volume**: `./static/results:/app/static/results`
+   - Maps the local `static/results` directory to `/app/static/results` in the container
+   - Contains generated plots and visualization results
+   - This is where the application stores output files
+
+#### Data Collection with Docker
+
+When using Docker, the data collection process works as follows:
+
+1. On your OpenStack server, run the data collection script:
+   ```bash
+   # Make the script executable
+   chmod +x docker-data-collector.sh
+
+   # Run the script
+   ./docker-data-collector.sh
+   ```
+
+2. The script will:
+   - Collect data from OpenStack using the standard collection scripts
+   - Transfer the data directly to the Docker container using `docker cp`
+   - No need to manually restart the application
+
+#### Running in Different Environments
+
+To run the application in a different environment or server:
+
+1. **Option 1: Using Docker Hub (Recommended for Production)**
+
+   a. Build and push the image to Docker Hub:
+   ```bash
+   # Build the image
+   docker build -t yourusername/aether:latest .
+
+   # Push to Docker Hub
+   docker push yourusername/aether:latest
+   ```
+
+   b. On the target server, create the necessary directories:
+   ```bash
+   mkdir -p data static/results
+   ```
+
+   c. Create a docker-compose.yml file:
+   ```yaml
+   version: '3.8'
+
+   services:
+     app:
+       image: yourusername/aether:latest
+       container_name: openstack-resource
+       restart: unless-stopped
+       ports:
+         - "5005:5005"
+       volumes:
+         - ./data:/app/data
+         - ./static/results:/app/static/results
+       environment:
+         - SECRET_KEY=your-secure-secret-key
+         - DEBUG=False
+         - HOST=0.0.0.0
+         - PORT=5005
+   ```
+
+   d. Start the container:
+   ```bash
+   docker compose up -d
+   ```
+
+   e. Transfer initial data to the new environment:
+   ```bash
+   # Create a minimal users.json file
+   echo '{"admin": "admin"}' > data/users.json
+
+   # Transfer OpenStack data from your collection server
+   scp user@openstack-server:/path/to/data/* ./data/
+   ```
+
+2. **Option 2: Using Local Image Export/Import**
+
+   a. Save the Docker image to a file:
+   ```bash
+   docker save -o aether-image.tar yourusername/aether:latest
+   ```
+
+   b. Transfer the image file to the target server:
+   ```bash
+   scp aether-image.tar user@target-server:/path/to/destination/
+   ```
+
+   c. On the target server, load the image:
+   ```bash
+   docker load -i aether-image.tar
+   ```
+
+   d. Follow steps c-e from Option 1 to set up and run the container
+
+#### Data Management for Different Environments
+
+When running the application in a different environment, you have several options for data management:
+
+1. **Manual Data Transfer**:
+   - Copy your data files to the `data` directory on the new server
+   - The application will read data from this directory
+
+2. **Automated Data Collection**:
+   - Set up the `docker-data-collector.sh` script on your OpenStack server
+   - Configure it to point to your new Docker container
+   - Run it manually or via cron job to keep data updated
+
+3. **Sample Data for Testing**:
+   - For testing purposes, you can create sample data files as described in the Development Guide
+   - This allows you to test the application without an OpenStack environment
+
+#### Docker Management Commands
+
+```bash
+# Using Docker Compose V2 (recommended)
+
+# View application logs
+docker logs openstack-resource
+
+# Restart the container
+docker compose restart
+
+# Update the application
+git pull
+docker compose up -d --build
+
+# Using Docker Compose V1 (legacy)
+docker-compose restart
+docker-compose up -d --build
+```
+
 ### Systemd Service
 
 Create a systemd service for automatic startup and management:
 
 1. Create the service file:
    ```bash
-   sudo vim /etc/systemd/system/openstack-resource.service
+   sudo vim /etc/systemd/system/aether.service
    ```
 
 2. Add the following configuration:
    ```ini
    [Unit]
-   Description=OpenStack Resource Allocation Web Application
+   Description=Aether - OpenStack Resource Manager
    After=network.target
 
    [Service]
    Type=simple
    User=ubuntu
    Group=ubuntu
-   WorkingDirectory=/home/ubuntu/openstack-resource/
-   ExecStart=/home/ubuntu/openstack-resource/venv-opre/bin/python3 -B /home/ubuntu/openstack-resource/app.py
+   WorkingDirectory=/home/ubuntu/aether/
+   ExecStart=/home/ubuntu/aether/venv-opre/bin/python3 -B /home/ubuntu/aether/app.py
    Restart=on-failure
    RestartSec=5
    StandardOutput=journal
    StandardError=journal
-   SyslogIdentifier=openstack-resource
+   SyslogIdentifier=aether
    Environment="PYTHONUNBUFFERED=1"
 
    [Install]
@@ -622,7 +819,7 @@ Set up cron jobs for automated data collection:
 2. Add the following line to run every 2 hours:
    ```bash
    # Run data collection every 2 hours (at 11 minutes past the hour)
-   11 */2 * * * /bin/bash /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.sh >> /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.log 2>&1
+   11 */2 * * * /bin/bash /home/ubuntu/workdir/scripts/aether/get-data-aio.sh >> /home/ubuntu/workdir/scripts/aether/get-data-aio.log 2>&1
    ```
 
 3. Verify the cron job is scheduled:
@@ -632,7 +829,7 @@ Set up cron jobs for automated data collection:
 
 4. Check the log file after the first scheduled run:
    ```bash
-   tail -f /home/ubuntu/workdir/scripts/openstack-resource/get-data-aio.log
+   tail -f /home/ubuntu/workdir/scripts/aether/get-data-aio.log
    ```
 
 ### Nginx Reverse Proxy (Optional)
@@ -647,7 +844,7 @@ For production environments, it's recommended to use Nginx as a reverse proxy:
 
 2. Create a site configuration:
    ```bash
-   sudo vim /etc/nginx/sites-available/openstack-resource
+   sudo vim /etc/nginx/sites-available/aether
    ```
 
 3. Add the following configuration:
@@ -668,14 +865,34 @@ For production environments, it's recommended to use Nginx as a reverse proxy:
 
 4. Enable the site and restart Nginx:
    ```bash
-   sudo ln -s /etc/nginx/sites-available/openstack-resource /etc/nginx/sites-enabled/
+   sudo ln -s /etc/nginx/sites-available/aether /etc/nginx/sites-enabled/
    sudo nginx -t
    sudo systemctl restart nginx
    ```
 
 5. Access the application at `http://your-server-domain.com`
 
-## 📊 Data Collection
+## 📊 Data Collection and Management
+
+### Data Flow Architecture
+
+The application follows a specific data flow architecture:
+
+1. **Data Collection**: Scripts run on the OpenStack server to collect resource data
+2. **Data Transfer**: Collected data is transferred to the application server
+3. **Data Processing**: The application processes and visualizes the data
+4. **Data Storage**: Results are stored in the `static/results` directory
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  OpenStack API  │────▶│  Data Scripts   │────▶│  Data Files     │
+└─────────────────┘     └─────────────────┘     └────────┬────────┘
+                                                         │
+                                                         ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Visualization  │◀────│  Flask App      │◀────│  Data Transfer  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
 
 ### OpenStack Data Scripts
 
@@ -684,6 +901,7 @@ The application includes several scripts for collecting and verifying data from 
 - **get-data-aio.sh**: Main data collection script that gathers instance, flavor, allocation, and volume data
 - **check-placement.sh**: Verifies placement allocations to detect inconsistencies between Nova and Placement API
 - **check-instance-ids.sh**: Verifies instance IDs when placement inconsistencies are found
+- **docker-data-collector.sh**: Collects data and transfers it directly to a Docker container
 
 #### get-data-aio.sh
 
@@ -695,7 +913,7 @@ This is the primary data collection script that:
 4. Gathers hypervisor allocation data with `openstack hypervisor list`
 5. Collects CPU and RAM allocation ratios from compute nodes via SSH
 6. Retrieves Ceph storage metrics with `ceph df`
-7. Collects volume data with `openstack volume list`
+7. Collects volume data with `openstack volume list` for each project
 8. Transfers all collected data to the web server
 9. Triggers placement verification with `check-placement.sh`
 10. Restarts the web application service
@@ -710,41 +928,136 @@ for project_name in "${project_names[@]}"; do
     awk -v project="$project_name" -F "|" 'BEGIN {OFS="|"} {print project, $0}' temp_aio_project.csv >> "$output_file"
 done
 
-# Collect allocation ratios from compute nodes
-for host in $(cat "$file_hosts"); do
-    ssh_result=$(ssh "$host" "sudo cat /etc/nova/nova.conf")
-    cpu_ratio=$(echo "$ssh_result" | grep -oP "cpu_allocation_ratio = \K\d+(\.\d+)?")
-    ram_ratio=$(echo "$ssh_result" | grep -oP "ram_allocation_ratio = \K\d+(\.\d+)?")
-    echo "$host, $cpu_ratio, $ram_ratio"
-done > ratio.txt
+# Collect volume data for each project
+project_list=$(openstack project list -f value -c ID -c Name)
+while read -r project_id project_name; do
+    # Get volumes for this project
+    openstack volume list --project $project_id -f json > volumes-$project_id.json
+
+    # Add project name to each volume
+    python3 -c "
+import json
+with open('volumes-$project_id.json', 'r') as f:
+    volumes = json.load(f)
+for volume in volumes:
+    volume['Project'] = '$project_name'
+with open('volumes-$project_id.json', 'w') as f:
+    json.dump(volumes, f)
+"
+    # Merge with all volumes
+done <<< "$(echo "$project_list")"
 ```
 
-#### check-placement.sh
+#### docker-data-collector.sh
 
-This script verifies the consistency between Nova and Placement API:
+This script is specifically designed for Docker deployments:
 
-1. Gets an authentication token from OpenStack
-2. Retrieves resource provider information from Placement API
-3. Compares allocation data between Nova and Placement
-4. Identifies discrepancies and saves them to `placement_diff.json`
-5. Triggers `check-instance-ids.sh` if discrepancies are found
+1. Sources OpenStack credentials
+2. Checks if the Docker container is running
+3. Runs the main data collection script (`get-data-aio.sh`)
+4. Copies the collected data files directly to the Docker container
+5. Runs placement check if needed
+6. No need to restart the container as the application detects file changes
 
-### Data Files
+```bash
+# Key sections of docker-data-collector.sh
 
-The application uses several data files, each with a specific purpose:
+# Set the Docker container's data directory
+CONTAINER_DATA_DIR="/app/data"
+CONTAINER_NAME="openstack-resource"
 
-| File | Description | Format | Example Content |
-|------|-------------|--------|----------------|
-| aio.csv | Instance data with project, flavor, and host information | CSV with pipe delimiter | `Project\|ID\|Name\|Status\|Power State\|Networks\|Image Name\|Image ID\|Flavor Name\|Flavor ID\|Host\|CPU\|RAM` |
-| allocation.txt | Resource allocation data from hypervisors | Text file | `1 compute-01 enabled up 15 10 20480 10240` |
-| cephdf.txt | Ceph storage metrics and utilization | Text file | `TOTAL 6246G 4500G 1746G 1746G 27.95` |
-| flavors.csv | Flavor definitions with resource specifications | CSV with pipe delimiter | `ID\|Name\|RAM\|Disk\|Ephemeral\|VCPUs\|Is Public\|Swap\|RXTX Factor\|Properties` |
-| ratio.txt | CPU/RAM allocation ratios from compute nodes | Text file | `compute-01, 4, 1.5` |
-| volumes.json | Volume data with size and attachment info | JSON | `[{"ID":"vol-123","Name":"test-volume","Status":"in-use","Size":10}]` |
-| users.json | User credentials for authentication | JSON | `{"admin":"password"}` |
-| reserved.json | Reserved resources data for capacity planning | JSON | `{"compute-01":{"CPU":"2","RAM":"4096"}}` |
-| placement_diff.json | Placement allocation verification results | JSON | `[{"hostname":"compute-01","differences":[...]}]` |
-| instance_ids_check.json | Instance ID verification results | JSON | `[{"instance_id":"12345","status":"found"}]` |
+# Run the original data collection script
+./get-data-aio.sh
+
+# Copy the data files to the Docker container
+docker cp data/aio.csv $CONTAINER_NAME:$CONTAINER_DATA_DIR/
+docker cp data/allocation.txt $CONTAINER_NAME:$CONTAINER_DATA_DIR/
+docker cp data/flavors.csv $CONTAINER_NAME:$CONTAINER_DATA_DIR/
+docker cp data/ratio.txt $CONTAINER_NAME:$CONTAINER_DATA_DIR/
+docker cp data/cephdf.txt $CONTAINER_NAME:$CONTAINER_DATA_DIR/
+docker cp data/volumes.json $CONTAINER_NAME:$CONTAINER_DATA_DIR/
+```
+
+### Data Files and Their Sources
+
+The application uses several data files, each collected from specific OpenStack components:
+
+| File | Source | Collection Method | Format | Purpose |
+|------|--------|------------------|--------|---------|
+| aio.csv | Nova API | `openstack server list` | CSV with pipe delimiter | Instance data with project, flavor, and host information |
+| allocation.txt | Nova API | `openstack hypervisor list` | Text file | Resource allocation data from hypervisors |
+| cephdf.txt | Ceph | `ceph df` | Text file | Ceph storage metrics and utilization |
+| flavors.csv | Nova API | `openstack flavor list` | CSV with pipe delimiter | Flavor definitions with resource specifications |
+| ratio.txt | Compute Nodes | SSH to read Nova config | Text file | CPU/RAM allocation ratios from compute nodes |
+| volumes.json | Cinder API | `openstack volume list` | JSON | Volume data with size and attachment info |
+| users.json | Manual | Created manually | JSON | User credentials for authentication |
+| reserved.json | Manual | Created manually | JSON | Reserved resources data for capacity planning |
+| placement_diff.json | Placement API | `check-placement.sh` | JSON | Placement allocation verification results |
+| instance_ids_check.json | Nova API | `check-instance-ids.sh` | JSON | Instance ID verification results |
+
+### Data Management in Different Environments
+
+#### Standard Environment
+
+In a standard environment (non-Docker), data is managed as follows:
+
+1. **Collection**: Data is collected on the OpenStack server using `get-data-aio.sh`
+2. **Transfer**: Data is transferred to the application server using SCP
+3. **Storage**: Data is stored in the `data` directory on the application server
+4. **Access**: The Flask application reads data from the `data` directory
+5. **Visualization**: Results are stored in the `static/results` directory
+
+#### Docker Environment
+
+In a Docker environment, data is managed as follows:
+
+1. **Collection**: Data is collected on the OpenStack server using `get-data-aio.sh`
+2. **Transfer**: Data is transferred directly to the Docker container using `docker cp`
+3. **Storage**: Data is stored in the `/app/data` directory inside the container
+4. **Access**: The Flask application reads data from the `/app/data` directory
+5. **Visualization**: Results are stored in the `/app/static/results` directory
+
+#### Running in a New Environment
+
+When running the application in a new environment (different server or laptop):
+
+1. **Option 1: With OpenStack Access**
+   - Install the application on the new server
+   - Configure OpenStack credentials
+   - Run the data collection scripts
+   - Data will be stored in the `data` directory
+
+2. **Option 2: Without OpenStack Access**
+   - Install the application on the new server
+   - Transfer existing data files to the `data` directory
+   - The application will use these static data files
+   - Note: Data will not be updated automatically
+
+3. **Option 3: Using Docker Image**
+   - Pull the Docker image on the new server
+   - Create the necessary directories (`data` and `static/results`)
+   - Transfer existing data files to the `data` directory
+   - Start the Docker container with volume bindings
+   - The application will use the data files from the host's `data` directory
+
+### Data Refresh and Updates
+
+The application supports several methods for refreshing data:
+
+1. **Manual Refresh**:
+   - Run the data collection scripts manually
+   - Data files will be updated in the `data` directory
+   - The application will use the updated data on the next request
+
+2. **Automated Refresh (Cron)**:
+   - Set up a cron job to run the data collection scripts periodically
+   - Example: `11 */2 * * * /bin/bash /path/to/get-data-aio.sh`
+   - This will refresh data every 2 hours
+
+3. **Docker Refresh**:
+   - Run the `docker-data-collector.sh` script on the OpenStack server
+   - Data will be updated directly in the Docker container
+   - No need to restart the container
 
 ### Data Collection Requirements
 
@@ -766,6 +1079,105 @@ The application uses several data files, each with a specific purpose:
    - SSH access for secure file transfer
 
 ## 🔧 Troubleshooting
+
+### Docker-Specific Issues
+
+1. **Docker Compose Version Compatibility**
+
+   - **Issue**: Error `HTTPConnection.request() got an unexpected keyword argument 'chunked'` when running `docker-compose up`
+     ```bash
+     # Check Docker and Docker Compose versions
+     docker --version
+     docker-compose --version
+
+     # Install Docker Compose V2 (recommended solution)
+     sudo apt-get update && sudo apt-get install -y docker-compose-plugin
+
+     # Verify installation and use Docker Compose V2
+     docker compose version
+     docker compose up
+     ```
+
+   - **Issue**: Container starts but exits immediately
+     ```bash
+     # Check container logs
+     docker logs openstack-resource
+
+     # Verify volume bindings
+     docker inspect openstack-resource
+
+     # Ensure data directory exists and has correct permissions
+     mkdir -p data
+     chmod 750 data
+     ```
+
+   - **Issue**: Cannot access the application after container starts
+     ```bash
+     # Check if container is running
+     docker ps
+
+     # Check container port bindings
+     docker port openstack-resource
+
+     # Check application logs
+     docker logs openstack-resource
+
+     # Verify firewall settings
+     sudo ufw status
+     ```
+
+2. **Data Management in Docker**
+
+   - **Issue**: Data not updating in container
+     ```bash
+     # Verify docker-data-collector.sh is copying files correctly
+     bash -x docker-data-collector.sh
+
+     # Manually copy a file to test
+     docker cp data/aio.csv openstack-resource:/app/data/
+
+     # Check file exists in container
+     docker exec openstack-resource ls -la /app/data
+     ```
+
+   - **Issue**: Cannot create or access results in container
+     ```bash
+     # Verify results directory exists and has correct permissions
+     mkdir -p static/results
+     chmod 755 static/results
+
+     # Check volume binding
+     docker inspect openstack-resource
+     ```
+
+3. **Running in Different Environments**
+
+   - **Issue**: Cannot run container in new environment
+     ```bash
+     # Create necessary directories
+     mkdir -p data static/results
+
+     # Create minimal users.json
+     echo '{"admin": "admin"}' > data/users.json
+
+     # Verify docker-compose.yml exists and is correct
+     cat docker-compose.yml
+
+     # Start container with verbose output
+     docker compose up
+     ```
+
+   - **Issue**: Image not found when running in new environment
+     ```bash
+     # Pull image from Docker Hub
+     docker pull yourusername/aether:latest
+
+     # Or load image from file
+     docker load -i aether-image.tar
+
+     # Verify image exists
+     docker images
+     ```
 
 ### Common Issues
 
@@ -830,13 +1242,13 @@ The application uses several data files, each with a specific purpose:
    - **Service Configuration**:
      ```bash
      # Check service status
-     sudo systemctl status openstack-resource
+     sudo systemctl status aether
 
      # View service logs
-     sudo journalctl -u openstack-resource -n 100
+     sudo journalctl -u aether -n 100
 
      # Restart service
-     sudo systemctl restart openstack-resource
+     sudo systemctl restart aether
      ```
 
 3. **UI and Rendering Issues**
@@ -892,8 +1304,8 @@ The application uses several data files, each with a specific purpose:
 - **"Permission denied" when accessing data files**:
   ```bash
   # Fix ownership and permissions
-  sudo chown -R ubuntu:ubuntu /home/ubuntu/openstack-resource/
-  chmod -R 750 /home/ubuntu/openstack-resource/
+  sudo chown -R ubuntu:ubuntu /home/ubuntu/aether/
+  chmod -R 750 /home/ubuntu/aether/
   chmod 640 data/users.json
   ```
 
@@ -911,7 +1323,7 @@ The application uses several data files, each with a specific purpose:
 
 ## 🤝 Contributing
 
-Contributions to improve the OpenStack Resource Allocation Web application are welcome! Please follow these steps:
+Contributions to improve Aether are welcome! Please follow these steps:
 
 1. Fork the repository
 2. Create your feature branch: `git checkout -b feature/amazing-feature`

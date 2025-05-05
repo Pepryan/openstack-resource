@@ -1,0 +1,35 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+venv-opre/
+ENV/
+env/
+*.egg-info/
+
+# Data and results (will be mounted as volumes)
+data/*
+!data/.gitkeep
+static/results/*
+!static/results/.gitkeep
+
+# Development and local files
+.env
+*.log
+*.swp
+.DS_Store
+.idea/
+.vscode/
+
+# Documentation
+README.md
+LICENSE
+screenshot-opre.png
+linkedin-post.md

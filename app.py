@@ -16,6 +16,14 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=config.PERMANENT_SESSI
 # Configure Flask-Login remember cookie settings
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=config.PERMANENT_SESSION_LIFETIME_DAYS)
 app.config['REMEMBER_COOKIE_REFRESH_EACH_REQUEST'] = True
+app.config['REMEMBER_COOKIE_SECURE'] = True
+app.config['REMEMBER_COOKIE_HTTPONLY'] = True
+app.config['REMEMBER_COOKIE_SAMESITE'] = 'Lax'
+
+# Configure session cookie settings
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # Configure Flask-Login
 login_manager = LoginManager()
