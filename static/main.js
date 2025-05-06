@@ -304,6 +304,8 @@ async function loadInstances() {
             instances.forEach(async (instance, index) => {
                 const row = sourceHostTable.insertRow();
                 row.className = 'hover:bg-blue-200';
+                // Store instance ID as data attribute
+                row.setAttribute('data-instance-id', instance.ID);
 
                 const cell1 = row.insertCell(0);
                 cell1.textContent = instance.Name;
@@ -509,12 +511,8 @@ function updateComparisonCharts() {
 
 async function moveInstanceToDestination(btnId) {
     const sourceRow = document.getElementById(btnId).parentNode.parentNode;
-    // console.log('btnId:', btnId);
-    // console.log('sourceRow:', sourceRow);
-    // console.log('sourceRow.parentNode (tbody):', sourceRow.parentNode);
-    // console.log('sourceRow.parentNode.parentNode (table):', sourceRow.parentNode.parentNode);
-
     const name = sourceRow.cells[0].textContent;
+    const instanceId = sourceRow.getAttribute('data-instance-id');
     const selectedHost = document.getElementById('destinationHostsDropdown').value;
 
     // Set flag that instances have been selected
@@ -533,9 +531,10 @@ async function moveInstanceToDestination(btnId) {
     destinationHostsDropdown.disabled = true;
 
     try {
-        // Get instance vCPU information
-        const instanceVcpusResponse = await fetch(`/get_instance_vcpus_used?name=${encodeURIComponent(name)}`);
-        const vcpus_used_instance = parseFloat(await instanceVcpusResponse.json());
+        // Get instance vCPU and RAM information directly from the row
+        const vcpus_used_instance = parseFloat(sourceRow.cells[1].textContent);
+        const ram_gb_instance = parseFloat(sourceRow.cells[2].textContent);
+        const ram_used_instance = ram_gb_instance * 1024; // Convert GB to MB
 
         // Get destination host allocation information
         const hostAllocationResponse = await fetch(`/get_host_allocation?host=${encodeURIComponent(selectedHost)}`);
@@ -551,28 +550,6 @@ async function moveInstanceToDestination(btnId) {
         const ram_total_host = parseFloat(hostAllocation.ram_total);
         const ram_free_host = parseFloat(hostAllocation.ram_free);
 
-        // Get instance RAM information from the API
-        const instanceResponse = await fetch(`/get_instances?id=${encodeURIComponent(name)}`);
-        const instanceData = await instanceResponse.json();
-
-        // Get the RAM value in MB
-        let ram_used_instance = 0;
-        if (instanceData.instances && instanceData.instances.length > 0) {
-            const ramValue = instanceData.instances[0].RAM;
-            if (typeof ramValue === 'string') {
-                if (ramValue.endsWith('G')) {
-                    // Convert GB to MB
-                    ram_used_instance = parseFloat(ramValue.replace('G', '')) * 1024;
-                } else if (ramValue.endsWith('M')) {
-                    ram_used_instance = parseFloat(ramValue.replace('M', ''));
-                } else {
-                    ram_used_instance = parseFloat(ramValue);
-                }
-            } else {
-                ram_used_instance = parseFloat(ramValue);
-            }
-        }
-
         // Calculate total vCPUs and RAM to move
         const instancesToMoveTable = document.getElementById('instancesToMove');
         const rows = instancesToMoveTable.getElementsByTagName('tr');
@@ -582,7 +559,16 @@ async function moveInstanceToDestination(btnId) {
         for (let i = 1; i < rows.length; i++) {
             const cells = rows[i].getElementsByTagName('td');
             const vcpuInstance = parseFloat(cells[1].textContent);
-            const ramGBInstance = parseFloat(cells[2].textContent);
+            let ramGBInstance = parseFloat(cells[2].textContent);
+
+            // Make sure RAM value is not 0
+            if (ramGBInstance === 0 || isNaN(ramGBInstance)) {
+                // If RAM value is invalid, display "Invalid"
+                cells[2].textContent = "Invalid";
+                // Use 0 for calculations
+                ramGBInstance = 0;
+            }
+
             totalVCPUsToMove += vcpuInstance;
             totalRAMToMove += ramGBInstance * 1024; // Convert GB to MB
         }
@@ -608,9 +594,16 @@ async function moveInstanceToDestination(btnId) {
             const newRowToMove = instancesToMoveTable.insertRow();
             newRowToMove.insertCell(0).textContent = name;
             newRowToMove.insertCell(1).textContent = vcpus_used_instance;
-            // Use actual RAM value
-            const ramGB = (ram_used_instance / 1024).toFixed(1);
-            newRowToMove.insertCell(2).textContent = ramGB;
+
+            // Use the RAM value directly from the source row
+            if (ram_gb_instance === 0 || isNaN(ram_gb_instance)) {
+                newRowToMove.insertCell(2).textContent = "Invalid";
+            } else {
+                newRowToMove.insertCell(2).textContent = ram_gb_instance.toFixed(1);
+            }
+
+            // Store instance ID as data attribute on the new row
+            newRowToMove.setAttribute('data-instance-id', instanceId);
 
             // Remove from source list
             sourceRow.parentNode.removeChild(sourceRow);

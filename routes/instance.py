@@ -54,10 +54,22 @@ def get_instances():
 
     host = request.args.get('host')
     instance_id = request.args.get('id')
+    instance_name = request.args.get('name')
 
     if instance_id:
         # Filter by instance ID
         instance = data[data['ID'] == instance_id][['Name', 'CPU', 'RAM', 'Host']]
+        instance_json = instance.to_dict(orient='records')
+
+        # Convert RAM values to GB format
+        for inst in instance_json:
+            inst['RAM_GB'] = convert_ram_to_gb(inst['RAM'])
+
+        return jsonify({'instances': instance_json})
+
+    if instance_name:
+        # Filter by instance name
+        instance = data[data['Name'] == instance_name][['Name', 'CPU', 'RAM', 'Host', 'ID']]
         instance_json = instance.to_dict(orient='records')
 
         # Convert RAM values to GB format
@@ -106,6 +118,8 @@ def get_destination_host_instances():
         'vcpus_free': vcpus_free,
         'vcpus_used': vcpus_used,
     })
+
+
 
 @instance_bp.route('/get_instance_vcpus_used', methods=['GET'])
 @login_required
