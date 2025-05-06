@@ -313,8 +313,8 @@ async function loadInstances() {
                 cell2.className = "text-center";
 
                 const cell3 = row.insertCell(2);
-                // Estimasi RAM: 2GB per vCPU
-                const ramGB = (instance.CPU * 2).toFixed(1);
+                // Use actual RAM value from API instead of estimation
+                const ramGB = instance.RAM_GB ? parseFloat(instance.RAM_GB).toFixed(1) : "0.0";
                 cell3.textContent = ramGB;
                 cell3.className = "text-center";
 
@@ -405,8 +405,8 @@ async function loadDestinationHostInstances() {
                     cell2.className = "text-center py-1";
 
                     const cell3 = row.insertCell(2);
-                    // Estimasi RAM: 2GB per vCPU
-                    const ramGB = (instance.CPU * 2).toFixed(1);
+                    // Use actual RAM value from API instead of estimation
+                    const ramGB = instance.RAM_GB ? parseFloat(instance.RAM_GB).toFixed(1) : "0.0";
                     cell3.textContent = ramGB;
                     cell3.className = "text-center py-1";
                     });
@@ -551,9 +551,27 @@ async function moveInstanceToDestination(btnId) {
         const ram_total_host = parseFloat(hostAllocation.ram_total);
         const ram_free_host = parseFloat(hostAllocation.ram_free);
 
-        // Get instance RAM information (assuming 2GB RAM per vCPU as a simple estimation)
-        // In a real scenario, you would fetch the actual RAM usage of the instance
-        const ram_used_instance = vcpus_used_instance * 2048; // 2GB per vCPU in MB
+        // Get instance RAM information from the API
+        const instanceResponse = await fetch(`/get_instances?id=${encodeURIComponent(name)}`);
+        const instanceData = await instanceResponse.json();
+
+        // Get the RAM value in MB
+        let ram_used_instance = 0;
+        if (instanceData.instances && instanceData.instances.length > 0) {
+            const ramValue = instanceData.instances[0].RAM;
+            if (typeof ramValue === 'string') {
+                if (ramValue.endsWith('G')) {
+                    // Convert GB to MB
+                    ram_used_instance = parseFloat(ramValue.replace('G', '')) * 1024;
+                } else if (ramValue.endsWith('M')) {
+                    ram_used_instance = parseFloat(ramValue.replace('M', ''));
+                } else {
+                    ram_used_instance = parseFloat(ramValue);
+                }
+            } else {
+                ram_used_instance = parseFloat(ramValue);
+            }
+        }
 
         // Calculate total vCPUs and RAM to move
         const instancesToMoveTable = document.getElementById('instancesToMove');
@@ -564,8 +582,9 @@ async function moveInstanceToDestination(btnId) {
         for (let i = 1; i < rows.length; i++) {
             const cells = rows[i].getElementsByTagName('td');
             const vcpuInstance = parseFloat(cells[1].textContent);
+            const ramGBInstance = parseFloat(cells[2].textContent);
             totalVCPUsToMove += vcpuInstance;
-            totalRAMToMove += vcpuInstance * 2048; // 2GB per vCPU in MB
+            totalRAMToMove += ramGBInstance * 1024; // Convert GB to MB
         }
 
         // Check if there's enough vCPU and RAM capacity
@@ -589,8 +608,8 @@ async function moveInstanceToDestination(btnId) {
             const newRowToMove = instancesToMoveTable.insertRow();
             newRowToMove.insertCell(0).textContent = name;
             newRowToMove.insertCell(1).textContent = vcpus_used_instance;
-            // Estimasi RAM: 2GB per vCPU
-            const ramGB = (vcpus_used_instance * 2).toFixed(1);
+            // Use actual RAM value
+            const ramGB = (ram_used_instance / 1024).toFixed(1);
             newRowToMove.insertCell(2).textContent = ramGB;
 
             // Remove from source list

@@ -12,6 +12,34 @@ import config
 from utils import get_file_last_updated, clean_instance_data
 from routes import instance_bp
 
+def convert_ram_to_gb(ram_value):
+    """
+    Convert RAM value to GB format
+
+    Args:
+        ram_value (str or int): RAM value in various formats (e.g., '256G', '1024M', etc.)
+
+    Returns:
+        float: RAM value in GB
+    """
+    try:
+        if isinstance(ram_value, str):
+            if ram_value.endswith('G'):
+                # Already in GB
+                return float(ram_value.rstrip('G'))
+            elif ram_value.endswith('M'):
+                # Convert MB to GB
+                return round(float(ram_value.rstrip('M')) / 1024, 2)
+            else:
+                # Try direct conversion (assume MB)
+                return round(float(ram_value) / 1024, 2)
+        else:
+            # Assume MB if numeric
+            return round(float(ram_value) / 1024, 2)
+    except (ValueError, TypeError):
+        print(f"Warning: Could not convert RAM value '{ram_value}' to GB")
+        return 0
+
 @instance_bp.route('/get_instances', methods=['GET'])
 @login_required
 def get_instances():
@@ -29,13 +57,22 @@ def get_instances():
 
     if instance_id:
         # Filter by instance ID
-        instance = data[data['ID'] == instance_id][['Name', 'CPU', 'Host']]
+        instance = data[data['ID'] == instance_id][['Name', 'CPU', 'RAM', 'Host']]
         instance_json = instance.to_dict(orient='records')
+
+        # Convert RAM values to GB format
+        for inst in instance_json:
+            inst['RAM_GB'] = convert_ram_to_gb(inst['RAM'])
+
         return jsonify({'instances': instance_json})
 
     # If no instance ID is provided, return all instances for the host
-    instances = data[data['Host'] == host][['Name', 'CPU', 'Host']]
+    instances = data[data['Host'] == host][['Name', 'CPU', 'RAM', 'Host']]
     instances_json = instances.to_dict(orient='records')
+
+    # Convert RAM values to GB format
+    for inst in instances_json:
+        inst['RAM_GB'] = convert_ram_to_gb(inst['RAM'])
     return jsonify({'instances': instances_json})
 
 @instance_bp.route('/get_destination_host_instances', methods=['GET'])
@@ -51,8 +88,12 @@ def get_destination_host_instances():
     data = pd.read_csv(config.AIO_CSV_PATH, delimiter=config.CSV_DELIMITER)
 
     host = request.args.get('host')
-    instances = data[data['Host'] == host][['Name', 'CPU']]
+    instances = data[data['Host'] == host][['Name', 'CPU', 'RAM']]
     instances_json = instances.to_dict(orient='records')
+
+    # Convert RAM values to GB format
+    for inst in instances_json:
+        inst['RAM_GB'] = convert_ram_to_gb(inst['RAM'])
 
     vcpus_used = DataHost.get_vcpus_used(host)
     vcpus_ratio = DataHost.get_vcpus_ratio(host)
