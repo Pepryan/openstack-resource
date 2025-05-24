@@ -103,6 +103,7 @@ async function initAllocationCharts() {
                     const hostData = data.hosts.find(host => host.name === selectedHost);
                     if (hostData) {
                         createInstancesChart(hostData.instances);
+                        createInstancesRamChart(hostData.instances);
                     }
                 }
             });
@@ -675,6 +676,121 @@ async function generateImprovedVcpuPlot(host) {
             errorElement.classList.remove('hidden');
             errorElement.textContent = 'Error generating plot. Please try again.';
         }
+    }
+}
+
+/**
+ * Create instances RAM chart for a specific host
+ */
+function createInstancesRamChart(instances) {
+    if (!instances || !Array.isArray(instances) || instances.length === 0) {
+        console.error('Invalid instances data provided to createInstancesRamChart');
+        return;
+    }
+
+    const chartElement = document.getElementById('instances-ram-chart');
+    if (!chartElement) {
+        console.error('Instances RAM chart element not found');
+        return;
+    }
+
+    const ctx = chartElement.getContext('2d');
+    if (!ctx) {
+        console.error('Could not get 2D context for instances RAM chart');
+        return;
+    }
+
+    try {
+        // Sort instances by RAM usage (descending)
+        instances.sort((a, b) => (b.ram_gb || 0) - (a.ram_gb || 0));
+
+        // Prepare data
+        const labels = instances.map(instance => instance.name || 'Unknown');
+        const ramData = instances.map(instance => instance.ram_gb || 0);
+        const backgroundColors = instances.map(() => 'rgba(16, 185, 129, 0.8)'); // Green color for RAM
+
+        // Destroy existing chart if it exists
+        if (window.instancesRamChart) {
+            window.instancesRamChart.destroy();
+        }
+
+        // Create chart
+        window.instancesRamChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'RAM (GB)',
+                        data: ramData,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            afterTitle: function(context) {
+                                if (!context || !context[0]) return '';
+                                const instanceIndex = context[0].dataIndex;
+                                if (instanceIndex < 0 || instanceIndex >= instances.length) return '';
+
+                                const instance = instances[instanceIndex];
+                                return `Status: ${instance.status || 'Unknown'}`;
+                            },
+                            afterBody: function(context) {
+                                if (!context || !context[0]) return [];
+                                const instanceIndex = context[0].dataIndex;
+                                if (instanceIndex < 0 || instanceIndex >= instances.length) return [];
+
+                                const instance = instances[instanceIndex];
+                                return [
+                                    `vCPUs: ${instance.vcpus || 0}`,
+                                    `Disk: ${instance.total_disk || 0} GB`,
+                                    `Tier: ${instance.tier || 'Unknown'}`
+                                ];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'RAM (GB)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Show instances RAM chart container and hide the no instances message
+        const containerElement = document.getElementById('instances-ram-chart-container');
+        if (containerElement) {
+            containerElement.classList.remove('hidden');
+        }
+
+        const noInstancesMessage = document.getElementById('no-instances-ram-message');
+        if (noInstancesMessage) {
+            noInstancesMessage.classList.add('hidden');
+        }
+    } catch (error) {
+        console.error('Error creating instances RAM chart:', error);
     }
 }
 

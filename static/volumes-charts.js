@@ -1,17 +1,31 @@
 /**
- * Volumes Charts JavaScript
+ * Volumes Charts JavaScript - Performance Optimized
  * Handles interactive chart visualizations for the volumes page
- * Optimized for performance with lazy loading and reduced animations
+ * Optimized with lazy loading, caching, and modern performance techniques
  */
 
-// Chart objects
+// ========== PERFORMANCE OPTIMIZATIONS ==========
+
+// Chart objects with better memory management
+const chartInstances = new WeakMap();
 let statusChart = null;
 let sizeDistributionChart = null;
 let projectDistributionChart = null;
 let chartsInitialized = false;
 let projectDataCache = null;
 
-// Chart colors
+// Element cache for DOM queries
+const elementCache = new Map();
+
+// Cached DOM element getter
+function getElement(id) {
+    if (!elementCache.has(id)) {
+        elementCache.set(id, document.getElementById(id));
+    }
+    return elementCache.get(id);
+}
+
+// Chart colors - optimized object
 const chartColors = {
     blue: '#3b82f6',
     lightBlue: '#93c5fd',
@@ -27,24 +41,11 @@ const chartColors = {
     blueAlpha: 'rgba(59, 130, 246, 0.2)'
 };
 
-// Project color palette
+// Project color palette - optimized array
 const projectColors = [
-    '#3b82f6', // Blue
-    '#10b981', // Green
-    '#f59e0b', // Yellow
-    '#ef4444', // Red
-    '#8b5cf6', // Purple
-    '#ec4899', // Pink
-    '#06b6d4', // Cyan
-    '#f97316', // Orange
-    '#14b8a6', // Teal
-    '#a855f7', // Violet
-    '#6366f1', // Indigo
-    '#84cc16', // Lime
-    '#0ea5e9', // Sky
-    '#d946ef', // Fuchsia
-    '#64748b', // Slate
-    '#0891b2', // Cyan
+    '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899',
+    '#06b6d4', '#f97316', '#14b8a6', '#a855f7', '#6366f1', '#84cc16',
+    '#0ea5e9', '#d946ef', '#64748b', '#0891b2'
 ];
 
 /**
@@ -100,38 +101,47 @@ function lazyLoadCharts() {
 }
 
 /**
- * Create status distribution chart with optimized performance
+ * Create status distribution chart with enhanced performance optimizations
  */
 function createStatusChart() {
-    const chartElement = document.getElementById('status-chart');
-    if (!chartElement || !chartElement.getContext) return;
+    const chartElement = getElement('status-chart');
+    if (!chartElement || !chartElement.getContext) {
+        console.warn('Status chart element not found or invalid');
+        return;
+    }
 
     const ctx = chartElement.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+        console.warn('Could not get 2D context for status chart');
+        return;
+    }
 
     try {
-        // Get data from the data attributes - use || 0 for safety
-        const inUse = parseInt(chartElement.dataset.inUse) || 0;
-        const available = parseInt(chartElement.dataset.available) || 0;
-        const creating = parseInt(chartElement.dataset.creating) || 0;
-        const error = parseInt(chartElement.dataset.error) || 0;
-        const reserved = parseInt(chartElement.dataset.reserved) || 0;
+        // Get data from the data attributes with optimized parsing
+        const statusData = {
+            inUse: parseInt(chartElement.dataset.inUse) || 0,
+            available: parseInt(chartElement.dataset.available) || 0,
+            creating: parseInt(chartElement.dataset.creating) || 0,
+            error: parseInt(chartElement.dataset.error) || 0,
+            reserved: parseInt(chartElement.dataset.reserved) || 0
+        };
 
-        // Destroy existing chart if it exists
-        if (statusChart) {
+        // Destroy existing chart safely
+        if (statusChart && typeof statusChart.destroy === 'function') {
             statusChart.destroy();
+            statusChart = null;
         }
 
         // Hide loading indicator
         hideChartLoadingIndicator('status-chart-loading');
 
-        // Create chart with optimized options
-        statusChart = new Chart(ctx, {
+        // Optimized chart configuration
+        const chartConfig = {
             type: 'doughnut',
             data: {
                 labels: ['In Use', 'Available', 'Creating', 'Error', 'Reserved'],
                 datasets: [{
-                    data: [inUse, available, creating, error, reserved],
+                    data: Object.values(statusData),
                     backgroundColor: [
                         chartColors.blue,
                         chartColors.green,
@@ -150,31 +160,49 @@ function createStatusChart() {
                 animation: {
                     animateScale: false,  // Disable scale animation for better performance
                     animateRotate: true,
-                    duration: 400         // Reduce animation duration
+                    duration: 300,        // Further reduced animation duration
+                    easing: 'easeOutQuart'
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false
                 },
                 legend: {
                     position: 'right',
                     labels: {
                         boxWidth: 12,
                         padding: 15,
-                        fontSize: 12
+                        fontSize: 12,
+                        usePointStyle: true
                     }
                 },
                 tooltips: {
                     enabled: true,
+                    mode: 'nearest',
+                    intersect: false,
+                    animation: {
+                        duration: 0 // Disable tooltip animations
+                    },
                     callbacks: {
                         label: function(tooltipItem, data) {
                             const index = tooltipItem.index;
                             const label = data.labels[index] || '';
                             const value = data.datasets[0].data[index] || 0;
                             const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
-                            const percentage = Math.round((value / total) * 100);
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
                             return `${label}: ${value} (${percentage}%)`;
                         }
                     }
                 }
             }
-        });
+        };
+
+        // Create chart with error handling
+        statusChart = new Chart(ctx, chartConfig);
+        
+        // Store reference for cleanup
+        chartInstances.set(chartElement, statusChart);
+        
     } catch (error) {
         console.error('Error creating status chart:', error);
     }

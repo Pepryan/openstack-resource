@@ -331,6 +331,25 @@
                             <p>Select a host from the <strong>Host Details</strong> dropdown above to view instances.</p>
                         </div>
                     </div>
+                    
+                    <!-- Instances RAM Chart -->
+                    <div class="bg-tertiary rounded-lg p-5 mb-6">
+                        <h3 class="host-info-header mb-3">Instances by RAM Usage</h3>
+                        <div id="instances-ram-chart-container" class="hidden">
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="instances-ram-chart"></canvas>
+                            </div>
+                        </div>
+                        <div id="no-instances-ram-message" class="text-center py-8 rounded-lg">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent-color mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="font-semibold">Host Selection Required</span>
+                            </div>
+                            <p>Select a host from the <strong>Host Details</strong> dropdown above to view instances.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Plot Tab Content -->
