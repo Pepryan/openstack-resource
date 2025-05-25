@@ -1,5 +1,7 @@
 # Aether - OpenStack Resource Manager 🚀
 
+![Aether Resource Allocation](/screenshots/3b.png)
+
 [![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.x-green?logo=flask)](https://flask.palletsprojects.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -169,7 +171,8 @@ aether/
 │   ├── list-instances.css  # Instance page styles
 │   ├── volumes.css         # Volume page styles
 │   ├── allocation.css      # Allocation page styles
-│   └── results/            # Generated plots and visualization results
+│   ├── results/            # Generated plots and visualization results
+│   └── screenshots/        # Application screenshots and documentation images
 ├── templates/              # HTML templates with Jinja2
 │   ├── allocation.html     # Resource allocation page
 │   ├── index.html          # Home page with migration tools
