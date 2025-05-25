@@ -6,7 +6,7 @@
 [![DataTables](https://img.shields.io/badge/DataTables-1.x-orange?logo=jquery)](https://datatables.net/)
 [![OpenStack](https://img.shields.io/badge/OpenStack-Cloud-red?logo=openstack)](https://www.openstack.org/)
 
-Welcome to Aether - a lightweight, Python-powered solution for efficient OpenStack resource management and monitoring. Named after the fifth element in ancient philosophy that fills the "space" above us, Aether brings clarity to your cloud environment. This web application simplifies complex resource allocation tasks with an intuitive interface, powerful automation features, and real-time data visualization.
+Welcome to Aether - a lightweight, Python-powered solution for efficient OpenStack resource management and monitoring. Named after the fifth element in ancient philosophy that fills the "space" above us, Aether brings clarity to your cloud environment. This web application simplifies complex resource allocation tasks with an intuitive interface, powerful automation features, and comprehensive data visualization with automated updates via custom time cron job.
 
 ## 📑 Table of Contents
 
@@ -45,13 +45,14 @@ Welcome to Aether - a lightweight, Python-powered solution for efficient OpenSta
 | 💽 Volume Management | Volume listing with usage statistics and volume usage prediction calculator |
 | 🍦 Flavor Catalog | Detailed listing of available instance flavors with resource specifications |
 | 🎯 Resource Allocation | Placement analysis, compute node monitoring, and resource reservation system |
-| 🔄 Data Synchronization | Automated data updates every 2 hours via cron jobs |
+| 🔄 Data Synchronization | Automated data collection and updates every 2 hours via cron jobs |
 | 🔍 Advanced Filtering | Powerful search capabilities with regex support and DataTables integration |
 | 📤 Data Export | Easy export of instance and allocation data to various formats |
 | 🔐 User Authentication | Secure login system with persistent session management |
-| 📊 Data Visualization | Visual representation of resource allocation with interactive charts |
+| 📊 Data Visualization | Interactive charts and visual representation of resource allocation |
 | 📱 Responsive Design | Mobile-friendly interface with adaptive layouts |
 | 🌙 Dark Mode | Elegant dark theme for reduced eye strain during night operations |
+| ⚡ Performance Optimized | Efficient file-based storage with no database dependencies |
 
 ## 🛠️ Technology Stack
 
@@ -106,22 +107,24 @@ The application follows a modular, layered architecture designed for efficiency 
 
 4. **Presentation Layer**:
    - Responsive HTML templates with Jinja2 templating
-   - JavaScript for interactive features and real-time updates
+   - JavaScript for interactive features and dynamic content updates
    - DataTables for advanced table functionality
    - Chart.js for interactive data visualization
 
 ### System Flow
 
-1. **Data Collection**: Scheduled execution of `get-data-aio.sh` script collects data from OpenStack environment
+1. **Data Collection**: Scheduled execution of `get-data-aio.sh` script collects data from OpenStack environment every 2 hours
 2. **Data Verification**: `check-placement.sh` and `check-instance-ids.sh` verify data consistency
 3. **Data Transfer**: Collected data is securely transferred to the web server
 4. **Application Processing**: Flask application processes and transforms the data
 5. **User Interface**: Web interface presents the data with interactive visualizations
 6. **User Interaction**: Users can filter, search, and analyze the resource data
 
+**Data Update Schedule**: The application updates data via automated cron jobs, ensuring fresh information while maintaining system performance.
+
 ```bash
-# Cron job configuration example
-11 2-23/2 * * * /bin/bash /home/ubuntu/workdir/scripts/aether/get-data-aio.sh >> /home/ubuntu/workdir/scripts/aether/get-data-aio.log 2>&1
+# Cron job configuration example - runs every 2 hours
+11 */2 * * * /bin/bash /home/ubuntu/workdir/scripts/aether/get-data-aio.sh >> /home/ubuntu/workdir/scripts/aether/get-data-aio.log 2>&1
 ```
 
 ## 📂 Project Structure
@@ -232,9 +235,12 @@ chmod 640 data/users.json  # Restrict access to the credentials file
 ```
 
 3. Configure application settings in config.py:
+
+The application uses a direct configuration approach in `config.py` for better session persistence and simplified deployment. Key settings include:
+
 ```python
 # Security settings
-SECRET_KEY = 'your-secure-secret-key'  # Change this to a random secure string
+SECRET_KEY = 'your-secure-secret-key'  # Fixed key for session persistence
 DEBUG = False  # Set to True for development
 HOST = "0.0.0.0"  # Listen on all interfaces
 PORT = 5005  # Application port
@@ -243,11 +249,24 @@ PORT = 5005  # Application port
 SESSION_PERMANENT = True
 PERMANENT_SESSION_LIFETIME_DAYS = 30  # Adjust session duration as needed
 
+# File paths (automatically configured)
+DATA_DIR = 'data'
+AIO_CSV_PATH = os.path.join(DATA_DIR, 'aio.csv')
+USERS_FILE_PATH = os.path.join(DATA_DIR, 'users.json')
+# ... other file paths
+
 # Constants
 CORE_COMPUTE = 48  # Number of cores per compute node (adjust to match your environment)
 CEPH_ERASURE_CODE = 1.5  # Adjust based on your Ceph configuration
 CEPH_TOTAL_SIZE_TB = 6246.4  # Update with your Ceph total size
+CSV_DELIMITER = '|'  # Delimiter for CSV files
 ```
+
+**Configuration Benefits**:
+- No environment file dependencies
+- Consistent session management
+- Simplified deployment process
+- All settings in one location
 
 4. Set up OpenStack credentials for data collection:
 ```bash
@@ -268,7 +287,7 @@ EOF
 chmod 600 ~/admin-openrc  # Secure the credentials file
 ```
 
-5. Modify the data collection script to match your environment:
+4. Modify the data collection script to match your environment:
 ```bash
 # Edit get-data-aio.sh and update the instance_server variable
 vim get-data-aio.sh
@@ -312,6 +331,8 @@ Access the application at `http://your-server-ip:5005`
    ```python
    DEBUG = True
    ```
+   
+   **Note**: The application uses direct configuration in `config.py` - no environment files are needed.
 4. Create sample data files for testing:
    ```bash
    # Create sample data files with realistic structure
@@ -536,7 +557,7 @@ Manual testing should be performed for all components:
    vim config.py
    ```
 
-   Key production settings:
+   Key production settings in `config.py`:
    ```python
    # Use a fixed secret key for session persistence
    SECRET_KEY = 'your-fixed-production-secret-key'  # Change this!
@@ -544,10 +565,20 @@ Manual testing should be performed for all components:
    HOST = "0.0.0.0"
    PORT = 5005
 
-   # Ensure session settings are configured
+   # Session settings (already configured)
    SESSION_PERMANENT = True
    PERMANENT_SESSION_LIFETIME_DAYS = 30
+   
+   # File paths and constants (pre-configured)
+   DATA_DIR = 'data'
+   CORE_COMPUTE = 48  # Adjust to your environment
+   CEPH_TOTAL_SIZE_TB = 6246.4  # Update with your Ceph size
    ```
+   
+   **Production Benefits**:
+   - No environment file management required
+   - Consistent configuration across deployments
+   - Simplified container deployments
 
 4. Create and secure the data directory:
    ```bash
@@ -565,7 +596,7 @@ Manual testing should be performed for all components:
 
 ### Docker Deployment
 
-For easier deployment and environment consistency, you can use Docker:
+For easier deployment and environment consistency, you can use Docker. The application is designed to work seamlessly with containers using the built-in configuration system:
 
 #### Docker and Docker Compose Version Requirements
 
@@ -574,6 +605,13 @@ The application has been tested with the following versions:
 - Docker Compose: v2.35.1 or newer (Docker Compose V2)
 
 > **Note**: Docker Compose V1 (using `docker-compose` command) may have compatibility issues with newer Docker versions. We recommend using Docker Compose V2 (using `docker compose` command without hyphen).
+
+#### Container Configuration Benefits
+
+- **No Environment Files**: Configuration is handled directly in `config.py`
+- **Persistent Sessions**: Fixed secret key ensures session persistence across container restarts
+- **Volume Mounting**: Data directory is mounted for easy data updates
+- **Simplified Deployment**: No complex environment variable management
 
 #### Installing Docker Compose V2
 
@@ -819,6 +857,7 @@ Set up cron jobs for automated data collection:
 2. Add the following line to run every 2 hours:
    ```bash
    # Run data collection every 2 hours (at 11 minutes past the hour)
+   # This ensures fresh data while maintaining optimal system performance
    11 */2 * * * /bin/bash /home/ubuntu/workdir/scripts/aether/get-data-aio.sh >> /home/ubuntu/workdir/scripts/aether/get-data-aio.log 2>&1
    ```
 
@@ -874,14 +913,24 @@ For production environments, it's recommended to use Nginx as a reverse proxy:
 
 ## 📊 Data Collection and Management
 
+### Data Update Schedule
+
+**Important**: Aether is designed as a **scheduled data collection system**, not a real-time monitoring tool. Data is collected and updated via automated cron jobs.
+
+**Update Frequency**: Every 2 hours (configurable)
+**Data Freshness**: Web interface shows the timestamp of the last data collection
+**Performance**: Optimized for efficiency with minimal impact on OpenStack infrastructure
+
 ### Data Flow Architecture
 
-The application follows a specific data flow architecture:
+The application follows a specific data flow architecture with scheduled updates:
 
-1. **Data Collection**: Scripts run on the OpenStack server to collect resource data
+1. **Data Collection**: Scripts run on the OpenStack server every 2 hours to collect resource data
 2. **Data Transfer**: Collected data is transferred to the application server
 3. **Data Processing**: The application processes and visualizes the data
 4. **Data Storage**: Results are stored in the `static/results` directory
+5. **Data Refresh**: Web interface displays the most recent data collected from the last update cycle
+6. **Timestamp Display**: Each page shows when the data was last updated
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
