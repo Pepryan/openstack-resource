@@ -1,0 +1,11 @@
+ID|Name|RAM|Disk|Ephemeral|VCPUs|Is Public|Swap|RXTX Factor|Properties
+f1e2d3c4-b5a6-7890-f1e2-d3c4b5a67890|micro-1cpu-1gb|1024|10|0|1|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+e2d3c4b5-a6f7-8901-e2d3-c4b5a6f78901|large-16cpu-32gb|32768|50|0|16|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+d3c4b5a6-f7e8-9012-d3c4-b5a6f7e89012|medium-8cpu-8gb|8192|10|0|8|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+c4b5a6f7-e8d9-1234-c4b5-a6f7e8d91234|xlarge-16cpu-64gb|65536|100|0|16|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+b5a6f7e8-d9c0-2345-b5a6-f7e8d9c02345|large-8cpu-32gb|32768|50|0|8|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+a6f7e8d9-c0b1-3456-a6f7-e8d9c0b13456|medium-4cpu-16gb|16384|25|0|4|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+9f8e7d6c-b5a4-4567-9f8e-7d6cb5a45678|large-16cpu-32gb|32768|50|0|16|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+8e7d6c5b-a4f3-5678-8e7d-6c5ba4f35678|large-8cpu-64gb|65536|100|0|8|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+7d6c5b4a-3f2e-6789-7d6c-5b4a3f2e6789|large-8cpu-32gb|32768|50|0|8|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'
+6c5b4a3f-2e1d-7890-6c5b-4a3f2e1d7890|small-2cpu-4gb|4096|20|0|2|True||1.0|hw:cpu_policy='dedicated', hw:cpu_max_sockets='1'

@@ -1,0 +1,10 @@
+{
+    "current_volume_tb": 2150.75,
+    "ceph_erasure_code": 1.5,
+    "ceph_total_size_tb": 8200,
+    "total_volumes": 325,
+    "volumes_in_use": 278,
+    "volumes_available": 47,
+    "current_usage_percentage": 39.42,
+    "last_updated": "2024-08-15T14:45:30Z"
+}

@@ -1,0 +1,14 @@
+--- RAW STORAGE ---
+CLASS  SIZE     AVAIL    USED     RAW USED  %RAW USED
+hdd    8.2 PiB  6.5 PiB  1.7 PiB   1.7 PiB      20.73
+ssd    480 TiB  290 TiB  190 TiB   190 TiB      39.58
+TOTAL  8.7 PiB  6.8 PiB  1.9 PiB   1.9 PiB      21.84
+
+--- POOLS ---
+POOL                   ID  PGS    STORED   OBJECTS  USED     %USED  MAX AVAIL
+system_metrics          1      1  320 MiB     1245  960 MiB      0    950 TiB
+virtual_machines        2    512  3.8 TiB    8.45M  11.4 TiB   5.21     65 TiB
+block_storage           3    512  195 TiB    2.35M  195 TiB  85.53     65 TiB
+image_repository        4    128  2.3 TiB    2.15M  6.9 TiB   0.72    950 TiB
+object_storage          5    512  1.6 PiB    3.45M  1.6 PiB  32.65    950 TiB
+backup_repository       6    128  2.5 TiB    2.75M  7.5 TiB   0.79    950 TiB

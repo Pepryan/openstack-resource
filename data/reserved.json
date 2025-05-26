@@ -1,0 +1,117 @@
+{
+    "cloud-node-01": {
+        "CPU": "2",
+        "RAM": "",
+        "Kebutuhan": "test environment"
+    },
+    "cloud-node-02": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-13": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-07": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "chatbot-app-primary"
+    },
+    "cloud-node-18": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "chatbot-app-secondary"
+    },
+    "cloud-node-27": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "chatbot-db-primary"
+    },
+    "cloud-node-28": {
+        "CPU": "4",
+        "RAM": "16",
+        "Kebutuhan": "plan ksql-server-primary"
+    },
+    "cloud-node-37": {
+        "CPU": "18",
+        "RAM": "68",
+        "Kebutuhan": "plan migrate mongo-db-primary,secondary & object-storage"
+    },
+    "cloud-node-39": {
+        "CPU": "16",
+        "RAM": "32",
+        "Kebutuhan": "plan api-gateway-primary"
+    },
+    "cloud-node-43": {
+        "CPU": "16",
+        "RAM": "88",
+        "Kebutuhan": "plan kafka-broker-secondary & chatbot-app-secondary"
+    },
+    "cloud-node-45": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "chatbot-db-secondary"
+    },
+    "cloud-node-53": {
+        "CPU": "8",
+        "RAM": "64",
+        "Kebutuhan": "chatbot-db-tertiary"
+    },
+    "cloud-node-17": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-04": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-46": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
+    },
+    "cloud-node-12": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-47": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "Backup for maintenance"
+    },
+    "cloud-node-49": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-48": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
+    },
+    "cloud-node-61": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
+    },
+    "cloud-node-14": {
+        "CPU": "",
+        "RAM": "",
+        "Kebutuhan": "backup for maintenance"
+    },
+    "cloud-node-03": {
+        "CPU": "5",
+        "RAM": "",
+        "Kebutuhan": ""
+    },
+    "cloud-node-30": {
+        "CPU": "1",
+        "RAM": "8",
+        "Kebutuhan": ""
+    }
+}

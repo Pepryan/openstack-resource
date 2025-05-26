@@ -1,0 +1,16 @@
+cloud-node-01, 1, 1
+cloud-node-05, 4, 1
+cloud-node-06, 4, 1
+cloud-node-07, 4, 1
+cloud-node-03, 8, 1.5
+cloud-node-18, 4, 1
+cloud-node-27, 4, 1
+cloud-node-28, 4, 1
+cloud-node-30, 4, 1
+cloud-node-37, 4, 1
+cloud-node-39, 4, 1
+cloud-node-45, 4, 1
+cloud-node-49, 4, 1
+cloud-node-53, 4, 1
+cloud-node-54, 4, 1
+cloud-node-55, 4, 1
