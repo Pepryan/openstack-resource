@@ -1,0 +1,362 @@
+[
+  {
+    "ID": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+    "Name": "monitor-server-boot",
+    "Status": "in-use",
+    "Size": 3000,
+    "Attached to": [
+      {
+        "id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        "attachment_id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        "volume_id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        "server_id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        "host_name": "cloud-node-07",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-05T10:38:57.000000"
+      }
+    ],
+    "Project": "monitoring-team"
+  },
+  {
+    "ID": "b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+    "Name": "grafana-dashboard-disk",
+    "Status": "in-use",
+    "Size": 50,
+    "Attached to": [
+      {
+        "id": "b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+        "attachment_id": "b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+        "volume_id": "b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+        "server_id": "b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+        "host_name": "cloud-node-06",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-06T11:38:57.000000"
+      }
+    ],
+    "Project": "monitoring-team"
+  },
+  {
+    "ID": "c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+    "Name": "loki-logging-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+        "attachment_id": "c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+        "volume_id": "c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+        "server_id": "c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+        "host_name": "cloud-node-55",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-07T12:38:57.000000"
+      }
+    ],
+    "Project": "monitoring-team"
+  },
+  {
+    "ID": "d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+    "Name": "prometheus-metrics-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+        "attachment_id": "d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+        "volume_id": "d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+        "server_id": "d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+        "host_name": "cloud-node-55",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-08T13:38:57.000000"
+      }
+    ],
+    "Project": "monitoring-team"
+  },
+  {
+    "ID": "e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+    "Name": "kafka-broker-primary-disk",
+    "Status": "in-use",
+    "Size": 200,
+    "Attached to": [
+      {
+        "id": "e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+        "attachment_id": "e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+        "volume_id": "e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+        "server_id": "e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+        "host_name": "cloud-node-49",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-09T14:38:57.000000"
+      }
+    ],
+    "Project": "data-services"
+  },
+  {
+    "ID": "f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+    "Name": "kafka-broker-secondary-disk",
+    "Status": "in-use",
+    "Size": 200,
+    "Attached to": [
+      {
+        "id": "f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+        "attachment_id": "f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+        "volume_id": "f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+        "server_id": "f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+        "host_name": "cloud-node-30",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-10T15:38:57.000000"
+      }
+    ],
+    "Project": "data-services"
+  },
+  {
+    "ID": "a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+    "Name": "kafka-connect-primary-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+        "attachment_id": "a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+        "volume_id": "a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+        "server_id": "a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+        "host_name": "cloud-node-54",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-11T16:38:57.000000"
+      }
+    ],
+    "Project": "data-services"
+  },
+  {
+    "ID": "b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+    "Name": "kafka-connect-secondary-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+        "attachment_id": "b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+        "volume_id": "b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+        "server_id": "b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+        "host_name": "cloud-node-01",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-12T17:38:57.000000"
+      }
+    ],
+    "Project": "data-services"
+  },
+  {
+    "ID": "c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+    "Name": "ksql-server-primary-disk",
+    "Status": "in-use",
+    "Size": 50,
+    "Attached to": [
+      {
+        "id": "c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+        "attachment_id": "c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+        "volume_id": "c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+        "server_id": "c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+        "host_name": "cloud-node-28",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-13T18:38:57.000000"
+      }
+    ],
+    "Project": "data-services"
+  },
+  {
+    "ID": "d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+    "Name": "ksql-server-secondary-disk",
+    "Status": "in-use",
+    "Size": 50,
+    "Attached to": [
+      {
+        "id": "d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+        "attachment_id": "d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+        "volume_id": "d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+        "server_id": "d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+        "host_name": "cloud-node-05",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-14T19:38:57.000000"
+      }
+    ],
+    "Project": "data-services"
+  },
+  {
+    "ID": "e1f2a3b4-c5d6-7890-e1f2-a3b4c5d67890",
+    "Name": "api-gateway-primary-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "e1f2a3b4-c5d6-7890-e1f2-a3b4c5d67890",
+        "attachment_id": "e1f2a3b4-c5d6-7890-e1f2-a3b4c5d67890",
+        "volume_id": "e1f2a3b4-c5d6-7890-e1f2-a3b4c5d67890",
+        "server_id": "e1f2a3b4-c5d6-7890-e1f2-a3b4c5d67890",
+        "host_name": "cloud-node-39",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-15T20:38:57.000000"
+      }
+    ],
+    "Project": "api-platform"
+  },
+  {
+    "ID": "f2a3b4c5-d6e7-8901-f2a3-b4c5d6e78901",
+    "Name": "api-gateway-secondary-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "f2a3b4c5-d6e7-8901-f2a3-b4c5d6e78901",
+        "attachment_id": "f2a3b4c5-d6e7-8901-f2a3-b4c5d6e78901",
+        "volume_id": "f2a3b4c5-d6e7-8901-f2a3-b4c5d6e78901",
+        "server_id": "f2a3b4c5-d6e7-8901-f2a3-b4c5d6e78901",
+        "host_name": "cloud-node-03",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-16T21:38:57.000000"
+      }
+    ],
+    "Project": "api-platform"
+  },
+  {
+    "ID": "a3b4c5d6-e7f8-9012-a3b4-c5d6e7f89012",
+    "Name": "chatbot-app-primary-disk",
+    "Status": "in-use",
+    "Size": 200,
+    "Attached to": [
+      {
+        "id": "a3b4c5d6-e7f8-9012-a3b4-c5d6e7f89012",
+        "attachment_id": "a3b4c5d6-e7f8-9012-a3b4-c5d6e7f89012",
+        "volume_id": "a3b4c5d6-e7f8-9012-a3b4-c5d6e7f89012",
+        "server_id": "a3b4c5d6-e7f8-9012-a3b4-c5d6e7f89012",
+        "host_name": "cloud-node-07",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-17T22:38:57.000000"
+      }
+    ],
+    "Project": "chatbot-service"
+  },
+  {
+    "ID": "b4c5d6e7-f8a9-0123-b4c5-d6e7f8a90123",
+    "Name": "chatbot-app-secondary-disk",
+    "Status": "in-use",
+    "Size": 200,
+    "Attached to": [
+      {
+        "id": "b4c5d6e7-f8a9-0123-b4c5-d6e7f8a90123",
+        "attachment_id": "b4c5d6e7-f8a9-0123-b4c5-d6e7f8a90123",
+        "volume_id": "b4c5d6e7-f8a9-0123-b4c5-d6e7f8a90123",
+        "server_id": "b4c5d6e7-f8a9-0123-b4c5-d6e7f8a90123",
+        "host_name": "cloud-node-18",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-18T23:38:57.000000"
+      }
+    ],
+    "Project": "chatbot-service"
+  },
+  {
+    "ID": "c5d6e7f8-a9b0-1234-c5d6-e7f8a9b01234",
+    "Name": "chatbot-db-primary-disk",
+    "Status": "in-use",
+    "Size": 500,
+    "Attached to": [
+      {
+        "id": "c5d6e7f8-a9b0-1234-c5d6-e7f8a9b01234",
+        "attachment_id": "c5d6e7f8-a9b0-1234-c5d6-e7f8a9b01234",
+        "volume_id": "c5d6e7f8-a9b0-1234-c5d6-e7f8a9b01234",
+        "server_id": "c5d6e7f8-a9b0-1234-c5d6-e7f8a9b01234",
+        "host_name": "cloud-node-27",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-19T00:38:57.000000"
+      }
+    ],
+    "Project": "chatbot-service"
+  },
+  {
+    "ID": "d6e7f8a9-b0c1-2345-d6e7-f8a9b0c12345",
+    "Name": "chatbot-db-secondary-disk",
+    "Status": "in-use",
+    "Size": 500,
+    "Attached to": [
+      {
+        "id": "d6e7f8a9-b0c1-2345-d6e7-f8a9b0c12345",
+        "attachment_id": "d6e7f8a9-b0c1-2345-d6e7-f8a9b0c12345",
+        "volume_id": "d6e7f8a9-b0c1-2345-d6e7-f8a9b0c12345",
+        "server_id": "d6e7f8a9-b0c1-2345-d6e7-f8a9b0c12345",
+        "host_name": "cloud-node-45",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-20T01:38:57.000000"
+      }
+    ],
+    "Project": "chatbot-service"
+  },
+  {
+    "ID": "e7f8a9b0-c1d2-3456-e7f8-a9b0c1d23456",
+    "Name": "chatbot-db-tertiary-disk",
+    "Status": "in-use",
+    "Size": 500,
+    "Attached to": [
+      {
+        "id": "e7f8a9b0-c1d2-3456-e7f8-a9b0c1d23456",
+        "attachment_id": "e7f8a9b0-c1d2-3456-e7f8-a9b0c1d23456",
+        "volume_id": "e7f8a9b0-c1d2-3456-e7f8-a9b0c1d23456",
+        "server_id": "e7f8a9b0-c1d2-3456-e7f8-a9b0c1d23456",
+        "host_name": "cloud-node-53",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-21T02:38:57.000000"
+      }
+    ],
+    "Project": "chatbot-service"
+  },
+  {
+    "ID": "f8a9b0c1-d2e3-4567-f8a9-b0c1d2e34567",
+    "Name": "mongo-db-primary-disk",
+    "Status": "in-use",
+    "Size": 300,
+    "Attached to": [
+      {
+        "id": "f8a9b0c1-d2e3-4567-f8a9-b0c1d2e34567",
+        "attachment_id": "f8a9b0c1-d2e3-4567-f8a9-b0c1d2e34567",
+        "volume_id": "f8a9b0c1-d2e3-4567-f8a9-b0c1d2e34567",
+        "server_id": "f8a9b0c1-d2e3-4567-f8a9-b0c1d2e34567",
+        "host_name": "cloud-node-37",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-22T03:38:57.000000"
+      }
+    ],
+    "Project": "database-service"
+  },
+  {
+    "ID": "a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+    "Name": "mongo-db-secondary-disk",
+    "Status": "in-use",
+    "Size": 300,
+    "Attached to": [
+      {
+        "id": "a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+        "attachment_id": "a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+        "volume_id": "a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+        "server_id": "a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+        "host_name": "cloud-node-37",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-23T04:38:57.000000"
+      }
+    ],
+    "Project": "database-service"
+  },
+  {
+    "ID": "b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+    "Name": "object-storage-server-disk",
+    "Status": "in-use",
+    "Size": 100,
+    "Attached to": [
+      {
+        "id": "b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+        "attachment_id": "b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+        "volume_id": "b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+        "server_id": "b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+        "host_name": "cloud-node-37",
+        "device": "/dev/sda",
+        "attached_at": "2024-08-24T05:38:57.000000"
+      }
+    ],
+    "Project": "storage-service"
+  }
+]

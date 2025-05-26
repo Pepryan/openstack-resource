@@ -1,0 +1,20 @@
+[
+{
+  "hostname": "cloud-node-30",
+  "missing_in_openstack": [""],
+  "missing_in_curl": ["f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345"],
+  "checked_at": "2024-12-08T05:55:37Z"
+},
+{
+  "hostname": "cloud-node-49",
+  "missing_in_openstack": [""],
+  "missing_in_curl": ["e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234"],
+  "checked_at": "2024-12-08T05:55:43Z"
+},
+{
+  "hostname": "cloud-node-54",
+  "missing_in_openstack": ["a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456"],
+  "missing_in_curl": [""],
+  "checked_at": "2024-12-08T05:55:50Z"
+}
+]

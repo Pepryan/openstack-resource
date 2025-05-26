@@ -1,0 +1,23 @@
+[
+{
+  "hostname": "cloud-node-30",
+  "placement_vcpu": 186,
+  "actual_vcpu": 190,
+  "difference": -4,
+  "checked_at": "2024-12-08T01:59:16Z"
+},
+{
+  "hostname": "cloud-node-49",
+  "placement_vcpu": 274,
+  "actual_vcpu": 282,
+  "difference": -8,
+  "checked_at": "2024-12-08T02:00:23Z"
+},
+{
+  "hostname": "cloud-node-54",
+  "placement_vcpu": 190,
+  "actual_vcpu": 186,
+  "difference": 4,
+  "checked_at": "2024-12-08T02:00:26Z"
+}
+]
