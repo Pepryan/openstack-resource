@@ -1,6 +1,7 @@
-Flask==2.1.1
+Flask==2.3.3
 Flask-Login==0.6.3
 Werkzeug==2.3.7
 matplotlib==3.8.0
 pandas==2.1.0
 numpy==1.26.0
+google-generativeai==0.3.2

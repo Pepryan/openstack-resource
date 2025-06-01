@@ -3,6 +3,16 @@
  * A cohesive, elegant, and modern design system
  */
 
+/* Theme initialization - disable transitions during theme switching */
+.theme-init,
+.theme-init *,
+.theme-init *:before,
+.theme-init *:after {
+    transition: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+}
+
 /* ========== LIGHT MODE VARIABLES ========== */
 :root {
     /* Primary Colors */

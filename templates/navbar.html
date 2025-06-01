@@ -193,21 +193,27 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
-        [data-theme='dark'] .theme-toggle .moon-icon {
-            display: none;
+        /* Theme toggle icons - controlled by JavaScript */
+        .theme-toggle .moon-icon,
+        .theme-toggle .sun-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: all 0.2s ease;
         }
 
-        [data-theme='dark'] .theme-toggle .sun-icon {
-            display: block;
-        }
-
-        /* Light theme icon */
+        /* Default state - show moon icon for light mode */
         .theme-toggle .moon-icon {
             display: block;
         }
 
         .theme-toggle .sun-icon {
             display: none;
+        }
+
+        /* Hover effects for theme toggle */
+        .theme-toggle:hover .moon-icon,
+        .theme-toggle:hover .sun-icon {
+            transform: scale(1.1);
         }
 
         /* Logout button */
@@ -271,6 +277,7 @@
                     <a href="/list-all-flavors" class="nav-link">Flavors</a>
                     <a href="/volumes" class="nav-link">Volumes</a>
                     <a href="/allocation" class="nav-link">Allocation</a>
+                    <a href="/ai-chat" class="nav-link">AI Chat</a>
                 </div>
 
                 <!-- Theme toggle and logout on right -->
@@ -344,53 +351,85 @@
                 <a href="/list-all-flavors" class="mobile-nav-link">Flavors</a>
                 <a href="/volumes" class="mobile-nav-link">Volumes</a>
                 <a href="/allocation" class="mobile-nav-link">Allocation</a>
+                <a href="/ai-chat" class="mobile-nav-link">AI Chat</a>
             </div>
         </div>
     </nav>
     <script>
-        // Theme toggle functionality with enhanced performance optimization
+        // Enhanced theme toggle functionality
         function toggleTheme() {
-            // Disable all transitions and animations temporarily for better performance
+            // Disable all transitions temporarily for smooth switching
             document.documentElement.classList.add('theme-init');
 
-            // Toggle theme
+            // Get current theme
             const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
+            const currentTheme = html.getAttribute('data-theme') || 'light';
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-            // Apply theme change
+            // Apply theme change immediately
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
 
-            // Force a reflow to ensure the theme-init class takes effect
-            void document.documentElement.offsetWidth;
+            // Update theme toggle icons
+            updateThemeIcons(newTheme);
 
-            // Trigger custom event for theme change immediately
-            document.dispatchEvent(new CustomEvent('themeChanged', {
+            // Force reflow
+            html.offsetHeight;
+
+            // Dispatch theme change event
+            window.dispatchEvent(new CustomEvent('themeChanged', {
                 detail: { theme: newTheme }
             }));
 
-            // Re-enable transitions after a short delay
+            // Re-enable transitions
             setTimeout(() => {
                 document.documentElement.classList.remove('theme-init');
-            }, 100);
+            }, 50);
+        }
+
+        // Update theme toggle button icons
+        function updateThemeIcons(theme) {
+            const moonIcons = document.querySelectorAll('.moon-icon');
+            const sunIcons = document.querySelectorAll('.sun-icon');
+            
+            if (theme === 'dark') {
+                moonIcons.forEach(icon => icon.style.display = 'none');
+                sunIcons.forEach(icon => icon.style.display = 'block');
+            } else {
+                moonIcons.forEach(icon => icon.style.display = 'block');
+                sunIcons.forEach(icon => icon.style.display = 'none');
+            }
         }
 
         // Initialize theme on page load
         function initTheme() {
             const savedTheme = localStorage.getItem('theme');
             const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const preferredTheme = savedTheme || (systemDarkMode ? 'dark' : 'light');
 
-            if (savedTheme === 'dark' || (!savedTheme && systemDarkMode)) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
+            // Set theme attribute
+            document.documentElement.setAttribute('data-theme', preferredTheme);
+            
+            // Update icons
+            updateThemeIcons(preferredTheme);
 
-            // Remove the theme-init class after a short delay to re-enable transitions
+            // Remove theme-init class to enable transitions
             setTimeout(() => {
                 document.documentElement.classList.remove('theme-init');
             }, 100);
+        }
+
+        // Listen for system theme changes
+        function initSystemThemeListener() {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', (e) => {
+                // Only auto-switch if user hasn't manually set a preference
+                if (!localStorage.getItem('theme')) {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateThemeIcons(newTheme);
+                }
+            });
         }
 
         // Mobile menu functionality
@@ -435,8 +474,13 @@
         // Run initializations
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
+            initSystemThemeListener();
             initMobileMenu();
         });
+
+        // Also initialize theme immediately to prevent flash
+        initTheme();
+        initSystemThemeListener();
     </script>
 </body>
 </html>
