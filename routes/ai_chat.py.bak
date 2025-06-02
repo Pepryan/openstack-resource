@@ -1,0 +1,407 @@
+from flask import render_template, request, jsonify, session
+from flask_login import login_required
+import json
+import os
+import google.generativeai as genai
+from datetime import datetime
+from routes import ai_chat_bp
+import config
+
+# Configure Gemini AI
+def configure_gemini(api_key):
+    """Configure Gemini AI with API key"""
+    try:
+        genai.configure(api_key=api_key)
+        return True
+    except Exception as e:
+        print(f"Error configuring Gemini: {e}")
+        return False
+
+def get_gemini_api_key():
+    """Get Gemini API key from file"""
+    api_key_file = os.path.join(config.DATA_DIR, 'gemini_api_key.txt')
+    try:
+        if os.path.exists(api_key_file):
+            with open(api_key_file, 'r') as f:
+                return f.read().strip()
+    except Exception as e:
+        print(f"Error reading API key: {e}")
+    return None
+
+def save_gemini_api_key(api_key):
+    """Save Gemini API key to file"""
+    api_key_file = os.path.join(config.DATA_DIR, 'gemini_api_key.txt')
+    try:
+        with open(api_key_file, 'w') as f:
+            f.write(api_key)
+        return True
+    except Exception as e:
+        print(f"Error saving API key: {e}")
+        return False
+
+def get_openstack_context():
+    """Get comprehensive OpenStack data context for AI analysis"""
+    context = {
+        'instances': [],
+        'flavors': [],
+        'volumes': [],
+        'allocation': {},
+        'reserved': {},
+        'volume_stats': {},
+        'ceph_storage': '',
+        'placement_diff': [],
+        'instance_ids_check': [],
+        'ratio_config': [],
+        'summary': {}
+    }
+    
+    try:
+        # Load instances data (AIO CSV)
+        if os.path.exists(config.AIO_CSV_PATH):
+            import pandas as pd
+            df = pd.read_csv(config.AIO_CSV_PATH, delimiter='|')
+            context['instances'] = df.to_dict('records')
+        
+        # Load flavors data
+        if os.path.exists(config.FLAVORS_FILE_PATH):
+            import pandas as pd
+            df = pd.read_csv(config.FLAVORS_FILE_PATH, delimiter='|')
+            context['flavors'] = df.to_dict('records')
+        
+        # Load volumes data
+        if os.path.exists(config.VOLUMES_FILE_PATH):
+            with open(config.VOLUMES_FILE_PATH, 'r') as f:
+                volumes_data = json.load(f)
+                context['volumes'] = volumes_data if isinstance(volumes_data, list) else []
+        
+        # Load allocation data (compute node resources)
+        if os.path.exists(config.ALLOCATION_FILE_PATH):
+            with open(config.ALLOCATION_FILE_PATH, 'r') as f:
+                allocation_lines = f.readlines()
+                allocation_data = []
+                for line in allocation_lines:
+                    parts = line.strip().split()
+                    if len(parts) >= 7:
+                        allocation_data.append({
+                            'node_id': parts[0],
+                            'hostname': parts[1],
+                            'type': parts[2],
+                            'ip': parts[3],
+                            'status': parts[4],
+                            'vcpu_used': int(parts[5]),
+                            'vcpu_total': int(parts[6]),
+                            'memory_used_mb': int(parts[7]) if len(parts) > 7 else 0,
+                            'memory_total_mb': int(parts[8]) if len(parts) > 8 else 0
+                        })
+                context['allocation'] = allocation_data
+        
+        # Load reserved resources
+        if os.path.exists(config.RESERVED_FILE_PATH):
+            with open(config.RESERVED_FILE_PATH, 'r') as f:
+                context['reserved'] = json.load(f)
+        
+        # Load volume statistics
+        if os.path.exists(config.VOLUME_STATS_FILE_PATH):
+            with open(config.VOLUME_STATS_FILE_PATH, 'r') as f:
+                context['volume_stats'] = json.load(f)
+        
+        # Load Ceph storage information
+        if os.path.exists(config.CEPHDF_FILE_PATH):
+            with open(config.CEPHDF_FILE_PATH, 'r') as f:
+                context['ceph_storage'] = f.read()
+        
+        # Load placement differences
+        if os.path.exists(config.PLACEMENT_DIFF_FILE_PATH):
+            with open(config.PLACEMENT_DIFF_FILE_PATH, 'r') as f:
+                context['placement_diff'] = json.load(f)
+        
+        # Load instance ID checks
+        if os.path.exists(config.INSTANCE_IDS_CHECK_FILE_PATH):
+            with open(config.INSTANCE_IDS_CHECK_FILE_PATH, 'r') as f:
+                context['instance_ids_check'] = json.load(f)
+        
+        # Load ratio configuration
+        if os.path.exists(config.RATIO_FILE_PATH):
+            with open(config.RATIO_FILE_PATH, 'r') as f:
+                ratio_lines = f.readlines()
+                ratio_data = []
+                for line in ratio_lines:
+                    parts = line.strip().split(', ')
+                    if len(parts) >= 3:
+                        ratio_data.append({
+                            'hostname': parts[0],
+                            'cpu_ratio': float(parts[1]),
+                            'memory_ratio': float(parts[2])
+                        })
+                context['ratio_config'] = ratio_data
+        
+        # Generate summary statistics
+        context['summary'] = {
+            'total_instances': len(context['instances']),
+            'total_flavors': len(context['flavors']),
+            'total_volumes': len(context['volumes']),
+            'total_compute_nodes': len(context['allocation']) if isinstance(context['allocation'], list) else 0,
+            'projects': list(set([inst.get('Project', 'unknown') for inst in context['instances']])),
+            'active_instances': len([inst for inst in context['instances'] if inst.get('Status') == 'ACTIVE']),
+            'shutoff_instances': len([inst for inst in context['instances'] if inst.get('Status') == 'SHUTOFF'])
+        }
+                
+    except Exception as e:
+        print(f"Error loading OpenStack context: {e}")
+    
+    return context
+
+@ai_chat_bp.route('/ai-chat')
+@login_required
+def ai_chat():
+    """AI Chat page"""
+    api_key = get_gemini_api_key()
+    return render_template('ai_chat.html', has_api_key=bool(api_key))
+
+@ai_chat_bp.route('/api/ai-chat/send', methods=['POST'])
+@login_required
+def send_message():
+    """Send message to AI"""
+    try:
+        data = request.get_json()
+        message = data.get('message', '').strip()
+        
+        if not message:
+            return jsonify({'error': 'Message is required'}), 400
+        
+        # Get API key
+        api_key = get_gemini_api_key()
+        if not api_key:
+            return jsonify({'error': 'Gemini API key not configured'}), 400
+        
+        # Configure Gemini
+        if not configure_gemini(api_key):
+            return jsonify({'error': 'Failed to configure Gemini AI'}), 500
+        
+        # Get OpenStack context with optimization for AI processing
+        openstack_context = get_openstack_context()
+        
+        # Create optimized system prompt with essential OpenStack context
+        # Limit data size to prevent timeout issues
+        system_prompt = f"""
+You are an AI assistant specialized in OpenStack infrastructure management and analysis.
+You have access to OpenStack environment data from a production cloud infrastructure.
+
+=== ENVIRONMENT OVERVIEW ===
+Summary: {json.dumps(openstack_context['summary'], indent=2)}
+
+=== COMPUTE RESOURCES ===
+Compute Node Allocation: {json.dumps(openstack_context['allocation'], indent=2)}
+
+CPU/Memory Ratios: {json.dumps(openstack_context['ratio_config'], indent=2)}
+
+Reserved Resources: {json.dumps(openstack_context['reserved'], indent=2)}
+
+Flavors Available: {json.dumps(openstack_context['flavors'], indent=2)}
+
+=== INSTANCE SUMMARY ===
+Total Instances: {openstack_context['summary']['total_instances']}
+Active Instances: {openstack_context['summary']['active_instances']}
+Shutoff Instances: {openstack_context['summary']['shutoff_instances']}
+Projects: {openstack_context['summary']['projects']}
+
+=== OVERCOMMIT RATIO EXPLANATION ===
+Dalam environment production ini, overcommit ratio yang berbeda digunakan secara strategis:
+- **1:1 Ratio**: Digunakan untuk instance production yang membutuhkan resource besar dan performa tinggi
+- **1:4 Ratio**: Digunakan untuk instance campuran (mixed workload) dengan kebutuhan resource sedang
+- **1:8 Ratio**: Digunakan untuk instance development/testing yang tidak memerlukan resource penuh
+
+Ini adalah praktik normal untuk mengoptimalkan penggunaan resource hardware. Overcommit memungkinkan:
+- Efisiensi resource yang lebih baik
+- Penghematan biaya infrastruktur
+- Fleksibilitas dalam alokasi resource berdasarkan kebutuhan workload
+
+Ketika menganalisis data ratio.txt, perhatikan bahwa variasi ratio ini adalah by design, bukan masalah.
+
+=== VCPU CAPACITY CALCULATION ===
+**PENTING - GUNAKAN DATA RATIO.TXT**: Untuk perhitungan kapasitas vCPU yang akurat, WAJIB menggunakan data dari ratio.txt:
+
+**CARA PERHITUNGAN YANG BENAR**:
+1. **Ambil data dari ratio_config** (sudah dimuat dari ratio.txt)
+2. **Base Physical Cores**: 48 cores per compute node
+3. **Rumus**: Kapasitas vCPU = 48 × cpu_ratio (dari ratio.txt)
+
+**Contoh dari data ratio.txt**:
+- Jika hostname memiliki cpu_ratio: 4.0 → Kapasitas = 48 × 4 = 192 vCPUs
+- Jika hostname memiliki cpu_ratio: 8.0 → Kapasitas = 48 × 8 = 384 vCPUs
+- Jika hostname memiliki cpu_ratio: 1.0 → Kapasitas = 48 × 1 = 48 vCPUs
+
+**LARANGAN**:
+- JANGAN asal mengalikan dengan overcommit ratio umum
+- JANGAN menggunakan vcpu_total dari allocation.txt saja
+- WAJIB cross-check dengan data ratio_config untuk setiap hostname
+
+**Untuk mencari compute kosong**:
+1. Ambil cpu_ratio dari ratio_config berdasarkan hostname
+2. Hitung kapasitas real: 48 × cpu_ratio
+3. Ambil vcpu_used dari allocation data
+4. **Hitung vCPU Available**: kapasitas_real - vcpu_used
+5. Compute layak = yang memiliki vCPU Available sesuai input user
+
+**RUMUS LENGKAP**:
+- Kapasitas vCPU = 48 × cpu_ratio
+- vCPU Available = Kapasitas vCPU - vcpu_used
+- Utilization % = (vcpu_used / Kapasitas vCPU) × 100
+
+**CONTOH PERHITUNGAN**:
+- cloud-node-01: cpu_ratio=4.0, vcpu_used=17
+- Kapasitas = 48 × 4.0 = 192 vCPUs
+- Available = 192 - 17 = 175 vCPUs
+- Utilization = (17/192) × 100 = 8.9%
+
+Selalu gunakan data ratio.txt yang actual, bukan asumsi overcommit ratio!
+
+=== RAM CAPACITY CALCULATION ===
+**PENTING - GUNAKAN DATA ALLOCATION.TXT DAN RATIO.TXT**: Untuk analisis RAM yang lengkap dan akurat:
+
+**DATA YANG TERSEDIA**:
+1. **allocation.txt**: memory_used_mb, memory_total_mb per hostname
+2. **ratio.txt**: memory_ratio per hostname untuk overcommit calculation
+3. **reserved.json**: RAM yang sudah direservasi untuk keperluan khusus
+
+**CARA ANALISIS RAM YANG BENAR**:
+1. **RAM Total**: Gunakan memory_total_mb dari allocation.txt
+2. **RAM Used**: Gunakan memory_used_mb dari allocation.txt
+3. **RAM Reserved**: Cek reserved.json untuk RAM yang direservasi
+4. **RAM Available**: memory_total_mb - memory_used_mb - reserved_ram
+5. **Memory Ratio**: Gunakan memory_ratio dari ratio_config untuk memahami overcommit
+
+**KONVERSI SATUAN**:
+- Data allocation.txt dalam MB, konversi ke GB: MB ÷ 1024
+- Tampilkan dalam format yang mudah dibaca (contoh: 128.5 GB)
+
+**KRITERIA KELAYAKAN COMPUTE NODE**:
+- **vCPU Available** sesuai input user (berdasarkan perhitungan: kapasitas - used)
+- **RAM Available** sesuai input user (berdasarkan perhitungan: total - used - reserved)
+- Kolom "Layak?" = "Ya" jika kedua syarat terpenuhi, "Tidak" jika salah satu tidak terpenuhi
+
+**WAJIB SERTAKAN**:
+- Tabel lengkap dengan semua kolom RAM
+- Perhitungan yang jelas untuk setiap compute node
+- Rekomendasi berdasarkan data actual, bukan estimasi
+
+=== STORAGE RESOURCES ===
+Total Volumes: {openstack_context['summary']['total_volumes']}
+Volume Statistics: {json.dumps(openstack_context['volume_stats'], indent=2)}
+
+Ceph Storage Status:
+{openstack_context['ceph_storage']}
+
+=== MONITORING & HEALTH ===
+Placement Issues: {len(openstack_context['placement_diff'])} differences found
+Instance Check Status: {len(openstack_context['instance_ids_check'])} items checked
+
+=== DATA INTERPRETATION GUIDE ===
+1. Allocation Data Format: node_id hostname type ip status vcpu_used vcpu_total memory_used_mb memory_total_mb
+2. Flavors: Complete specifications with RAM (MB), VCPUs, and Disk (GB)
+3. Instances: Active workloads with their resource consumption
+4. Ceph Storage: Raw storage capacity and pool utilization
+5. Placement Diff: Discrepancies between placement service and actual allocation
+6. Reserved Resources: Planned or reserved capacity for specific purposes
+
+=== ANALYSIS CAPABILITIES ===
+Provide detailed analysis for:
+- **Resource Utilization**: Calculate actual CPU, RAM, and storage usage percentages
+- **Capacity Planning**: Predict future resource needs and identify bottlenecks
+- **Cost Optimization**: Identify over-provisioned resources and optimization opportunities
+- **Performance Analysis**: Detect resource contention and performance issues
+- **Infrastructure Health**: Monitor placement accuracy and resource consistency
+- **Migration Planning**: Suggest optimal instance placement and consolidation
+- **Storage Management**: Analyze Ceph utilization and volume distribution
+- **Project Analysis**: Compare resource usage across different projects/tenants
+
+=== RESPONSE GUIDELINES ===
+- Always calculate specific percentages and metrics from the actual data
+- Provide concrete recommendations with quantified benefits
+- Identify specific hosts, instances, or resources when making suggestions
+- Include both current state analysis and future planning recommendations
+- Reference actual data points to support your analysis
+- Consider the Indonesian context where applicable (some reserved resources have Indonesian descriptions)
+
+=== TABLE FORMATTING GUIDELINES ===
+**PENTING**: Saat menampilkan data dalam bentuk tabel, gunakan format Markdown yang rapi:
+
+1. **Gunakan Markdown Table Format**:
+   ```
+   | Column 1 | Column 2 | Column 3 |
+   |----------|----------|----------|
+   | Data 1   | Data 2   | Data 3   |
+   ```
+
+2. **Untuk Data Besar**: Jika tabel terlalu besar, tampilkan hanya data penting atau buat ringkasan
+
+3. **Format Angka**: Gunakan format yang mudah dibaca (contoh: 1,234 MB bukan 1234)
+
+4. **Header yang Jelas**: Gunakan header kolom yang deskriptif
+
+5. **Alignment**: Rata kanan untuk angka, rata kiri untuk teks
+
+6. **Contoh Format yang Baik**:
+   | Hostname | vCPU Used | vCPU Total | Utilization |
+   |----------|-----------|------------|-------------|
+   | cloud-node-01 | 17 | 192 | 8.9% |
+   | cloud-node-05 | 189 | 192 | 98.4% |
+
+JANGAN tampilkan data mentah atau format pipe-separated. Selalu gunakan Markdown table yang rapi dan mudah dibaca.
+
+Analyze the provided data comprehensively and provide actionable insights based on the actual infrastructure state.
+"""
+        
+        # Create model and send message with configuration from config
+        generation_config = {
+            "temperature": config.AI_MODEL_TEMPERATURE,
+            "top_p": config.AI_MODEL_TOP_P,
+            "top_k": config.AI_MODEL_TOP_K,
+            "max_output_tokens": config.AI_MODEL_MAX_TOKENS,
+        }
+        
+        model = genai.GenerativeModel(
+            model_name=config.AI_MODEL_NAME,
+            generation_config=generation_config
+        )
+        
+        # Combine system prompt with user message
+        full_prompt = f"{system_prompt}\n\nUser Question: {message}"
+        
+        response = model.generate_content(full_prompt)
+        
+        return jsonify({
+            'response': response.text,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"Error in AI chat: {e}")
+        return jsonify({'error': f'AI service error: {str(e)}'}), 500
+
+@ai_chat_bp.route('/api/ai-chat/save-api-key', methods=['POST'])
+@login_required
+def save_api_key():
+    """Save Gemini API key"""
+    try:
+        data = request.get_json()
+        api_key = data.get('api_key', '').strip()
+        
+        if not api_key:
+            return jsonify({'error': 'API key is required'}), 400
+        
+        if save_gemini_api_key(api_key):
+            return jsonify({'success': True, 'message': 'API key saved successfully'})
+        else:
+            return jsonify({'error': 'Failed to save API key'}), 500
+            
+    except Exception as e:
+        print(f"Error saving API key: {e}")
+        return jsonify({'error': f'Error saving API key: {str(e)}'}), 500
+
+@ai_chat_bp.route('/api/ai-chat/check-api-key', methods=['GET'])
+@login_required
+def check_api_key():
+    """Check if API key is configured"""
+    api_key = get_gemini_api_key()
+    return jsonify({'has_api_key': bool(api_key)})

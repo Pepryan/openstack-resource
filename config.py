@@ -23,6 +23,7 @@ RESERVED_FILE_PATH = os.path.join(DATA_DIR, 'reserved.json')
 CEPHDF_FILE_PATH = os.path.join(DATA_DIR, 'cephdf.txt')
 PLACEMENT_DIFF_FILE_PATH = os.path.join(DATA_DIR, 'placement_diff.json')
 INSTANCE_IDS_CHECK_FILE_PATH = os.path.join(DATA_DIR, 'instance_ids_check.json')
+VOLUME_STATS_FILE_PATH = os.path.join(DATA_DIR, 'volume_stats.json')
 
 # Constants
 CSV_DELIMITER = '|'
@@ -33,3 +34,10 @@ CEPH_TOTAL_SIZE_TB = 6246.4 #GTI
 
 # Date format
 DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
+
+# AI Model Configuration
+AI_MODEL_NAME = 'gemini-2.0-flash'
+AI_MODEL_TEMPERATURE = 0.7
+AI_MODEL_MAX_TOKENS = 8192
+AI_MODEL_TOP_P = 0.9
+AI_MODEL_TOP_K = 40

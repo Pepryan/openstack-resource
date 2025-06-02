@@ -45,6 +45,22 @@ function checkApiKeyStatus() {
         });
 }
 
+function refreshContext() {
+    // Show notification that context is being refreshed
+    showNotification('Refreshing data context...', 'info');
+    
+    // Add a system message to indicate context refresh
+    const timestamp = new Date().toISOString();
+    addMessage('🔄 Data context refreshed. AI will now use the latest OpenStack data for analysis.', 'system', timestamp);
+    
+    // Update storage status
+    document.getElementById('storageStatus').textContent = 'Context Refreshed';
+    
+    setTimeout(() => {
+        document.getElementById('storageStatus').textContent = 'Ready';
+    }, 3000);
+}
+
 function saveApiKey() {
     const apiKeyInput = document.getElementById('apiKeyInput');
     const apiKey = apiKeyInput.value.trim();
@@ -155,6 +171,9 @@ function formatAIResponse(content) {
     // Convert markdown-like formatting to HTML
     let formatted = escapeHtml(content);
     
+    // Convert markdown tables to HTML tables
+    formatted = convertMarkdownTables(formatted);
+    
     // Convert **bold** to <strong>
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
@@ -177,6 +196,44 @@ function formatAIResponse(content) {
     formatted = formatted.replace(/^[-*]\s(.+)$/gm, '<div style="margin-left: 1rem;">• $1</div>');
     
     return formatted;
+}
+
+function convertMarkdownTables(text) {
+    // Regular expression to match markdown tables
+    const tableRegex = /((?:^\|.*\|\s*$\n?)+)/gm;
+    
+    return text.replace(tableRegex, function(match) {
+        const lines = match.trim().split('\n');
+        if (lines.length < 2) return match;
+        
+        // Check if second line is separator (contains only |, -, :, and spaces)
+        const separatorRegex = /^\s*\|[\s\|:-]+\|\s*$/;
+        if (!separatorRegex.test(lines[1])) return match;
+        
+        let html = '<div class="table-wrapper"><table>';
+        
+        // Process header
+        const headerCells = lines[0].split('|').slice(1, -1).map(cell => cell.trim());
+        html += '<thead><tr>';
+        headerCells.forEach(cell => {
+            html += `<th>${cell}</th>`;
+        });
+        html += '</tr></thead>';
+        
+        // Process body rows
+        html += '<tbody>';
+        for (let i = 2; i < lines.length; i++) {
+            const cells = lines[i].split('|').slice(1, -1).map(cell => cell.trim());
+            html += '<tr>';
+            cells.forEach(cell => {
+                html += `<td>${cell}</td>`;
+            });
+            html += '</tr>';
+        }
+        html += '</tbody></table></div>';
+        
+        return html;
+    });
 }
 
 function escapeHtml(text) {
@@ -379,6 +436,18 @@ function addMessageToDOM(content, sender, timestamp = null) {
                     <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
+                </div>
+            </div>
+        `;
+    } else if (sender === 'system') {
+        const timeStr = timestamp ? new Date(timestamp).toLocaleTimeString() : new Date().toLocaleTimeString();
+        messageDiv.innerHTML = `
+            <div class="flex-1 flex justify-center">
+                <div class="system-message bg-yellow-500/20 border border-yellow-500/30 rounded-lg px-4 py-2 text-center">
+                    <p class="text-sm text-yellow-200">${escapeHtml(content)}</p>
+                    <div class="message-timestamp text-center text-xs text-yellow-300/70 mt-1">
+                        ${timeStr}
+                    </div>
                 </div>
             </div>
         `;
